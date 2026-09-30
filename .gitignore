@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Environment secrets
+.env
+.env.local
+.env.*.local
+
+# Databases
+*.db
+*.sqlite
+
+# Private storage files (never commit paid products)
+storage/private/
+
+# Turborepo
+.turbo/
+
+# Editor
+.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/

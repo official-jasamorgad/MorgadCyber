@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Articles — MorgadCyber</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .articles-page-header {
+      padding: 60px 0 30px;
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.04) 0%, transparent 100%);
+      border-bottom: 1px solid var(--color-border, #e2e8f0);
+    }
+
+    .articles-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 24px;
+    }
+
+    .articles-filter-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--color-border, #e2e8f0);
+      background: #ffffff;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .articles-filter-chip:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .articles-filter-chip.active {
+      background: #7c3aed;
+      color: #ffffff;
+      border-color: #7c3aed;
+    }
+
+    .articles-count {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .article-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    [data-theme="dark"] .articles-page-header {
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.12) 0%, transparent 100%);
+    }
+
+    [data-theme="dark"] .articles-filter-chip {
+      background: var(--color-surface);
+      border-color: var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    [data-theme="dark"] .articles-filter-chip.active {
+      background: #7c3aed;
+      color: #ffffff;
+      border-color: #7c3aed;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon brand-image"><img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png" alt="J.S. Morgad Cyber"></div>
+        <span>MorgadCyber</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#trending" class="nav-link">Explore</a></li>
+        <li><a href="categories.html" class="nav-link">Categories</a></li>
+        <li><a href="artikel.html" class="nav-link active">Articles</a></li>
+      </ul>
+      <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark and light mode" title="Toggle Dark / Light Mode">◐</button>
+
+      <div class="nav-actions">
+        <a href="index.html#trending" class="btn-header-cta">
+          Explore Products
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="articles-page-header">
+    <div class="container">
+      <div
+        style="font-size: 12px; font-weight: 700; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
+        From the Hub
+      </div>
+      <h1 style="font-size: 36px; font-weight: 800; color: var(--color-text-primary); margin: 0 0 10px; letter-spacing: -0.02em;">
+        All Articles
+      </h1>
+      <p style="font-size: 15px; color: var(--color-text-secondary); margin: 0; max-width: 650px; line-height: 1.6;">
+        Tips, trends, and inspiration for creators. Browse every article from the hub.
+      </p>
+    </div>
+  </section>
+
+  <main class="container" style="padding: 0 0 80px;">
+    <div class="articles-filters" id="articleFilters">
+      <button type="button" class="articles-filter-chip active" data-tag="all">All</button>
+      <button type="button" class="articles-filter-chip" data-tag="Tips &amp; Guides">Tips &amp; Guides</button>
+      <button type="button" class="articles-filter-chip" data-tag="Inspiration">Inspiration</button>
+      <button type="button" class="articles-filter-chip" data-tag="Resources">Resources</button>
+    </div>
+
+    <div class="articles-count" id="articleCount">Showing 9 articles</div>
+
+    <div class="article-grid-3" id="articleGrid">
+      <a href="baca-artikel.html?id=Jurnal Ilmiah Sinsta 1" class="article-card" data-tag="Tips &amp; Guides">
+        <div class="article-image-container">
+          <img src="assets/images/citations.jpeg" alt="International Journal of Electrical and Computer Engineering">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Tips &amp; Guides</span>
+            <span class="article-date">May 18, 2026</span>
+          </div>
+          <h3 class="article-title">International Journal of Electrical and Computer Engineering</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=digital-art-styles-2026" class="article-card" data-tag="Inspiration">
+        <div class="article-image-container">
+          <img src="assets/images/article-desk.svg" alt="Best Digital Art Styles Trending in 2026" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Inspiration</span>
+            <span class="article-date">May 12, 2026</span>
+          </div>
+          <h3 class="article-title">Best Digital Art Styles Trending in 2026</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=high-quality-images" class="article-card" data-tag="Resources">
+        <div class="article-image-container">
+          <img src="assets/images/article-peaks.svg" alt="Where to Find High-Quality Images For Your Projects" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Resources</span>
+            <span class="article-date">May 08, 2026</span>
+          </div>
+          <h3 class="article-title">Where to Find High-Quality Images For Your Projects</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=price-digital-products" class="article-card" data-tag="Tips &amp; Guides">
+        <div class="article-image-container">
+          <img src="assets/images/article-desk.svg" alt="How to Price Digital Products Without Losing Buyers" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Tips &amp; Guides</span>
+            <span class="article-date">Apr 29, 2026</span>
+          </div>
+          <h3 class="article-title">How to Price Digital Products Without Losing Buyers</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=color-palettes-social" class="article-card" data-tag="Inspiration">
+        <div class="article-image-container">
+          <img src="assets/images/article-peaks.svg" alt="Color Palettes That Make Social Content Pop" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Inspiration</span>
+            <span class="article-date">Apr 21, 2026</span>
+          </div>
+          <h3 class="article-title">Color Palettes That Make Social Content Pop</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=licensing-checklist" class="article-card" data-tag="Resources">
+        <div class="article-image-container">
+          <img src="assets/images/article-lens.svg" alt="A Creator Checklist for Licensing Digital Assets" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Resources</span>
+            <span class="article-date">Apr 14, 2026</span>
+          </div>
+          <h3 class="article-title">A Creator Checklist for Licensing Digital Assets</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=batch-editing-workflows" class="article-card" data-tag="Tips &amp; Guides">
+        <div class="article-image-container">
+          <img src="assets/images/article-peaks.svg" alt="Batch Editing Workflows for Faster Content Drops" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Tips &amp; Guides</span>
+            <span class="article-date">Apr 02, 2026</span>
+          </div>
+          <h3 class="article-title">Batch Editing Workflows for Faster Content Drops</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=moodboards-sellable-packs" class="article-card" data-tag="Inspiration">
+        <div class="article-image-container">
+          <img src="assets/images/article-lens.svg" alt="Moodboards That Turn Ideas Into Sellable Packs" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Inspiration</span>
+            <span class="article-date">Mar 26, 2026</span>
+          </div>
+          <h3 class="article-title">Moodboards That Turn Ideas Into Sellable Packs</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="baca-artikel.html?id=organize-visual-libraries" class="article-card" data-tag="Resources">
+        <div class="article-image-container">
+          <img src="assets/images/article-desk.svg" alt="Tools Creators Use to Organize Visual Libraries" class="article-image">
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <span class="article-tag">Resources</span>
+            <span class="article-date">Mar 18, 2026</span>
+          </div>
+          <h3 class="article-title">Tools Creators Use to Organize Visual Libraries</h3>
+          <span class="article-link">
+            Read More
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>&copy; 2026 MorgadCyber. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#articles">From the Hub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const savedTheme = localStorage.getItem('preferred_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeToggleBtn?.addEventListener('click', () => {
+      const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('preferred_theme', nextTheme);
+    });
+    const chips = [...document.querySelectorAll('#articleFilters .articles-filter-chip')];
+    const grid = document.getElementById('articleGrid');
+    const count = document.getElementById('articleCount');
+    let cards = [...grid.querySelectorAll('.article-card')];
+    let activeTag = 'all';
+
+    function applyArticleFilter() {
+      let visible = 0;
+      cards.forEach(card => {
+        const matches = activeTag === 'all' || card.dataset.tag === activeTag;
+        card.style.display = matches ? 'flex' : 'none';
+        if (matches) visible += 1;
+      });
+      count.textContent = `Showing ${visible} article${visible === 1 ? '' : 's'}`;
+    }
+
+    chips.forEach(chip => chip.addEventListener('click', () => {
+      chips.forEach(item => item.classList.remove('active'));
+      chip.classList.add('active');
+      activeTag = chip.dataset.tag;
+      applyArticleFilter();
+    }));
+
+    async function loadPublishedArticles() {
+      try {
+        const response = await fetch('/api/articles');
+        const data = await response.json();
+        if (!response.ok || !data.success) return;
+        data.articles.forEach(article => {
+          const card = document.createElement('a');
+          card.href = `baca-artikel.html?id=${encodeURIComponent(article.slug)}`;
+          card.className = 'article-card';
+          card.dataset.tag = article.category;
+          const imageContainer = document.createElement('div');
+          imageContainer.className = 'article-image-container';
+          const image = document.createElement('img');
+          image.src = article.image_url || 'assets/images/article-desk.svg';
+          image.alt = article.title;
+          image.className = 'article-image';
+          image.loading = 'lazy';
+          imageContainer.appendChild(image);
+          const body = document.createElement('div');
+          body.className = 'article-body';
+          const meta = document.createElement('div');
+          meta.className = 'article-meta';
+          const tag = document.createElement('span');
+          tag.className = 'article-tag';
+          tag.textContent = article.category;
+          const date = document.createElement('span');
+          date.className = 'article-date';
+          date.textContent = article.published_at ? new Date(article.published_at).toLocaleDateString() : '';
+          meta.append(tag, date);
+          const title = document.createElement('h3');
+          title.className = 'article-title';
+          title.textContent = article.title;
+          const summary = document.createElement('p');
+          summary.className = 'article-summary';
+          summary.textContent = article.summary;
+          const link = document.createElement('span');
+          link.className = 'article-link';
+          link.textContent = 'Read More →';
+          body.append(meta, title, summary, link);
+          card.append(imageContainer, body);
+          grid.appendChild(card);
+        });
+        cards = [...grid.querySelectorAll('.article-card')];
+        applyArticleFilter();
+      } catch {
+        applyArticleFilter();
+      }
+    }
+
+    applyArticleFilter();
+    loadPublishedArticles();
+  </script>
+</body>
+
+</html>

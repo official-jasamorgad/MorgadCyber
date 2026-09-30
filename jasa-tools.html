@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jasa Sewa Tools FRP &amp; Tools Lain - MorgadCyber</title>
+  <link rel="stylesheet" href="styles.css?v=tools-rental-20260924">
+  <style>
+    .tools-page { min-height: 100vh; background: #151412; color: #f8fafc; }
+    .tools-hero { padding: 88px 0 64px; background: radial-gradient(circle at 80% 10%, rgba(217, 164, 88, .2), transparent 34%), #151412; }
+    .tools-hero-inner { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; }
+    .tools-eyebrow { color: #e7b66f; font-size: .75rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .tools-hero h1 { max-width: 650px; margin: 16px 0; color: #fffaf0; font-size: clamp(2.5rem, 6vw, 4.8rem); line-height: 1.02; letter-spacing: -.04em; }
+    .tools-hero p { max-width: 600px; color: #c6c0b7; font-size: 1.05rem; line-height: 1.7; }
+    .tools-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .tools-hero-actions a { text-decoration: none; }
+    .tools-section { padding: 64px 0 88px; }
+    .tools-section h2 { margin: 0 0 10px; color: #fffaf0; font-size: 2rem; }
+    .tools-section-intro { margin: 0 0 28px; color: #a9a39a; }
+    .tools-note { margin-top: 30px; padding: 18px 20px; border-left: 3px solid #e7b66f; color: #c6c0b7; background: #211f1b; line-height: 1.6; }
+    .price-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 32px; }
+    .price-card { display: flex; flex-direction: column; padding: 20px; border: 1px solid #403a31; border-radius: 12px; background: #211f1b; }
+    .price-card { cursor: pointer; transition: border-color .18s ease, transform .18s ease; }
+    .price-card:hover, .price-card:focus-within { border-color: #e7b66f; transform: translateY(-2px); }
+    .price-card h3 { margin: 0 0 8px; color: #fffaf0; font-size: 1rem; line-height: 1.35; }
+    .price-duration { color: #a9a39a; font-size: .82rem; }
+    .price-value { margin: 18px 0; color: #e7b66f; font-size: 1.35rem; font-weight: 800; }
+    .price-buy { margin-top: auto; padding: 10px 14px; border: 0; border-radius: 8px; color: #171411; background: #e7b66f; font: inherit; font-size: .85rem; font-weight: 800; cursor: pointer; }
+    .price-buy:hover { background: #f2ca8d; }
+    .tools-checkout { display: none; margin-top: 28px; padding: 22px; border: 1px solid #e7b66f; border-radius: 12px; background: #211f1b; }
+    .tools-checkout.is-open { display: block; }
+    .tools-checkout h3 { margin: 0 0 8px; color: #fffaf0; }
+    .tools-checkout p { margin: 0 0 14px; color: #c6c0b7; }
+    .tools-checkout form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .tools-checkout input { flex: 1 1 220px; min-width: 0; padding: 11px 12px; border: 1px solid #594f41; border-radius: 8px; color: #fff; background: #151412; font: inherit; }
+    .tools-checkout button { padding: 11px 16px; border: 0; border-radius: 8px; color: #171411; background: #e7b66f; font: inherit; font-weight: 800; cursor: pointer; }
+    .checkout-status { margin-top: 12px; color: #e7b66f; font-size: .9rem; }
+    .product-dialog[hidden] { display: none; }
+    .product-dialog { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.72); }
+    .product-dialog-content { position: relative; width: min(720px, 100%); max-height: min(680px, 90vh); overflow: auto; padding: 32px; border: 1px solid #594f41; border-radius: 14px; background: #211f1b; box-shadow: 0 24px 80px rgba(0,0,0,.5); }
+    .product-dialog-close { position: absolute; top: 14px; right: 16px; border: 0; color: #c6c0b7; background: transparent; font-size: 1.7rem; cursor: pointer; }
+    .product-dialog-kicker { color: #e7b66f; font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .product-dialog-image { display: none; width: 100%; max-height: 320px; margin: 18px 0 22px; border-radius: 10px; object-fit: contain; background: #151412; }
+    .product-dialog-image.is-visible { display: block; }
+    .product-dialog h2 { margin: 10px 40px 8px 0; color: #fffaf0; font-size: clamp(1.6rem, 4vw, 2.3rem); }
+    .product-dialog-price { display: block; margin: 18px 0; color: #e7b66f; font-size: 1.45rem; }
+    .product-dialog-description { color: #c6c0b7; line-height: 1.7; }
+    .product-dialog-list { margin: 20px 0 26px; padding-left: 20px; color: #c6c0b7; line-height: 1.8; }
+    .product-dialog-buy { padding: 12px 20px; border: 0; border-radius: 8px; color: #171411; background: #e7b66f; font: inherit; font-weight: 800; cursor: pointer; }
+    .tools-footer { padding: 26px 0; border-top: 1px solid #332f29; color: #8e887f; font-size: .85rem; }
+    @media (max-width: 1000px) { .price-list { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 800px) { .tools-hero-inner { grid-template-columns: 1fr; } .price-list { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="tools-page">
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo"><div class="logo-icon brand-image"><img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png" alt="J.S.Morgad Cyber"></div><span>MorgadCyber</span></a>
+      <ul class="nav-links"><li><a href="index.html" class="nav-link">Explore</a></li><li><a href="/categories" class="nav-link">Categories</a></li><li><a href="/jasa-tools" class="nav-link active">Jasa Tools</a></li></ul>
+      <div class="nav-actions"><a href="/categories" class="btn-header-cta">Produk Digital <span aria-hidden="true">→</span></a></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="tools-hero">
+      <div class="container tools-hero-inner">
+        <div>
+          <span class="tools-eyebrow">Morgad Tools Rental</span>
+          <h1>Sewa Tools FRP dan Tools Teknisi Lain</h1>
+          <p>Gunakan tools sesuai kebutuhan tanpa harus membeli lisensi penuh. Tersedia pilihan FRP, flashing, unlock, dan utilitas teknisi untuk pemakaian yang sah pada perangkat milik Anda atau dengan izin pemilik.</p>
+          <div class="tools-hero-actions"><a class="btn-primary" href="#daftar-tools">Lihat Daftar Tools <span aria-hidden="true">→</span></a><a class="btn-view-all" href="index.html">Kembali ke Beranda</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tools-section" id="daftar-tools">
+      <div class="container">
+        <h2>Pilihan Sewa Tools</h2>
+        <p class="tools-section-intro">Pilih paket dan durasi. Setelah mengisi email, Anda akan diarahkan ke pembayaran Mayar.</p>
+        <div class="price-list" aria-label="Daftar harga sewa tools">
+          <article class="price-card" tabindex="0" data-product-id="rental_unlocktool_6h" data-product-name="Sewa Unlocktool 6 Jam" data-price="Rp10.000" data-image="assets/images/Sewa-Unlocktool-6-Jam-10k.png"><h3>Sewa Unlocktool</h3><span class="price-duration">6 Jam</span><strong class="price-value">Rp10.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_unlocktool_12h" data-product-name="Sewa Unlocktool 12 Jam" data-price="Rp15.000"><h3>Sewa Unlocktool</h3><span class="price-duration">12 Jam</span><strong class="price-value">Rp15.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_unlocktool_24h" data-product-name="Sewa Unlocktool 24 Jam" data-price="Rp20.000"><h3>Sewa Unlocktool</h3><span class="price-duration">24 Jam</span><strong class="price-value">Rp20.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_dft_pro_24h" data-product-name="Sewa DFT Pro Tool 24 Jam" data-price="Rp25.000"><h3>DFT Pro Tool</h3><span class="price-duration">24 Jam</span><strong class="price-value">Rp25.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_dft_pro_48h" data-product-name="Sewa DFT Pro Tool 48 Jam" data-price="Rp30.000"><h3>DFT Pro Tool</h3><span class="price-duration">48 Jam</span><strong class="price-value">Rp30.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_tfm_24h" data-product-name="Sewa TFM Tool 24 Jam" data-price="Rp15.000"><h3>TFM Tool</h3><span class="price-duration">24 Jam</span><strong class="price-value">Rp15.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_cf_tool_24h" data-product-name="Sewa CF Tool Instan 24 Jam" data-price="Rp12.000"><h3>CF Tool Instan</h3><span class="price-duration">24 Jam</span><strong class="price-value">Rp12.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+          <article class="price-card" tabindex="0" data-product-id="rental_android_multi_tool_24h" data-product-name="Android Multi Tool 24 Jam" data-price="Rp11.000"><h3>Android Multi Tool</h3><span class="price-duration">24 Jam</span><strong class="price-value">Rp11.000</strong><button class="price-buy" type="button">Lihat Deskripsi</button></article>
+        </div>
+        <div class="product-dialog" id="productDialog" role="dialog" aria-modal="true" aria-labelledby="productDialogTitle" hidden>
+          <div class="product-dialog-content">
+            <button class="product-dialog-close" id="productDialogClose" type="button" aria-label="Tutup deskripsi">&times;</button>
+            <span class="product-dialog-kicker">Detail Produk Sewa</span>
+            <h2 id="productDialogTitle"></h2>
+            <img class="product-dialog-image" id="productDialogImage" alt="">
+            <strong class="product-dialog-price" id="productDialogPrice"></strong>
+            <p class="product-dialog-description">Layanan sewa tools untuk teknisi. Gunakan hanya pada perangkat milik sendiri atau perangkat yang sudah mendapat izin pemilik.</p>
+            <ul class="product-dialog-list"><li>Akses sesuai durasi yang dipilih</li><li>Instruksi dan detail akses dikirim setelah pembayaran terverifikasi</li><li>Pembayaran diproses aman melalui Mayar</li></ul>
+            <button class="product-dialog-buy" id="productDialogBuy" type="button">Beli Produk</button>
+          </div>
+        </div>
+        <div class="tools-checkout" id="toolsCheckout" aria-live="polite">
+          <h3 id="checkoutProductName">Checkout Mayar</h3>
+          <p>Masukkan email untuk menerima instruksi dan referensi pembayaran.</p>
+          <form id="toolsCheckoutForm"><input id="checkoutEmail" type="email" placeholder="email@contoh.com" required><button type="submit">Lanjut ke Mayar</button></form>
+          <div class="checkout-status" id="checkoutStatus"></div>
+        </div>
+        <div class="tools-note">Catatan: layanan hanya untuk perangkat milik sendiri atau perangkat dengan izin pemilik. Detail kompatibilitas, durasi sewa, harga, dan prosedur verifikasi dapat dikonfirmasi kepada admin.</div>
+      </div>
+    </section>
+  </main>
+  <footer class="tools-footer"><div class="container">© 2026 MorgadCyber Digital Tools Rental.</div></footer>
+  <script>
+    const checkoutPanel = document.getElementById('toolsCheckout');
+    const checkoutName = document.getElementById('checkoutProductName');
+    const checkoutEmail = document.getElementById('checkoutEmail');
+    const checkoutStatus = document.getElementById('checkoutStatus');
+    const checkoutForm = document.getElementById('toolsCheckoutForm');
+    const productDialog = document.getElementById('productDialog');
+    const productDialogTitle = document.getElementById('productDialogTitle');
+    const productDialogPrice = document.getElementById('productDialogPrice');
+    const productDialogImage = document.getElementById('productDialogImage');
+    const productDialogClose = document.getElementById('productDialogClose');
+    const productDialogBuy = document.getElementById('productDialogBuy');
+    let selectedProductId = '';
+
+    function openProductDescription(card) {
+      selectedProductId = card.dataset.productId || '';
+      productDialogTitle.textContent = card.dataset.productName || 'Sewa Tools';
+      productDialogPrice.textContent = card.dataset.price || '';
+      productDialogImage.src = card.dataset.image || '';
+      productDialogImage.alt = card.dataset.productName || 'Gambar produk';
+      productDialogImage.classList.toggle('is-visible', Boolean(card.dataset.image));
+      productDialog.hidden = false;
+      productDialogClose.focus();
+    }
+
+    document.querySelectorAll('.price-card').forEach((card) => {
+      card.addEventListener('click', () => openProductDescription(card));
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openProductDescription(card);
+        }
+      });
+    });
+
+    document.querySelectorAll('.price-buy').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openProductDescription(button.closest('.price-card'));
+      });
+    });
+
+    function closeProductDescription() {
+      productDialog.hidden = true;
+    }
+
+    productDialogClose.addEventListener('click', closeProductDescription);
+    productDialog.addEventListener('click', (event) => {
+      if (event.target === productDialog) closeProductDescription();
+    });
+    productDialogBuy.addEventListener('click', () => {
+      closeProductDescription();
+      checkoutName.textContent = `Checkout Mayar: ${productDialogTitle.textContent}`;
+      checkoutStatus.textContent = '';
+      checkoutPanel.classList.add('is-open');
+      checkoutEmail.focus();
+      checkoutPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    checkoutForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      checkoutStatus.textContent = 'Menyiapkan pembayaran Mayar...';
+      try {
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: selectedProductId, customer_email: checkoutEmail.value.trim() })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.checkout_url) throw new Error(result.error || 'Checkout gagal dibuat.');
+        window.location.href = result.checkout_url;
+      } catch (error) {
+        checkoutStatus.textContent = error instanceof Error ? error.message : 'Checkout gagal dibuat.';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MorgadCyber — Discover Digital Content Worth Sharing</title>
+  <link rel="stylesheet" href="styles.css?v=responsive-dark-20260923-10">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- =========================================================================
+       SITE HEADER / NAVIGATION
+       ========================================================================= -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <!-- Brand Logo -->
+      <a href="#" class="brand-logo">
+        <div class="logo-icon brand-image">
+          <img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png" alt="J.S.Morgad Cyber">
+        </div>
+        <span>MorgadCyber</span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <ul class="nav-links">
+        <li><a href="#trending" class="nav-link active">Explore</a></li>
+        <li><a href="#categories" class="nav-link">Categories</a></li>
+        <li><a href="#featured" class="nav-link">Featured</a></li>
+        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="#articles" class="nav-link">Articles</a></li>
+      </ul>
+
+      <!-- Navigation Actions -->
+      <div class="nav-actions">
+        <div class="search-bar-toggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="catalogSearchInput" placeholder="Search catalog...">
+        </div>
+
+        <button class="icon-button" id="cartToggleBtn" aria-label="View Cart">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-badge" id="cartCountBadge">0</span>
+        </button>
+
+        <!-- Currency Switcher (IDR / USD) -->
+        <div class="currency-switcher" id="currencySwitcher" role="radiogroup" aria-label="Select Currency">
+          <button type="button" class="currency-btn active" data-currency="IDR"
+            aria-label="Indonesian Rupiah">IDR</button>
+          <button type="button" class="currency-btn" data-currency="USD" aria-label="US Dollar">USD</button>
+        </div>
+
+        <!-- Light / Dark Mode Toggle -->
+        <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn"
+          aria-label="Toggle dark and light mode" title="Toggle Dark / Light Mode">
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <a href="#trending" class="btn-header-cta">
+          Explore Products
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================================
+         HERO SECTION
+         ========================================================================= -->
+    <section class="section hero-section">
+      <div class="container hero-grid">
+        <!-- Hero Text Content -->
+        <div class="hero-content">
+          <div class="hero-badge">
+            <svg class="hero-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>Trending Digital Collections</span>
+          </div>
+
+          <h1 class="hero-title">
+            Discover Digital Content Worth Sharing.
+          </h1>
+
+          <p class="hero-subtitle">
+            Explore premium viral images, creative collections and digital assets. Buy instantly and download securely.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#trending" class="btn-primary">
+              Explore Products
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <a href="#trending" class="btn-secondary">
+              See What's Trending
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Dynamic Floating Card Cluster (Matching reference tilt composition) -->
+        <div class="hero-visual">
+          <div class="hero-ambient-glow"></div>
+          <div class="floating-cards-wrapper">
+            <!-- Card 1: Top Left (Cellebrite UFED 4 UPC) -->
+            <div class="float-card card-top-left" onclick="openProductQuickView('prod-4')">
+              <img src="assets/images/ufed.svg" alt="Cellebrite UFED 4 UPC">
+              <span class="card-pill">Cellebrite UFED 4 UPC</span>
+            </div>
+
+            <!-- Card 2: Top Right (Creative Digital Art) -->
+            <div class="float-card card-top-right" onclick="openProductQuickView('prod-3')">
+              <img src="assets/images/autocad.svg" alt="Creative Digital Art">
+              <span class="card-pill">AutoCad</span>
+            </div>
+
+            <!-- Card 3: Bottom Left (DZKG Tools) -->
+            <div class="float-card card-bottom-left" onclick="openProductQuickView('prod-1')">
+              <img src="assets/images/dzkg.svg" alt="DZKG Tools">
+              <span class="card-pill">DZKG Tools</span>
+            </div>
+
+            <!-- Card 4: Bottom Right (IPS Tools) -->
+            <div class="float-card card-bottom-right" onclick="openProductQuickView('prod-2')">
+              <img src="assets/images/Tp_isp.svg" alt="ISP Tools">
+              <span class="card-pill">Tes point Isp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         COMPACT VALUE / TRUST STRIP
+         ========================================================================= -->
+    <div class="container trust-strip-container">
+      <div class="trust-strip">
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <div class="trust-info">
+            <div class="trust-title">Instant Digital Access</div>
+            <div class="trust-desc">Get your files instantly</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div class="trust-info">
+            <div class="trust-title">Secure Payments</div>
+            <div class="trust-desc">100% safe &amp; secure</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </div>
+          <div class="trust-info">
+            <div class="trust-title">Easy Download</div>
+            <div class="trust-desc">Simple &amp; fast downloads</div>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="trust-info">
+            <div class="trust-title">No Signup Required</div>
+            <div class="trust-desc">Buy without an account</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         SECTION 1: TRENDING RIGHT NOW (4-COLUMN PRODUCT GRID)
+         The catalog is the hero of the website. Products visually dominate.
+         ========================================================================= -->
+    <section class="section" id="trending">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Trending Right Now</h2>
+            <p class="section-subtitle">Popular digital collections people are exploring.</p>
+          </div>
+          <a href="/categories" class="btn-view-all">
+            View All Products
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <!-- 4-Column Product Grid -->
+        <div class="product-grid-4" id="trendingProductGrid">
+          <!-- Card 1: DZKJ Tools -->
+          <article class="product-card" data-category="Software" data-id="prod-1">
+            <div class="product-image-container" onclick="openProductQuickView('prod-1')">
+              <img src="assets/images/dzkg.svg" alt="DZKJ Tools" class="product-image">
+              <div class="product-quick-view-overlay">
+                <span class="quick-view-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  Quick View
+                </span>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-tag">Tools Teknisi</span>
+              <h3 class="product-title">DZKJ Tools</h3>
+              <p class="product-desc">DkKJ Tools adalah tools yang digunaka oleh teknisi Hendphone untuk membaca skema.</p>
+              <div class="product-price-row">
+                <span class="product-price" data-price-idr="35000" data-price-usd="1.96">Rp 35.000</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn-buy-now" onclick="handleBuyNow('prod-1')">
+                  Buy Now
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </button>
+                <button class="btn-view-details" onclick="openProductQuickView('prod-1')">
+                  View Details
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Premium Aesthetic Collection -->
+          <article class="product-card" data-category="photos" data-id="prod-2">
+            <div class="product-image-container" onclick="openProductQuickView('prod-2')">
+              <img src="assets/images/Tp_isp.svg" alt="Premium Aesthetic Collection" class="product-image">
+              <div class="product-quick-view-overlay">
+                <span class="quick-view-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  Quick View
+                </span>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-tag">Software</span>
+              <h3 class="product-title">Tes Point Isp </h3>
+              <p class="product-desc">Tes point isp adalah tools digunakan oleh teknisi Hendphone.</p>
+              <div class="product-price-row">
+                <span class="product-price" data-price-idr="15000" data-price-usd="0.84">Rp 15.000</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn-buy-now" onclick="handleBuyNow('prod-2')">
+                  Buy Now
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </button>
+                <button class="btn-view-details" onclick="openProductQuickView('prod-2')">
+                  View Details
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Creative Image Bundle -->
+          <article class="product-card" data-category="creative" data-id="prod-3">
+            <div class="product-image-container" onclick="openProductQuickView('prod-3')">
+              <img src="assets/images/autocad.svg" alt="Creative Image Bundle" class="product-image">
+              <div class="product-quick-view-overlay">
+                <span class="quick-view-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  Quick View
+                </span>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-tag">Software</span>
+              <h3 class="product-title">AutoCAD</h3>
+              <p class="product-desc">AutoCAD adalah tools yang digunakan oleh mahasiswa Teknik Sipil dan Insiyur..</p>
+              <div class="product-price-row">
+                <span class="product-price" data-price-idr="35000" data-price-usd="1.96">Rp 35.000</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn-buy-now" onclick="handleBuyNow('prod-3')">
+                  Buy Now
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </button>
+                <button class="btn-view-details" onclick="openProductQuickView('prod-3')">
+                  View Details
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Cellebrite UFED 4PC -->
+          <article class="product-card" data-category="Software" data-id="prod-4">
+            <div class="product-image-container" onclick="openProductQuickView('prod-4')">
+              <img src="assets/images/ufed.svg" alt="AutoCad" class="product-image">
+              <div class="product-quick-view-overlay">
+                <span class="quick-view-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  Quick View
+                </span>
+              </div>
+            </div>
+            <div class="product-card-body">
+              <span class="product-tag">Software</span>
+              <h3 class="product-title">Cellebrite Tools</h3>
+              <p class="product-desc">Cellebrite UFED adalah tools yang digunakan oleh Forensics.</p>
+              <div class="product-price-row">
+                <span class="product-price" data-price-idr="50000" data-price-usd="2.8">Rp 50.000</span>
+              </div>
+              <div class="product-actions">
+                <button class="btn-buy-now" onclick="handleBuyNow('prod-4')">
+                  Buy Now
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </button>
+                <button class="btn-view-details" onclick="openProductQuickView('prod-4')">
+                  View Details
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="catalog-empty-state" id="catalogEmptyState" hidden>
+          <strong>No products found</strong>
+          <span>Try another keyword or clear the category filter.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 2: BROWSE CATEGORIES (5 VISUAL CATEGORY TILES)
+         ========================================================================= -->
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Browse Categories</h2>
+          </div>
+          <a href="/categories" class="btn-view-all">
+            Explore All Categories
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <!-- 5 Category Visual Tiles -->
+        <div class="category-grid-5">
+          <!-- Tile 1: Software -->
+          <div class="category-tile" data-cat="viral" onclick="filterByCategory('Software', this)">
+            <img src="assets/images/Software.jpg" alt="Software">
+            <div class="category-tile-overlay">
+              <div class="category-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <span class="category-title">Software</span>
+            </div>
+          </div>
+
+          <!-- Tile 2: Sewa Tools FRP -->
+          <div class="category-tile" data-cat="Frp" onclick="filterByCategory('photos', this)">
+            <img src="assets/images/frp.svg" alt="FRP Toolss">
+            <div class="category-tile-overlay">
+              <div class="category-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </div>
+              <span class="category-title">Sewa FRP Tools</span>
+            </div>
+          </div>
+
+          <!-- Tile 3: Wallpapers -->
+          <div class="category-tile" data-cat="ToolsTeknisi" onclick="filterByCategory('ToolsTeknisi', this)">
+            <img src="assets/images/teknisi.svg" alt="ToolsTeknisi">
+            <div class="category-tile-overlay">
+              <div class="category-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <span class="category-title">Tools Teknisi</span>
+            </div>
+          </div>
+
+          <!-- Tile 4: Creative Packs -->
+          <div class="category-tile" data-cat="creative" onclick="filterByCategory('creative', this)">
+            <img src="assets/images/file.svg" alt="Creative Packs">
+            <div class="category-tile-overlay">
+              <div class="category-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </div>
+              <span class="category-title">Creative Packs</span>
+            </div>
+          </div>
+
+          <!-- Tile 5: Trending Collections -->
+          <div class="category-tile" data-cat="trending" onclick="filterByCategory('trending', this)">
+            <img src="assets/images/tren.svg" alt="Trending Collections">
+            <div class="category-tile-overlay">
+              <div class="category-icon-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path
+                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z">
+                  </path>
+                </svg>
+              </div>
+              <span class="category-title">Trending Collections</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 3: JASA SEWA TOOLS BANNER
+         ========================================================================= -->
+    <section class="section" id="featured">
+      <div class="container">
+        <div class="featured-banner">
+          <!-- Left Column Content -->
+          <div class="featured-content">
+            <span class="featured-pill">Jasa Sewa Tools</span>
+            <h2 class="featured-title">Sewa Tools FRP &amp; Tools Lain</h2>
+            <p class="featured-desc">
+              Akses tools FRP, flashing, unlock, dan utilitas teknisi dengan pilihan sewa yang fleksibel.
+            </p>
+
+            <div class="featured-benefits">
+              <div class="benefit-item">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>Tools FRP Terupdate</span>
+              </div>
+              <div class="benefit-item">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="8 12 11 15 16 9"></polyline>
+                </svg>
+                <span>Sewa Harian &amp; Mingguan</span>
+              </div>
+              <div class="benefit-item">
+                <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Support Teknisi</span>
+              </div>
+            </div>
+
+            <a class="btn-primary" href="/jasa-tools">
+              Lihat Daftar Tools
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Right Column 3D Fanned Cards -->
+          <div class="featured-visual">
+            <div class="featured-card-fan">
+              <div class="fan-card fan-card-1">
+                <img src="assets/images/pandora.jpeg" alt="FRP service tools">
+              </div>
+              <div class="fan-card fan-card-2">
+                <img src="assets/images/hydara.jpeg" alt="Flashing service tools">
+              </div>
+              <div class="fan-card fan-card-3">
+                <img src="assets/images/tools.jpeg" alt="Mobile utility tools">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 4: HOW IT WORKS
+         Selective card usage: Clean spacious 3 steps with connectors
+         ========================================================================= -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-header-centered">
+          <h2 class="section-title">How It Works</h2>
+          <p class="section-subtitle">Get your digital content in three simple steps.</p>
+        </div>
+
+        <div class="how-it-works-flow">
+          <!-- Step 1 -->
+          <div class="step-card">
+            <div class="step-icon-wrapper">
+              <div class="step-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </div>
+              <span class="step-badge">1</span>
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">Choose</h3>
+              <p class="step-desc">Browse and select the digital products you love.</p>
+            </div>
+          </div>
+
+          <!-- Dotted Connector 1 -->
+          <div class="step-connector">
+            <svg width="32" height="12" viewBox="0 0 32 12" fill="none">
+              <line x1="0" y1="6" x2="28" y2="6" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"></line>
+              <polyline points="24 2 28 6 24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              </polyline>
+            </svg>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card">
+            <div class="step-icon-wrapper">
+              <div class="step-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+              </div>
+              <span class="step-badge">2</span>
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">Pay Securely</h3>
+              <p class="step-desc">Complete payment securely and safely.</p>
+            </div>
+          </div>
+
+          <!-- Dotted Connector 2 -->
+          <div class="step-connector">
+            <svg width="32" height="12" viewBox="0 0 32 12" fill="none">
+              <line x1="0" y1="6" x2="28" y2="6" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"></line>
+              <polyline points="24 2 28 6 24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              </polyline>
+            </svg>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card">
+            <div class="step-icon-wrapper">
+              <div class="step-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </div>
+              <span class="step-badge">3</span>
+            </div>
+            <div class="step-content">
+              <h3 class="step-title">Download</h3>
+              <p class="step-desc">Instantly download your files and start using.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 5: WHY MORGADCYBER HUB?
+         Compact value strip
+         ========================================================================= -->
+    <section class="section" id="why-choose">
+      <div class="container">
+        <div class="section-header-centered">
+          <h2 class="section-title">Why Choose MorgadCyber?</h2>
+        </div>
+
+        <div class="why-choose-strip">
+          <div class="why-item">
+            <div class="why-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
+            <div>
+              <div class="why-title">Instant Access</div>
+              <div class="why-desc">Get immediate access to your purchased digital products.</div>
+            </div>
+          </div>
+
+          <div class="why-item">
+            <div class="why-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon>
+              </svg>
+            </div>
+            <div>
+              <div class="why-title">High Quality</div>
+              <div class="why-desc">Premium quality content crafted for creators.</div>
+            </div>
+          </div>
+
+          <div class="why-item">
+            <div class="why-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+            </div>
+            <div>
+              <div class="why-title">Secure Checkout</div>
+              <div class="why-desc">Your payments are protected with top-level security.</div>
+            </div>
+          </div>
+
+          <div class="why-item">
+            <div class="why-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+            <div>
+              <div class="why-title">Simple Download</div>
+              <div class="why-desc">Easy and fast downloads with one click.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 6: FROM THE HUB (3 EDITORIAL ARTICLE CARDS)
+         ========================================================================= -->
+    <section class="section" id="articles">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">From the Hub</h2>
+            <p class="section-subtitle">Tips, trends and inspiration for creators.</p>
+          </div>
+          <a href="artikel.html" class="btn-view-all">
+            View All Articles
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+
+        <div class="article-grid-3">
+          <!-- Article 1 -->
+          <a href="baca-artikel.html?id=Intenational-art-styles-2025" class="article-card">
+            <div class="article-image-container">
+              <img src="assets/images/citations.jpeg" alt="International Journal of Electrical and Computer EngineeringInternational Journal of Electrical and Computer Engineering"
+                class="article-image">
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-tag">Tips &amp; Guides</span>
+                <span class="article-date">May 18, 2026</span>
+              </div>
+              <h3 class="article-title">10 Tips to Create Viral Images That Get Noticed</h3>
+              <span class="article-link">
+                Read More
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- Article 2 -->
+          <a href="baca-artikel.html?id=digital-art-styles-2026" class="article-card">
+            <div class="article-image-container">
+              <img src="assets/images/article-desk.svg" alt="Best Digital Art Styles Trending in 2026"
+                class="article-image">
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-tag">Inspiration</span>
+                <span class="article-date">May 12, 2026</span>
+              </div>
+              <h3 class="article-title">Best Digital Art Styles Trending in 2026</h3>
+              <span class="article-link">
+                Read More
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- Article 3 -->
+          <a href="baca-artikel.html?id=high-quality-images" class="article-card">
+            <div class="article-image-container">
+              <img src="assets/images/article-peaks.svg" alt="Where to Find High-Quality Images For Your Projects"
+                class="article-image">
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-tag">Resources</span>
+                <span class="article-date">May 08, 2026</span>
+              </div>
+              <h3 class="article-title">Where to Find High-Quality Images For Your Projects</h3>
+              <span class="article-link">
+                Read More
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 7: PRE-FOOTER CALL TO ACTION BANNER
+         ========================================================================= -->
+    <section class="container cta-banner-section">
+      <div class="cta-banner">
+        <div class="cta-left">
+          <div class="cta-icon-circle">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="cta-title">Find Something Worth Downloading.</h2>
+            <p class="cta-subtitle">Explore our latest digital collections.</p>
+          </div>
+        </div>
+
+        <a href="#trending" class="btn-cta-white">
+          Explore Products
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       FOOTER
+       ========================================================================= -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1: Brand Info -->
+        <div class="footer-brand">
+          <a href="#" class="footer-logo">
+            <div class="logo-icon brand-image"><img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png"
+                alt="J.S. Morgad Cyber"></div>
+            <span>MorgadCyber</span>
+          </a>
+          <p class="footer-desc">
+            Your ultimate destination for premium digital content, curated viral imagery, and modern creative assets.
+          </p>
+          <div class="footer-socials">
+            <a href="#" class="social-icon-btn" aria-label="Twitter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                </path>
+              </svg>
+            </a>
+            <a href="#" class="social-icon-btn" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            <a href="#" class="social-icon-btn" aria-label="Discord">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M18 6h0a14.5 14.5 0 0 0-4-1.2 11.5 11.5 0 0 0-.5 1.2 13.5 13.5 0 0 0-3 0A11.5 11.5 0 0 0 10 4.8 14.5 14.5 0 0 0 6 6c-2.5 4-3 8-3 12 2 1.5 4 2 6 2 .5-.7 1-1.5 1.4-2.3-1-.3-1.8-.8-2.4-1.4.2.1.4.3.6.4 2 1 4.5 1.5 7.4 1.5s5.4-.5 7.4-1.5c.2-.1.4-.3.6-.4-.6.6-1.4 1.1-2.4 1.4.4.8.9 1.6 1.4 2.3 2 0 4-.5 6-2 0-4-.5-8-3-12z">
+                </path>
+                <circle cx="9.5" cy="12.5" r="1.5"></circle>
+                <circle cx="14.5" cy="12.5" r="1.5"></circle>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Col 2: Explore -->
+        <div>
+          <h4 class="footer-heading">Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#trending">Trending Now</a></li>
+            <li><a href="#categories">Browse Categories</a></li>
+            <li><a href="#featured">Featured Collection</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#articles">Creator Articles</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Products -->
+        <div>
+          <h4 class="footer-heading">Products</h4>
+          <ul class="footer-links">
+            <li><a href="#trending">Viral Visual Packs</a></li>
+            <li><a href="#trending">Aesthetic Photos</a></li>
+            <li><a href="#trending">Creative Bundles</a></li>
+            <li><a href="#trending">4K Wallpapers</a></li>
+            <li><a href="#trending">Social Media Assets</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Support -->
+        <div>
+          <h4 class="footer-heading">Support</h4>
+          <ul class="footer-links">
+            <li><a href="frontend/pages/help-center.html">Help Center &amp; FAQ</a></li>
+            <li><a href="frontend/pages/commercial-licensing.html">Commercial Licensing</a></li>
+            <li><a href="frontend/pages/direct-download-help.html">Direct Download Help</a></li>
+            <li><a href="frontend/pages/refund-policy.html">Refund Policy</a></li>
+            <li><a href="frontend/pages/contact-support.html">Contact Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 5: Company -->
+        <div>
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href="frontend/pages/about-morgadcyber.html">About MorgadCyber</a></li>
+            <li><a href="frontend/pages/creator-program.html">Creator Program</a></li>
+            <li><a href="frontend/pages/affiliates-partners.html">Affiliates &amp; Partners</a></li>
+            <li><a href="frontend/pages/terms-of-service.html">Terms of Service</a></li>
+            <li><a href="frontend/pages/privacy-policy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 MorgadCyber. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="frontend/pages/terms-of-service.html">Terms</a>
+          <a href="frontend/pages/privacy-policy.html">Privacy</a>
+          <a href="frontend/pages/commercial-licensing.html">Licenses</a>
+          <a href="frontend/pages/help-center.html">Security</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       PRODUCT QUICK VIEW MODAL
+       ========================================================================= -->
+  <div class="modal-backdrop" id="productModal">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeProductModal()" aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="modal-split-grid">
+        <div class="modal-image-preview">
+          <img id="modalImg" src="" alt="Product Preview">
+        </div>
+        <div class="modal-details">
+          <span class="modal-tag" id="modalTag">Category</span>
+          <h2 class="modal-title" id="modalTitle">Product Title</h2>
+          <p class="modal-desc" id="modalDesc">Detailed description of the digital asset pack.</p>
+
+          <div class="modal-specs-list">
+            <div class="spec-item">
+              <span class="spec-label">Equipment:</span>
+              <span class="spec-val" id="modalRes">Software + Lincensi</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Files:</span>
+              <span class="spec-val" id="modalFiles">85+ Assets</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Format:</span>
+              <span class="spec-val">Zip ,Exe ,File</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">License:</span>
+              <span class="spec-val">Commercial</span>
+            </div>
+          </div>
+
+          <div class="modal-price-row">
+            <div>
+              <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Instant Download
+                Price</span>
+              <span class="modal-price" id="modalPrice">Rp 25.000</span>
+              </span>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="modalBuyBtn"
+            style="width: 100%; justify-content: center; margin-bottom: 10px;">
+            Buy &amp; Download Instantly
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       CART DRAWER
+       ========================================================================= -->
+  <div class="cart-drawer-backdrop" id="cartBackdrop" onclick="toggleCartDrawer()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title">Your Digital Cart</h3>
+      <button class="icon-button" onclick="toggleCartDrawer()" aria-label="Close cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cart-items-container" id="cartItemsList">
+      <!-- Dynamically filled by app.js -->
+      <p style="color: var(--color-text-muted); font-size: 0.9rem; text-align: center; margin-top: 40px;">
+        Your cart is currently empty.<br>Browse our trending products to get started!
+      </p>
+    </div>
+
+    <div class="cart-drawer-footer">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span id="cartTotalSum">$0.00</span>
+      </div>
+      <button class="btn-buy-now" id="checkoutBtn" onclick="handleCheckout()">
+        Proceed to Instant Checkout
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       TOAST NOTIFICATION CONTAINER
+       ========================================================================= -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+</body>
+
+</html>

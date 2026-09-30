@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore All Categories — MorgadCyber</title>
+  <link rel="stylesheet" href="/styles.css?v=editorial-20260923">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .category-page-header {
+      padding: 60px 0 30px;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+    }
+
+    .filters-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 30px 0;
+      padding: 16px 20px;
+      background: #ffffff;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 8px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-chip {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      background: #ffffff;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .filter-chip:hover {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    .filter-chip.active {
+      background: var(--purple-600);
+      color: #ffffff;
+      border-color: #7c3aed;
+    }
+
+    .sort-select {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      font-size: 13px;
+      color: #0f172a;
+      background: #ffffff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .product-count-info {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .empty-catalog-state {
+      padding: 80px 24px;
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 16px;
+      margin: 40px 0;
+    }
+
+    .catalog-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 28px;
+    }
+
+    .pagination-btn {
+      min-width: 38px;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 8px;
+      background: #ffffff;
+      color: #475569;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pagination-btn:hover:not(:disabled),
+    .pagination-btn.active {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: #ffffff;
+    }
+
+    .pagination-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    [data-theme="dark"] .pagination-btn {
+      background: var(--color-surface-subtle);
+      border-color: var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    [data-theme="dark"] .category-page-header {
+      background: var(--color-bg);
+      border-bottom-color: var(--color-border);
+    }
+    [data-theme="dark"] .category-page-header h1 {
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .filters-bar,
+    [data-theme="dark"] .empty-catalog-state {
+      background: var(--color-surface) !important;
+      border-color: var(--color-border) !important;
+    }
+    [data-theme="dark"] .filter-chip {
+      background: var(--color-surface-subtle);
+      border-color: var(--color-border);
+      color: var(--color-text-secondary);
+    }
+    [data-theme="dark"] .filter-chip:hover {
+      background: #2e384d;
+      color: #f8fafc;
+    }
+    [data-theme="dark"] .filter-chip.active {
+      background: #7c3aed;
+      color: #ffffff;
+      border-color: #7c3aed;
+    }
+    [data-theme="dark"] .sort-select {
+      background: var(--color-surface-subtle);
+      border-color: var(--color-border);
+      color: var(--color-text-primary);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header / Navigation -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo">
+        <div class="logo-icon brand-image"><img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png" alt="J.S. Morgad Cyber"></div>
+        <span>MorgadCyber</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/categories" class="nav-link active">Categories</a></li>
+        <li><a href="/order" class="nav-link">Check Order</a></li>
+      </ul>
+      <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark and light mode" title="Toggle Dark / Light Mode">◐</button>
+
+      <div class="nav-actions">
+        <div class="search-bar-toggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="catSearchInput" placeholder="Search in categories...">
+        </div>
+
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+        </a>
+
+        <a href="/order" class="btn-header-cta">
+          Check My Order
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="category-page-header">
+    <div class="container">
+      <div
+        style="font-size: 12px; font-weight: 700; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
+        Marketplace Catalog
+      </div>
+      <h1 style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 10px; letter-spacing: -0.02em;">
+        Explore All Categories
+      </h1>
+      <p style="font-size: 15px; color: #64748b; margin: 0; max-width: 650px; line-height: 1.6;">
+        Discover verified digital products, templates, software, papers, and graphics. Direct checkout via Mayar without
+        requiring an account.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container" style="padding-bottom: 80px;">
+    <!-- Filters & Sort Bar -->
+    <div class="filters-bar">
+      <!-- Category Chips -->
+      <div class="filter-group" id="categoryChips">
+        <button class="filter-chip active" data-cat="all">All Categories</button>
+        <button class="filter-chip" data-cat="Arsitek Tools">Arsitek Tools</button>
+        <button class="filter-chip" data-cat="FRP Tools">FRP Tools</button>
+        <button class="filter-chip" data-cat="Foresics Tools">Foresics Tools</button>
+        <button class="filter-chip" data-cat="Digital Assets">Digital Assets</button>
+        <button class="filter-chip" data-cat="Teknisi Tools">Teknisi Tools</button>
+        <button class="filter-chip" data-cat="Software">Software</button>
+        <button class="filter-chip" data-cat="Android Tools">Android Tools</button>
+        <button class="filter-chip" data-cat="File Formats">File Formats</button>
+      </div>
+
+      <!-- Currency & Sort Dropdowns -->
+      <div class="filter-group">
+        <select class="sort-select" id="currencySelect" aria-label="Display Currency">
+          <option value="IDR">IDR (Rupiah)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+
+        <select class="sort-select" id="sortSelect" aria-label="Sort Products">
+          <option value="newest">Sort: Newest</option>
+          <option value="price_asc">Price: Low → High</option>
+          <option value="price_desc">Price: High → Low</option>
+          <option value="name_asc">Name: A → Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Count -->
+    <div class="product-count-info" id="productCountInfo">
+      Loading products...
+    </div>
+
+    <!-- Products Grid -->
+    <div class="product-grid-4" id="categoryProductGrid">
+      <!-- Injected via JavaScript -->
+    </div>
+
+    <nav class="catalog-pagination" id="catalogPagination" aria-label="Product pages"></nav>
+
+    <!-- Empty State -->
+    <div class="empty-catalog-state" id="emptyState" style="display: none;">
+      <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+      <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">No products found</h3>
+      <p style="font-size: 14px; color: #64748b; margin-bottom: 24px;">Try selecting a different category or adjusting
+        your search keyword.</p>
+      <button class="filter-chip active" onclick="resetFilters()">Reset All Filters</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="background: #0f172a; color: #94a3b8; padding: 48px 0 24px;">
+    <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px;">
+      <div>
+        <div style="font-weight: 800; font-size: 20px; color: #ffffff; margin-bottom: 8px;">
+          Morgad<span style="color: #a78bfa;">Cyber</span>
+        </div>
+        <p style="font-size: 13px; max-width: 300px; line-height: 1.6;">
+          High-velocity digital product platform powered by Mayar payments and cryptographic download tokens.
+        </p>
+      </div>
+      <div style="display: flex; gap: 48px;">
+        <div>
+          <div
+            style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 12px;">
+            Marketplace</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+            <a href="/categories" style="color: #94a3b8; text-decoration: none;">All Categories</a>
+            <a href="/order" style="color: #94a3b8; text-decoration: none;">Track Order</a>
+          </div>
+        </div>
+        <div>
+          <div
+            style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 12px;">
+            Admin</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container"
+      style="border-top: 1px solid #1e293b; margin-top: 40px; padding-top: 20px; font-size: 12px; color: #475569;">
+      © 2026 MorgadCyber Digital Product Marketplace. All rights reserved.
+    </div>
+  </footer>
+
+  <div class="category-product-modal" id="categoryProductModal" hidden>
+    <div class="category-product-dialog" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
+      <button class="category-modal-close" type="button" onclick="closeCategoryProduct()" aria-label="Close product details">&times;</button>
+      <div class="category-modal-grid">
+        <div class="category-modal-image"><img id="categoryModalImage" src="" alt=""><div class="product-image-missing" id="categoryModalImagePlaceholder" hidden>Gambar produk tidak tersedia</div></div>
+        <div class="category-modal-details">
+          <span class="product-tag" id="categoryModalTag">Category</span>
+          <h2 id="categoryModalTitle">Product details</h2>
+          <p id="categoryModalDescription"></p>
+          <div class="category-modal-specs">
+            <span>Digital download</span>
+            <span>Commercial license</span>
+          </div>
+          <strong class="category-modal-price" id="categoryModalPrice"></strong>
+          <button class="btn-buy-now" id="categoryModalBuy" type="button">Buy &amp; Download Instantly</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const savedTheme = localStorage.getItem('preferred_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeToggleBtn?.addEventListener('click', () => {
+      const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('preferred_theme', nextTheme);
+    });
+
+    let allProducts = [];
+    let currentCategory = 'all';
+    let currentCurrency = localStorage.getItem('preferred_currency') || 'IDR';
+    let currentSort = 'newest';
+    let searchQuery = '';
+    let currentPage = 1;
+    const productsPerPage = 40;
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (data.status === 'success' && Array.isArray(data.products)) {
+          allProducts = data.products.map(p => ({
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            price: p.price,
+            currency: p.currency || 'IDR',
+            short_description: p.description || '',
+            image_path: p.image_path || p.image || '/assets/img/logo.png',
+            image: p.image_path || p.image || '/assets/img/logo.png',
+            imageCandidates: [...new Set([
+              ...(p.image_path ? [p.image_path] : []),
+              ...(p.image ? [p.image] : []),
+              ...['png', 'jpg', 'jpeg', 'webp'].map(extension => `/assets/uploads/products/${encodeURIComponent(p.id)}.${extension}`),
+              '/assets/img/logo.png'
+            ])]
+          }));
+        } else {
+          allProducts = [];
+        }
+      } catch (e) {
+        allProducts = [];
+      }
+      renderProducts();
+    }
+
+    function formatPrice(amount, currency) {
+      if (currency === 'USD') {
+        return '$' + (amount > 1000 ? (amount / 100).toFixed(2) : amount.toFixed(2));
+      }
+      return 'Rp ' + Number(amount).toLocaleString('id-ID');
+    }
+
+    function getDisplayPrice(product) {
+      const sourceCurrency = (product.currency || 'IDR').toUpperCase();
+      const sourceAmount = Number(product.price) || 0;
+      if (currentCurrency === sourceCurrency) return sourceAmount;
+      if (currentCurrency === 'IDR' && sourceCurrency === 'USD') return sourceAmount * 15000;
+      if (currentCurrency === 'USD' && sourceCurrency === 'IDR') return sourceAmount / 15000;
+      return sourceAmount;
+    }
+
+    function renderProducts() {
+      let filtered = [...allProducts];
+
+      // Category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategory);
+      }
+
+      // Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          (p.short_description && p.short_description.toLowerCase().includes(q)) ||
+          p.category.toLowerCase().includes(q)
+        );
+      }
+
+      // Sorting
+      if (currentSort === 'price_asc') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (currentSort === 'price_desc') {
+        filtered.sort((a, b) => b.price - a.price);
+      } else if (currentSort === 'name_asc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      const grid = document.getElementById('categoryProductGrid');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('productCountInfo');
+      const pagination = document.getElementById('catalogPagination');
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / productsPerPage));
+      currentPage = Math.min(currentPage, totalPages);
+      const pageProducts = filtered.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+      count.textContent = filtered.length ? `Showing ${(currentPage - 1) * productsPerPage + 1}-${Math.min(currentPage * productsPerPage, filtered.length)} of ${filtered.length} products` : `Showing 0 of ${allProducts.length} products`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        pagination.innerHTML = '';
+        return;
+      }
+
+      empty.style.display = 'none';
+      grid.innerHTML = pageProducts.map(p => `
+        <div class="product-card" data-id="${p.id}">
+          <div class="product-image-container" onclick="openCategoryProduct('${p.id}')">
+            <img class="product-image" alt="${p.name}" loading="lazy">
+            <div class="product-image-missing" hidden>Gambar produk tidak tersedia</div>
+          </div>
+          <div class="product-card-body">
+            <span class="product-tag">${p.category.replace('_', ' ')}</span>
+            <h3 class="product-title">${p.name}</h3>
+            <p class="product-desc">${p.short_description || 'Digital product siap digunakan untuk kebutuhan kreatif Anda.'}</p>
+            <div class="product-price-row">
+              <div class="product-price">${formatPrice(getDisplayPrice(p), currentCurrency)}</div>
+            </div>
+            <div class="product-actions">
+              <button class="btn-buy-now" type="button" onclick="initiateCheckout('${p.id}')">Buy Now</button>
+              <button class="btn-view-details" type="button" onclick="openCategoryProduct('${p.id}')">View Details <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      const renderedImages = grid.querySelectorAll('.product-image');
+      pageProducts.forEach((product, index) => {
+        const img = renderedImages[index];
+        const placeholder = img?.nextElementSibling;
+        const imageSrc = product.image_path || product.image || '/assets/img/logo.png';
+        if (img) {
+          img.src = imageSrc;
+          img.onerror = function() {
+            this.src = '/assets/img/logo.png';
+            this.onerror = null;
+          };
+        }
+        if (placeholder) {
+          placeholder.hidden = true;
+        }
+        setProductImage(img, placeholder, product);
+      });
+
+      pagination.innerHTML = `<button class="pagination-btn" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+        ${Array.from({ length: totalPages }, (_, index) => `<button class="pagination-btn ${currentPage === index + 1 ? 'active' : ''}" data-page="${index + 1}">${index + 1}</button>`).join('')}
+        <button class="pagination-btn" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+      pagination.querySelectorAll('.pagination-btn:not(:disabled)').forEach(button => {
+        button.addEventListener('click', () => {
+          const target = button.dataset.page;
+          currentPage = target === 'prev' ? currentPage - 1 : target === 'next' ? currentPage + 1 : Number(target);
+          renderProducts();
+          document.getElementById('categoryProductGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    }
+
+    function setProductImage(image, placeholder, product) {
+      let candidateIndex = 0;
+      const fallback = '/assets/img/logo.png';
+      const candidates = [...new Set([
+        ...(product.image_path ? [product.image_path] : []),
+        ...(product.image ? [product.image] : []),
+        ...(product.imageCandidates || []),
+        fallback
+      ].filter(Boolean))];
+      const safeCandidates = candidates.length ? candidates : [fallback];
+      image.hidden = false;
+      placeholder.hidden = true;
+      image.onerror = () => {
+        candidateIndex += 1;
+        if (candidateIndex < safeCandidates.length) {
+          image.src = safeCandidates[candidateIndex];
+          return;
+        }
+        image.src = fallback;
+        image.onerror = null;
+        image.hidden = false;
+        placeholder.hidden = true;
+      };
+      image.src = safeCandidates[candidateIndex];
+      if (!safeCandidates.length) {
+        image.hidden = true;
+        placeholder.hidden = false;
+      }
+    }
+
+    function openCategoryProduct(productId) {
+      const product = allProducts.find(item => item.id === productId);
+      if (!product) return;
+      const modalImage = document.getElementById('categoryModalImage');
+      const modalPlaceholder = document.getElementById('categoryModalImagePlaceholder');
+      setProductImage(modalImage, modalPlaceholder, product);
+      modalImage.alt = product.name;
+      document.getElementById('categoryModalTag').textContent = product.category.replace('_', ' ');
+      document.getElementById('categoryModalTitle').textContent = product.name;
+      document.getElementById('categoryModalDescription').textContent = product.short_description || 'Digital product siap digunakan untuk kebutuhan kreatif Anda.';
+      document.getElementById('categoryModalPrice').textContent = formatPrice(getDisplayPrice(product), currentCurrency);
+      document.getElementById('categoryModalBuy').onclick = () => initiateCheckout(product.id);
+      const modal = document.getElementById('categoryProductModal');
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCategoryProduct() {
+      document.getElementById('categoryProductModal').hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('categoryProductModal')?.addEventListener('click', event => {
+      if (event.target.id === 'categoryProductModal') closeCategoryProduct();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeCategoryProduct();
+    });
+
+    async function initiateCheckout(productId) {
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, customer_email: 'simulated.customer@example.com' })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          console.error('Checkout failed:', data.error || 'Unknown error');
+          return;
+        }
+
+        if (data.status === 'success' && data.invoice_id && data.paymentDetail) {
+          if (typeof openSandboxPaymentModal === 'function') {
+            openSandboxPaymentModal(data.paymentDetail, data.invoice_id);
+            return;
+          }
+          window.location.href = data.checkout_url || '/';
+          return;
+        }
+      } catch (e) {
+        console.error('Network error during checkout initiation.', e);
+      }
+    }
+
+    function resetFilters() {
+      currentCategory = 'all';
+      currentCurrency = localStorage.getItem('preferred_currency') || 'IDR';
+      currentSort = 'newest';
+      searchQuery = '';
+      currentPage = 1;
+      document.getElementById('catSearchInput').value = '';
+      document.getElementById('currencySelect').value = currentCurrency;
+      document.getElementById('sortSelect').value = 'newest';
+      document.querySelectorAll('#categoryChips .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-cat') === 'all');
+      });
+      renderProducts();
+    }
+
+    // Event Listeners
+    document.querySelectorAll('#categoryChips .filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#categoryChips .filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentCategory = chip.getAttribute('data-cat');
+        currentPage = 1;
+        renderProducts();
+      });
+    });
+
+    document.getElementById('currencySelect').addEventListener('change', (e) => {
+      currentCurrency = e.target.value === 'USD' ? 'USD' : 'IDR';
+      localStorage.setItem('preferred_currency', currentCurrency);
+      currentPage = 1;
+      renderProducts();
+    });
+
+    document.getElementById('currencySelect').value = currentCurrency;
+    window.addEventListener('storage', event => {
+      if (event.key === 'preferred_currency' && (event.newValue === 'IDR' || event.newValue === 'USD')) {
+        currentCurrency = event.newValue;
+        document.getElementById('currencySelect').value = currentCurrency;
+        renderProducts();
+      }
+    });
+
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+      currentSort = e.target.value;
+      currentPage = 1;
+      renderProducts();
+    });
+
+    document.getElementById('catSearchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      currentPage = 1;
+      renderProducts();
+    });
+
+    // Check URL parameters for pre-selected category
+    const urlParams = new URLSearchParams(window.location.search);
+    const catParam = urlParams.get('category');
+    if (catParam) {
+      currentCategory = catParam;
+      document.querySelectorAll('#categoryChips .filter-chip').forEach(c => {
+        c.classList.toggle('active', c.getAttribute('data-cat') === catParam);
+      });
+    }
+
+    loadProducts();
+  </script>
+</body>
+
+</html>

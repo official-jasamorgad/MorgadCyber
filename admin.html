@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — MorgadCyber Digital Marketplace</title>
+  <link rel="stylesheet" href="admin.css?v=dark-20260923">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="admin-shell">
+    <!-- =======================================================================
+         FIXED LEFT SIDEBAR
+         ======================================================================= -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <!-- Sidebar Header & Brand -->
+      <div class="sidebar-header">
+        <a href="/MorgadAdmin" class="sidebar-brand">
+          <div class="brand-badge-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="brand-text-label">
+            <span class="brand-name">MorgadCyber</span>
+            <span class="brand-sub">Admin Console</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Sidebar Navigation Links (11 required items) -->
+      <div class="sidebar-nav-container">
+        <div class="nav-category-header">Core Operations</div>
+
+        <!-- 1. Dashboard (Active) -->
+        <a href="/MorgadAdmin" class="nav-item active" data-nav="dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <!-- 2. Product Inventory -->
+        <a href="/MorgadAdmin/edit-produk" class="nav-item">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <span>Data Barang</span>
+          <span class="nav-counter" id="productNavCount">0</span>
+        </a>
+
+        <!-- 3. Orders -->
+        <a href="#orders-section" class="nav-item" data-nav="orders">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Orders</span>
+          <span class="nav-counter" id="orderNavCount">0</span>
+        </a>
+
+        <!-- 4. Payments -->
+        <a href="#payments-section" class="nav-item" data-nav="payments">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          <span>Payments</span>
+        </a>
+
+        <!-- 5. Downloads -->
+        <a href="#downloads-section" class="nav-item" data-nav="downloads">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Downloads</span>
+        </a>
+
+        <!-- 6. Customers -->
+        <a href="#customers-section" class="nav-item" data-nav="customers">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Customers</span>
+        </a>
+
+        <div class="nav-category-header">Catalog &amp; Content</div>
+
+        <!-- 7. Licenses -->
+        <a href="#licenses-section" class="nav-item" data-nav="licenses">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Licenses</span>
+        </a>
+
+        <!-- 8. Categories -->
+        <a href="#categories-section" class="nav-item" data-nav="categories">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          <span>Categories</span>
+        </a>
+
+        <a href="#articles-section" class="nav-item" data-nav="articles">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Articles</span>
+        </a>
+
+        <div class="nav-category-header">Analytics &amp; System</div>
+
+        <!-- 10. Reports -->
+        <a href="#reports-section" class="nav-item" data-nav="reports">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Reports</span>
+        </a>
+
+        <!-- 11. Settings -->
+        <a href="#settings-section" class="nav-item" data-nav="settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </div>
+
+      <!-- Sidebar Footer (Admin User) -->
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar-sm">SJ</div>
+          <div class="user-info-text">
+            <span class="user-name">Morgad Admin</span>
+            <span class="user-role">Morgad Admin</span>
+          </div>
+        </div>
+        <a href="/api/admin/logout" title="Logout" style="color: var(--text-muted);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </a>
+      </div>
+    </aside>
+
+    <!-- =======================================================================
+         MAIN WORKSPACE AREA
+         ======================================================================= -->
+    <div class="admin-main">
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="sidebarToggleBtn" aria-label="Toggle Navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="topbar-search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="color: var(--text-muted);">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="globalAdminSearch"
+              placeholder="Search orders, customers, products, payments...">
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <label class="currency-control" for="adminCurrencySelect">Currency</label>
+          <select id="adminCurrencySelect" class="form-select currency-select" aria-label="Display currency">
+            <option value="USD">USD</option>
+            <option value="IDR">IDR</option>
+          </select>
+          <!-- Gateway Health Status -->
+          <div class="system-status-indicator" title="Mayar Payment Gateway Webhooks active">
+            <span class="status-dot-pulse"></span>
+            <span>Mayar Gateway: Operational</span>
+          </div>
+
+          <!-- Storefront Quick Link -->
+          <a href="index.html" class="btn-storefront-link" target="_blank">
+            <span>View Store</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+
+          <!-- Notifications Bell -->
+          <div style="position: relative;">
+            <button class="topbar-action-btn" id="notifBellBtn" aria-label="Notifications">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="notif-badge-dot"></span>
+            </button>
+
+            <!-- Notifications Dropdown Popover -->
+            <div class="notif-popover" id="notifPopover">
+              <div class="notif-header">
+                <span>System Notifications</span>
+                <span style="font-size: 0.725rem; color: var(--purple-700); cursor: pointer;"
+                  onclick="markAllNotifsRead()">Mark all as read</span>
+              </div>
+              <div class="notif-list">
+                <div class="notif-empty">No notifications yet.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Avatar Profile -->
+          <div class="user-avatar-sm" style="cursor: pointer;" title="Sujon Admin">
+            SA
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Body Content -->
+      <main class="dashboard-content">
+        <!-- Dashboard Header & Controls -->
+        <div class="dashboard-header">
+          <div>
+            <h1 class="header-welcome-title">Welcome Back, Morgad</h1>
+            <p class="header-welcome-sub">Here is your digital marketplace operational overview and live performance
+              metrics.</p>
+          </div>
+
+          <div class="header-controls">
+            <!-- Date Range Filter Pill -->
+            <button class="date-filter-btn" id="dateRangeBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span id="activeDateRangeLabel">29 Jun, 2026 – 29 Aug, 2026</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Quick Primary Action -->
+            <button class="btn-primary-action" onclick="openAddProductModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add Product</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             1. SUMMARY KPI CARDS (4 CARDS)
+             =================================================================== -->
+        <div class="grid-12">
+          <!-- KPI 1: Total Revenue -->
+          <div class="col-3 admin-card kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Total Revenue</span>
+              <div class="kpi-icon-container">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="totalRevenueValue">
+                <Rp class="34 000"></Rp>
+              </span>
+              <span class="kpi-trend positive">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+                0%
+              </span>
+            </div>
+            <div class="kpi-footnote">
+              <span>Weekly Settlement: <strong id="weeklySettlementValue">$0.00</strong></span>
+            </div>
+            <div class="kpi-progress-bar">
+              <div class="kpi-progress-fill" style="width: 82%;"></div>
+            </div>
+          </div>
+
+          <!-- KPI 2: Total Orders -->
+          <div class="col-3 admin-card kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Total Orders</span>
+              <div class="kpi-icon-container">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="totalOrdersValue">0</span>
+              <span class="kpi-trend positive">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="18 15 12 9 6 15"></polyline>
+                </svg>
+                +12.6%
+              </span>
+            </div>
+            <div class="kpi-footnote">
+              <span>Fulfillment rate: <strong id="fulfillmentRateValue">0%</strong></span>
+            </div>
+            <div class="kpi-progress-bar">
+              <div class="kpi-progress-fill" style="width: 94%;"></div>
+            </div>
+          </div>
+
+          <!-- KPI 3: Products -->
+          <div class="col-3 admin-card kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Active Catalog</span>
+              <div class="kpi-icon-container">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="activeProductsValue">0</span>
+              <span class="kpi-trend neutral">
+                <span id="newProductsValue">0 new</span>
+              </span>
+            </div>
+            <div class="kpi-footnote">
+              <span>Across <strong>5 Categories</strong></span>
+            </div>
+            <div class="kpi-progress-bar">
+              <div class="kpi-progress-fill" style="width: 76%;"></div>
+            </div>
+          </div>
+
+          <!-- KPI 4: Successful Payments -->
+          <div class="col-3 admin-card kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-label">Payment Success</span>
+              <div class="kpi-icon-container">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="kpi-value-row">
+              <span class="kpi-value" id="paymentSuccessValue">0%</span>
+              <span class="kpi-trend positive">
+                <span id="paidOrdersValue">0 Paid</span>
+              </span>
+            </div>
+            <div class="kpi-footnote">
+              <span>Mayar Gateway: <strong id="refundRateValue">0% refunds</strong></span>
+            </div>
+            <div class="kpi-progress-bar">
+              <div class="kpi-progress-fill" style="width: 98%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             2. ANALYTICS & GATEWAY OVERVIEW (8 + 4 GRID)
+             =================================================================== -->
+        <div class="grid-12">
+          <!-- Col 8: Revenue & Orders Interactive Chart -->
+          <div class="col-8 admin-card" id="analytics-section">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Revenue &amp; Orders Trend</h3>
+                <span class="card-header-sub">Daily settlement and digital license volume</span>
+              </div>
+              <div class="chart-controls-row">
+                <div class="chart-toggle-pill">
+                  <button class="chart-toggle-btn active" onclick="switchChartMetric('revenue', this)">Revenue
+                    ($)</button>
+                  <button class="chart-toggle-btn" onclick="switchChartMetric('orders', this)">Orders Count</button>
+                </div>
+                <div class="chart-toggle-pill">
+                  <button class="chart-toggle-btn active" onclick="switchChartPeriod('monthly', this)">Monthly</button>
+                  <button class="chart-toggle-btn" onclick="switchChartPeriod('weekly', this)">Weekly</button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Chart is populated only when the database contains metrics. -->
+              <div class="analytics-chart-container" id="revenueChartContainer">
+                <div id="revenueChartEmpty" style="text-align:center; padding:70px 20px; color:var(--text-muted);">No analytics data yet.</div>
+                <svg class="chart-svg" viewBox="0 0 740 200" id="revenueChartSvg" hidden>
+                  <!-- Gridlines -->
+                  <line x1="40" y1="20" x2="720" y2="20" stroke="#F1F5F9" stroke-width="1.5"></line>
+                  <line x1="40" y1="65" x2="720" y2="65" stroke="#F1F5F9" stroke-width="1.5"></line>
+                  <line x1="40" y1="110" x2="720" y2="110" stroke="#F1F5F9" stroke-width="1.5"></line>
+                  <line x1="40" y1="155" x2="720" y2="155" stroke="#E2E8F0" stroke-width="1.5"></line>
+
+                  <!-- Axis Labels -->
+                  <text x="10" y="24" fill="#94A3B8" font-size="11" font-weight="500">$30k</text>
+                  <text x="10" y="69" fill="#94A3B8" font-size="11" font-weight="500">$20k</text>
+                  <text x="10" y="114" fill="#94A3B8" font-size="11" font-weight="500">$10k</text>
+                  <text x="25" y="159" fill="#94A3B8" font-size="11" font-weight="500">$0</text>
+
+                  <!-- Month Bars (Jan - Jun) matching reference proportions -->
+                  <!-- Jan -->
+                  <rect x="80" y="90" width="46" height="65" rx="8" fill="#EDE9FE"></rect>
+                  <text x="94" y="178" fill="#64748B" font-size="12" font-weight="600">JAN</text>
+
+                  <!-- Feb -->
+                  <rect x="180" y="55" width="46" height="100" rx="8" fill="#DDD6FE"></rect>
+                  <text x="194" y="178" fill="#64748B" font-size="12" font-weight="600">FEB</text>
+
+                  <!-- Mar -->
+                  <rect x="280" y="75" width="46" height="80" rx="8" fill="#EDE9FE"></rect>
+                  <text x="294" y="178" fill="#64748B" font-size="12" font-weight="600">MAR</text>
+
+                  <!-- Apr (Hero Peak Bar with badge matching reference) -->
+                  <rect x="380" y="25" width="46" height="130" rx="8" fill="#6D28D9"></rect>
+                  <text x="394" y="178" fill="#0F172A" font-size="12" font-weight="700">APR</text>
+                  <g transform="translate(378, 4)">
+                    <rect x="0" y="0" width="50" height="18" rx="9" fill="#ECFDF5" stroke="#A7F3D0"></rect>
+                    <text x="8" y="13" fill="#065F46" font-size="10" font-weight="700">+17.8%</text>
+                  </g>
+
+                  <!-- May -->
+                  <rect x="480" y="65" width="46" height="90" rx="8" fill="#DDD6FE"></rect>
+                  <text x="494" y="178" fill="#64748B" font-size="12" font-weight="600">MAY</text>
+
+                  <!-- Jun -->
+                  <rect x="580" y="50" width="46" height="105" rx="8" fill="#EDE9FE"></rect>
+                  <text x="594" y="178" fill="#64748B" font-size="12" font-weight="600">JUN</text>
+
+                  <!-- Trend Line Overlay -->
+                  <path d="M 103,90 Q 203,45 303,75 T 403,25 T 503,65 T 603,50" fill="none" stroke="#7C3AED"
+                    stroke-width="2.5" stroke-linecap="round"></path>
+                  <circle cx="403" cy="25" r="4" fill="#fff" stroke="#6D28D9" stroke-width="3"></circle>
+                </svg>
+              </div>
+              <div class="chart-legend-row">
+                <span><span class="legend-dot" style="background: #6D28D9;"></span> Total Marketplace Revenue</span>
+                <span><span class="legend-dot" style="background: #DDD6FE;"></span> Projected Settlement</span>
+                <span><span class="legend-dot" style="background: #10B981;"></span> Peak Growth Spike</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 4: Mayar Payment Status Overview & Quick Actions -->
+          <div class="col-4 admin-card" id="payments-section">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Mayar Payment Status</h3>
+                <span class="card-header-sub">Live gateway transaction distribution</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="mayar-distribution-block">
+                <div class="gateway-summary-badge">
+                  <div class="gateway-brand">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="color: var(--purple-700);">
+                      <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                      <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                    <span>Mayar Gateway</span>
+                  </div>
+                  <span class="gateway-rate" id="gatewayRate">0% Cleared</span>
+                </div>
+
+                <!-- Segmented Multi-Status Bar -->
+                <div class="multi-status-bar" title="Distribution of payment statuses">
+                  <div class="bar-segment" id="paidStatusBar" style="width: 0%; background-color: var(--success-dot);" title="Paid: 0%">
+                  </div>
+                  <div class="bar-segment" id="pendingStatusBar" style="width: 0%; background-color: var(--warning-dot);" title="Pending: 0%">
+                  </div>
+                  <div class="bar-segment" id="failedStatusBar" style="width: 0%; background-color: var(--danger-dot);" title="Failed: 0%">
+                  </div>
+                  <div class="bar-segment" id="expiredStatusBar" style="width: 0%; background-color: var(--slate-dot);" title="Expired: 0%">
+                  </div>
+                  <div class="bar-segment" id="refundedStatusBar" style="width: 0%; background-color: var(--info-dot);" title="Refunded: 0%">
+                  </div>
+                </div>
+
+                <!-- Status Stats Breakdown -->
+                <div class="status-breakdown-list">
+                  <div class="status-stat-item">
+                    <div class="status-stat-left">
+                      <span class="status-indicator-dot" style="background: var(--success-dot);"></span>
+                      <span>Paid &amp; Settled</span>
+                    </div>
+                    <span class="status-stat-count" id="paidStatusCount">0</span>
+                  </div>
+                  <div class="status-stat-item">
+                    <div class="status-stat-left">
+                      <span class="status-indicator-dot" style="background: var(--warning-dot);"></span>
+                      <span>Pending Verification</span>
+                    </div>
+                    <span class="status-stat-count" id="pendingStatusCount">0</span>
+                  </div>
+                  <div class="status-stat-item">
+                    <div class="status-stat-left">
+                      <span class="status-indicator-dot" style="background: var(--danger-dot);"></span>
+                      <span>Failed / Rejected</span>
+                    </div>
+                    <span class="status-stat-count" id="failedStatusCount">0</span>
+                  </div>
+                  <div class="status-stat-item">
+                    <div class="status-stat-left">
+                      <span class="status-indicator-dot" style="background: var(--slate-dot);"></span>
+                      <span>Expired Invoices</span>
+                    </div>
+                    <span class="status-stat-count" id="expiredStatusCount">0</span>
+                  </div>
+                  <div class="status-stat-item">
+                    <div class="status-stat-left">
+                      <span class="status-indicator-dot" style="background: var(--info-dot);"></span>
+                      <span>Refunded</span>
+                    </div>
+                    <span class="status-stat-count" id="refundedStatusCount">0</span>
+                  </div>
+                </div>
+
+                <!-- Quick Actions Toolbar (2x2 Grid) -->
+                <div class="quick-actions-grid">
+                  <button class="quick-action-btn" onclick="openAddProductModal()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      style="color: var(--purple-700);">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>Add Product</span>
+                  </button>
+
+                  <a href="#orders-section" class="quick-action-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="color: var(--purple-700);">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    </svg>
+                    <span>View Orders</span>
+                  </a>
+
+                  <button class="quick-action-btn" onclick="triggerFileUpload()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="color: var(--purple-700);">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Upload File</span>
+                  </button>
+
+                  <button class="quick-action-btn" onclick="openCreateCategoryModal()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      style="color: var(--purple-700);">
+                      <line x1="8" y1="6" x2="21" y2="6"></line>
+                      <line x1="8" y1="12" x2="21" y2="12"></line>
+                      <line x1="8" y1="18" x2="21" y2="18"></line>
+                      <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    </svg>
+                    <span>Create Category</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             3. RECENT ORDERS TABLE & PRODUCTS OVERVIEW (8 + 4 GRID)
+             =================================================================== -->
+        <div class="grid-12">
+          <!-- Col 8: Recent Orders Table -->
+          <div class="col-8 admin-card" id="orders-section">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Recent Orders</h3>
+                <span class="card-header-sub">Direct digital purchases and instant download grants</span>
+              </div>
+              <button type="button" id="exportOrdersBtn" class="btn-storefront-link" style="font-size: 0.75rem;">Export CSV</button>
+            </div>
+
+            <!-- Table Status Filter Tabs -->
+            <div class="table-filter-bar">
+              <div class="filter-tab-group">
+                <button class="filter-tab active" onclick="filterOrdersTable('all', this)">All (0)</button>
+                <button class="filter-tab" onclick="filterOrdersTable('paid', this)">Paid (0)</button>
+                <button class="filter-tab" onclick="filterOrdersTable('pending', this)">Pending (0)</button>
+                <button class="filter-tab" onclick="filterOrdersTable('refunded', this)">Refunded (0)</button>
+              </div>
+              <input type="text" id="orderSearchInput" placeholder="Filter orders..."
+                style="font-size: 0.775rem; padding: 4px 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); outline: none;">
+            </div>
+
+            <div class="table-responsive-wrapper card-body-flush">
+              <table class="admin-table" id="ordersTable">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date &amp; Time</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <!-- Order rows are rendered from /api/admin/orders. -->
+                  <!--
+                  <tr data-status="paid" data-id="ORD-9842">
+                    <td><strong style="color: var(--purple-700);">#ORD-9842</strong></td>
+                    <td>
+                      <div class="customer-cell">
+                        <div class="customer-avatar">DW</div>
+                        <div class="customer-meta">
+                          <span class="customer-name">Dribbble Design</span>
+                          <span class="customer-email">design@dribbble.com</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="product-cell">
+                        <img src="assets/images/cyberpunk-tunnel.svg" alt="Pack Vol. 01" class="product-mini-thumb">
+                        <span class="product-name-link">Viral Visual Pack Vol. 01</span>
+                      </div>
+                    </td>
+                    <td><span class="amount-text">
+                        <Rp class="10 000"></Rp>
+                      </span></td>
+                    <td><span class="badge-status badge-paid">Paid</span></td>
+                    <td><span style="font-size: 0.75rem;">16 Sep 2026, 10:30 PM</span></td>
+                    <td style="text-align: right;">
+                      <button class="action-btn-sm" onclick="openOrderDetailModal('ORD-9842')">Details</button>
+                    </td>
+                  </tr>
+
+                  <tr data-status="paid" data-id="ORD-9841">
+                    <td><strong style="color: var(--purple-700);">#ORD-9841</strong></td>
+                    <td>
+                      <div class="customer-cell">
+                        <div class="customer-avatar" style="background: #E0E7FF; color: #3730A3;">GP</div>
+                        <div class="customer-meta">
+                          <span class="customer-name">Gabriel Vance</span>
+                          <span class="customer-email">gabriel.v@studio.net</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="product-cell">
+                        <img src="assets/images/pink-archway.svg" alt="Aesthetic" class="product-mini-thumb">
+                        <span class="product-name-link">Premium Aesthetic Collection</span>
+                      </div>
+                    </td>
+                    <td><span class="amount-text">
+                        <Rp class="12.000"></Rp>
+                      </span></td>
+                    <td><span class="badge-status badge-paid">Paid</span></td>
+                    <td><span style="font-size: 0.75rem;">16 Sep 2026, 09:15 PM</span></td>
+                    <td style="text-align: right;">
+                      <button class="action-btn-sm" onclick="openOrderDetailModal('ORD-9841')">Details</button>
+                    </td>
+                  </tr>
+
+                  <tr data-status="pending" data-id="ORD-9840">
+                    <td><strong style="color: var(--purple-700);">#ORD-9840</strong></td>
+                    <td>
+                      <div class="customer-cell">
+                        <div class="customer-avatar" style="background: #FEF3C7; color: #92400E;">MK</div>
+                        <div class="customer-meta">
+                          <span class="customer-name">Marcus Kim</span>
+                          <span class="customer-email">marcus.kim@motion.io</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="product-cell">
+                        <img src="assets/images/fluid-swirl.svg" alt="Creative Bundle" class="product-mini-thumb">
+                        <span class="product-name-link">Creative Image Bundle</span>
+                      </div>
+                    </td>
+                    <td><span class="amount-text">
+                        <Rp class="12.500"></Rp>
+                      </span></td>
+                    <td><span class="badge-status badge-pending">Pending</span></td>
+                    <td><span style="font-size: 0.75rem;">16 Sep 2026, 08:42 PM</span></td>
+                    <td style="text-align: right;">
+                      <button class="action-btn-sm" onclick="openOrderDetailModal('ORD-9840')">Details</button>
+                    </td>
+                  </tr>
+
+                  <tr data-status="paid" data-id="ORD-9839">
+                    <td><strong style="color: var(--purple-700);">#ORD-9839</strong></td>
+                    <td>
+                      <div class="customer-cell">
+                        <div class="customer-avatar" style="background: #F3E8FF; color: #6D28D9;">SC</div>
+                        <div class="customer-meta">
+                          <span class="customer-name">Sarah Connor</span>
+                          <span class="customer-email">sarah.c@creativehub.co</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="product-cell">
+                        <img src="assets/images/mountain-lake.svg" alt="Social Media" class="product-mini-thumb">
+                        <span class="product-name-link">Social Media Image Pack</span>
+                      </div>
+                    </td>
+                    <td><span class="amount-text">
+                        <Rp class="13.000"></Rp>>
+                      </span></td>
+                    <td><span class="badge-status badge-paid">Paid</span></td>
+                    <td><span style="font-size: 0.75rem;">16 Sep 2026, 07:11 PM</span></td>
+                    <td style="text-align: right;">
+                      <button class="action-btn-sm" onclick="openOrderDetailModal('ORD-9839')">Details</button>
+                    </td>
+                  </tr>
+
+                  <tr data-status="refunded" data-id="ORD-9838">
+                    <td><strong style="color: var(--purple-700);">#ORD-9838</strong></td>
+                    <td>
+                      <div class="customer-cell">
+                        <div class="customer-avatar" style="background: #F1F5F9; color: #475569;">AL</div>
+                        <div class="customer-meta">
+                          <span class="customer-name">Alex Thorne</span>
+                          <span class="customer-email">alex@vfxpulse.org</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="product-cell">
+                        <img src="assets/images/featured-city.svg" alt="Cinematic" class="product-mini-thumb">
+                        <span class="product-name-link">Cinematic Visual Collection</span>
+                      </div>
+                    </td>
+                    <td><span class="amount-text">
+                        <RP class="12.000"></RP>>
+                      </span></td>
+                    <td><span class="badge-status badge-refunded">Refunded</span></td>
+                    <td><span style="font-size: 0.75rem;">16 Sep 2026, 05:20 PM</span></td>
+                    <td style="text-align: right;">
+                      <button class="action-btn-sm" onclick="openOrderDetailModal('ORD-9838')">Details</button>
+                    </td>
+                  </tr>
+                  -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Col 4: Products Overview (Best Selling & Catalog) -->
+          <div class="col-4 admin-card" id="products-section">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Top Digital Products</h3>
+                <span class="card-header-sub">Best-selling catalog assets</span>
+              </div>
+              <button class="action-btn-sm" onclick="openAddProductModal()">+ Add</button>
+            </div>
+            <div class="card-body-flush">
+              <div class="product-rank-list" id="productRankList">
+                <div class="notif-empty">No product sales data yet.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             4. PAYMENT ACTIVITY (MAYAR) & DOWNLOAD ACTIVITY (6 + 6 GRID)
+             =================================================================== -->
+        <div class="grid-12">
+          <!-- Col 6: Payment Activity Stream (Mayar Gateway) -->
+          <div class="col-6 admin-card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Payment Activity (Mayar Gateway)</h3>
+                <span class="card-header-sub">Real-time payment webhook logs &amp; statuses</span>
+              </div>
+              <span class="channel-pill">Webhook Sync: 100%</span>
+            </div>
+            <div class="table-responsive-wrapper card-body-flush">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Gateway ID</th>
+                    <th>Channel</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentActivityBody">
+                  <tr><td colspan="5" style="text-align:center; padding:28px; color:var(--text-muted);">No payment activity yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Col 6: Download Activity & Token Security -->
+          <div class="col-6 admin-card" id="downloads-section">
+            <div class="card-header">
+              <div>
+                <h3 class="card-header-title">Download Activity &amp; Tokens</h3>
+                <span class="card-header-sub">Digital asset delivery logs &amp; quota tracking</span>
+              </div>
+              <span class="channel-pill">Delivery: 100% Valid</span>
+            </div>
+            <div class="table-responsive-wrapper card-body-flush">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Order</th>
+                    <th>Quota</th>
+                    <th>Last Download</th>
+                    <th>Token</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="downloadActivityBody">
+                  <tr><td colspan="6" style="text-align:center; padding:28px; color:var(--text-muted);">No download activity yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 1: ADD PRODUCT MODAL
+       ======================================================================= -->
+  <div class="admin-modal-backdrop" id="addProductModal">
+    <div class="admin-modal-window">
+      <div class="modal-header-row">
+        <h3 class="modal-header-title">Add New Digital Product</h3>
+        <button class="modal-close-icon" onclick="closeAddProductModal()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="addProductForm" onsubmit="handleAddProductSubmit(event)">
+        <div class="modal-body-content">
+          <div class="form-group">
+            <label class="form-label">Product Title</label>
+            <input type="text" class="form-input" id="newProdTitle" placeholder="e.g. 4K Cyberpunk Neon Visuals Vol. 02"
+              required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" id="newProdCategory" required>
+                <option value="Arsitek Tools">Arsitek Tools</option>
+                <option value="FRP Tools">FRP Tools</option>
+                <option value="Foresics Tools">Foresics Tools</option>
+                <option value="Teknisi Tools">Teknisi Tools</option>
+                <option value="Trending Tools">Trending Tools</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (USD)</label>
+              <input type="number" step="0.01" class="form-input" id="newProdPrice" placeholder="9.99" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Short Description</label>
+            <textarea class="form-textarea" id="newProdDesc" rows="2"
+              placeholder="Brief summary of what creators will receive..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="productImageInput">Product Image *</label>
+            <div
+              style="border: 2px dashed var(--border-color); border-radius: var(--radius-sm); padding: 18px; text-align: center; background: var(--bg-app); cursor: pointer;"
+              onclick="document.getElementById('productImageInput').click()">
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: block;">Click to choose product image</span>
+              <span style="font-size: 0.725rem; color: var(--text-muted);" id="productImageLabel">Optional product image (not required for Drive-based products)</span>
+              <input type="file" id="productImageInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleProductImageSelected(this)">
+            </div>
+            <img id="productImagePreview" alt="Product image preview" hidden style="display: none; max-width: 180px; max-height: 120px; object-fit: cover; margin-top: 10px; border-radius: 6px;">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="googleDriveFileId">Google Drive File ID *</label>
+            <input type="text" class="form-input" id="googleDriveFileId" required maxlength="200"
+              pattern="[A-Za-z0-9_-]{10,200}"
+              placeholder="1wxkNECH793Z3eNfO8AZDTXptvSe84QGH"
+              autocomplete="off" spellcheck="false">
+            <span style="font-size: 0.725rem; color: var(--text-muted); display: block; margin-top: 5px;">
+              Masukkan ID file unik dari link share Google Drive Anda (Contoh: 1wxkNECH793Z3eNfO8AZDTXptvSe84QGH)
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="newProdStock">Initial Product Stock</label>
+            <input type="number" class="form-input" id="newProdStock" value="0" min="0" max="1000000" required>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label">Download Quota Limit</label>
+              <input type="number" class="form-input" value="5" min="1" max="50">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Token Expiration (Days)</label>
+              <input type="number" class="form-input" value="30" min="1" max="365">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-row">
+          <button type="button" class="btn-secondary-action" onclick="closeAddProductModal()">Cancel</button>
+          <button type="submit" class="btn-primary-action" id="addProductSubmitButton">Create &amp; Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 2: ORDER DETAILS MODAL
+       ======================================================================= -->
+  <div class="admin-modal-backdrop" id="orderDetailModal">
+    <div class="admin-modal-window">
+      <div class="modal-header-row">
+        <div>
+          <h3 class="modal-header-title" id="odOrderTitle">Order details</h3>
+          <span style="font-size: 0.75rem; color: var(--text-muted);" id="odOrderDate"></span>
+        </div>
+        <button class="modal-close-icon" onclick="closeOrderDetailModal()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body-content">
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-surface-subtle); border-radius: var(--radius-sm); margin-bottom: 16px;">
+          <div>
+            <span style="font-size: 0.7rem; color: var(--text-muted); display: block;">PAYMENT GATEWAY</span>
+            <span style="font-weight: 700; font-size: 0.85rem;" id="odGateway"></span>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 0.7rem; color: var(--text-muted); display: block;">STATUS</span>
+            <span class="badge-status badge-paid" id="odStatus">Paid</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Customer Information</label>
+          <div style="font-size: 0.85rem; color: var(--text-main); font-weight: 600;" id="odCustName"></div>
+          <div style="font-size: 0.775rem; color: var(--text-muted);" id="odCustEmail"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Purchased Product Item</label>
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color-light); padding-bottom: 8px;">
+            <span id="odProdName"></span>
+            <strong id="odProdPrice"></strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Cryptographic License Key</label>
+          <div
+            style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; padding: 8px 12px; font-family: monospace; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+            <span id="odLicenseKey"></span>
+            <button class="action-btn-sm" onclick="copyLicenseKey()">Copy</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Download Access Token URL</label>
+          <div
+            style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; padding: 8px 12px; font-family: monospace; font-size: 0.75rem; color: var(--purple-700); overflow-x: auto;">
+            <span id="odDownloadUrl"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer-row">
+        <button class="action-btn-danger-sm" onclick="promptRefundOrder()">Issue Refund</button>
+        <button class="btn-primary-action" onclick="resendDeliveryEmail()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>Resend Email</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 3: DESTRUCTIVE CONFIRMATION DIALOG
+       ======================================================================= -->
+  <div class="admin-modal-backdrop" id="confirmDialogModal">
+    <div class="admin-modal-window" style="max-width: 440px;">
+      <div class="modal-header-row">
+        <h3 class="modal-header-title" id="confirmDialogTitle" style="color: var(--danger-text);">Revoke Download Token
+        </h3>
+        <button class="modal-close-icon" onclick="closeConfirmDialog()" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body-content">
+        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;" id="confirmDialogMessage">
+          Are you sure you want to revoke the digital download token? The customer will immediately lose access to the
+          file download URL.
+        </p>
+      </div>
+      <div class="modal-footer-row">
+        <button class="btn-secondary-action" onclick="closeConfirmDialog()">Cancel</button>
+        <button class="btn-danger-action" id="confirmDialogActionBtn" onclick="executeConfirmedAction()">Yes, Revoke
+          Access</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Toast Container -->
+  <div class="admin-toast-box" id="adminToastContainer"></div>
+
+  <!-- Admin Application Script -->
+  <script src="admin.js?v=google-drive-id-20260926-5"></script>
+</body>
+
+</html>

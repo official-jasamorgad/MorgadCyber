@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article — MorgadCyber</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .article-read {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .article-read-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #7c3aed;
+      text-decoration: none;
+      margin-bottom: 28px;
+    }
+
+    .article-read-back:hover {
+      text-decoration: underline;
+    }
+
+    .article-read-hero {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      background: #f1f5f9;
+      aspect-ratio: 16 / 9;
+    }
+
+    .article-read-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .article-read-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--color-text-primary);
+      margin: 12px 0 16px;
+    }
+
+    .article-read-lead {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--color-text-secondary);
+      margin-bottom: 28px;
+    }
+
+    .article-read-body h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-text-primary);
+      margin: 32px 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .article-read-body p,
+    .article-read-body li {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--color-text-secondary);
+    }
+
+    .article-read-body p {
+      margin-bottom: 16px;
+    }
+
+    .article-read-body ul,
+    .article-read-body ol {
+      padding-left: 22px;
+      margin: 0 0 20px;
+    }
+
+    .article-read-body li {
+      margin-bottom: 8px;
+    }
+
+    .article-read-related {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border, #e2e8f0);
+    }
+
+    .article-read-related h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--color-text-primary);
+    }
+
+    .related-list a {
+      display: block;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border-light, #f1f5f9);
+      text-decoration: none;
+      color: var(--color-text-primary);
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .related-list a:hover {
+      color: #7c3aed;
+    }
+
+    .article-missing {
+      text-align: center;
+      padding: 80px 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon brand-image"><img src="assets/icons/file_0000000037a0720bb851249d9c21dcf7.png" alt="J.S. Morgad Cyber"></div>
+        <span>MorgadCyber</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#trending" class="nav-link">Explore</a></li>
+        <li><a href="categories.html" class="nav-link">Categories</a></li>
+        <li><a href="artikel.html" class="nav-link active">Articles</a></li>
+      </ul>
+      <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark and light mode" title="Toggle Dark / Light Mode">◐</button>
+      <div class="nav-actions">
+        <a href="artikel.html" class="btn-header-cta">All Articles</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="article-read" id="articleRead"></main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+        <div>&copy; 2026 MorgadCyber. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="index.html">Home</a>
+          <a href="artikel.html">All Articles</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const savedTheme = localStorage.getItem('preferred_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeToggleBtn?.addEventListener('click', () => {
+      const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      localStorage.setItem('preferred_theme', nextTheme);
+    });
+    const ARTICLES = {
+      'Intenational-art-styles-2025': {
+        title: 'International Journal of Electrical and Computer Engineering (IJECE) - Sinsta 1',
+        tag: 'Tips & Guides',
+        date: 'May 18, 2025',
+        image: 'assets/images/citations.jpeg',
+        lead: 'Institute of Advanced Engineering and Science.',
+        body: `
+          <h2>Institude of CyberSecurty Of Digital Forenscis</h2>
+          <p>Viral images are not lucky accidents. They are easy to understand in one second, emotionally sharp, and simple enough to share. If a viewer has to think too long, they keep scrolling.</p>
+          <p>Use these ten habits every time you finish a visual pack, thumbnail, or social post.</p>
+          <h2>The 10 tips</h2>
+          <ul>
+            <li><strong>Lead with one subject.</strong> One face, one object, or one scene. Extra details dilute the first impression.</li>
+            <li><strong>Increase contrast.</strong> Dark against light, warm against cool. Contrast is what the eye notices first on a small screen.</li>
+            <li><strong>Crop tighter than you think.</strong> Mobile feeds punish empty space. Fill the frame with the story.</li>
+            <li><strong>Use a readable focal point.</strong> Place the main subject near the center or on a rule-of-thirds line so it survives compression.</li>
+            <li><strong>Keep text large and short.</strong> If you add words, use 3–6 words max and make them readable at thumbnail size.</li>
+            <li><strong>Match platform ratios.</strong> Vertical for Reels and Stories, square for feeds, landscape for YouTube and blogs.</li>
+            <li><strong>Show motion even in a still.</strong> Hair, fabric, light streaks, or a mid-action pose feel more alive than a static product shot.</li>
+            <li><strong>Build a recognizable look.</strong> Repeat a color grade, grain, or framing so people recognize your work before they read your name.</li>
+            <li><strong>Test two versions.</strong> Change only one thing: crop, color, or headline. Keep the winner and archive the rest.</li>
+            <li><strong>Post with context.</strong> A strong caption, first comment, and clear CTA tell people what to do after they look.</li>
+          </ul>
+          <h2>How to apply this today</h2>
+          <p>Pick one image you already published. Recrop it, raise contrast, and republish in the correct ratio. Compare saves and shares after 24 hours. Repeat the process on your next drop instead of starting from zero.</p>
+          <p>Consistency beats one lucky post. Treat every image as a small experiment with a clear subject and a clear next step for the viewer.</p>
+        `
+      },
+      'digital-art-styles-2026': {
+        title: 'Best Digital Art Styles Trending in 2026',
+        tag: 'Inspiration',
+        date: 'May 12, 2026',
+        image: 'assets/images/article-desk.svg',
+        lead: 'A guided tour of the visual styles that are actually selling and circulating this year — and how to use them without looking dated.',
+        body: `
+          <h2>What “trending” actually means</h2>
+          <p>A style is trending when buyers, platforms, and other creators keep requesting it. In 2026 that usually means high-clarity lighting, tactile texture, and a mix of cinematic realism with graphic simplicity.</p>
+          <h2>Styles worth studying</h2>
+          <ul>
+            <li><strong>Soft cinematic realism.</strong> Film-like color, shallow depth, and quiet environments. Strong for lifestyle packs and wallpapers.</li>
+            <li><strong>Neon editorial.</strong> Saturated rim lights, glossy surfaces, and fashion-adjacent posing. Works well for viral social packs.</li>
+            <li><strong>Minimal geometry.</strong> Clean shapes, negative space, and one accent color. Easy to brand and easy to license.</li>
+            <li><strong>Painterly 3D.</strong> Sculpted forms with brush-like shading. Buyers like it because it feels handmade, not generic AI mash.</li>
+            <li><strong>Documentary grain.</strong> Natural light, imperfect frames, and analog texture. Trusted for authentic creator content.</li>
+          </ul>
+          <h2>How to use a trend without copying it</h2>
+          <p>Choose one style as the base, then add one personal rule: a recurring palette, a signature crop, or a subject you always return to. Buyers remember a point of view, not a trend name.</p>
+          <p>Before you publish a pack, ask: would this still look useful in twelve months? If the answer depends on a meme, keep it as a short social post, not as a paid collection.</p>
+        `
+      },
+      'high-quality-images': {
+        title: 'Where to Find High-Quality Images For Your Projects',
+        tag: 'Resources',
+        date: 'May 08, 2026',
+        image: 'assets/images/article-peaks.svg',
+        lead: 'A practical map of where to source images you can actually use — legally, consistently, and at a quality that survives print and 4K.',
+        body: `
+          <h2>Start with the license, not the thumbnail</h2>
+          <p>A beautiful image is useless if you cannot use it commercially. Always check whether the license covers ads, resale, client work, and social posting. If the terms are vague, do not use the file.</p>
+          <h2>Reliable sources</h2>
+          <ul>
+            <li><strong>Curated marketplaces.</strong> Paid packs from known creators usually include commercial terms, consistent color, and organized folders.</li>
+            <li><strong>Your own shoots.</strong> Phone or camera, same lighting setup, same export preset. This is the cleanest license you will ever have.</li>
+            <li><strong>Public-domain archives.</strong> Useful for historical or texture work. Verify the record, not just the website banner.</li>
+            <li><strong>Commissioned work.</strong> Hire for the exact angle you need. More expensive up front, cheaper than a legal problem later.</li>
+          </ul>
+          <h2>Quality checklist before you download</h2>
+          <p>Look at native resolution, noise, compression blocks, and whether similar files exist in a set. One hero image is weaker than a coherent series with matching white balance.</p>
+          <p>For client projects, keep a simple sheet: source, license type, date, and project name. If a client asks “can we use this on packaging?”, you should be able to answer in one minute.</p>
+        `
+      },
+      'price-digital-products': {
+        title: 'How to Price Digital Products Without Losing Buyers',
+        tag: 'Tips & Guides',
+        date: 'Apr 29, 2026',
+        image: 'assets/images/article-desk.svg',
+        lead: 'Pricing is not a guess. It is a clear offer: what the buyer gets, how fast they can use it, and why this price is fair.',
+        body: `
+          <h2>Price the outcome, not the file count</h2>
+          <p>Buyers do not pay for “80 PNGs”. They pay for saved time, a finished look, or a commercial-ready result. Describe that outcome first, then list the files.</p>
+          <h2>A simple pricing frame</h2>
+          <ul>
+            <li><strong>Entry pack.</strong> Narrow use case, smaller set, lower price. This is how new buyers try you.</li>
+            <li><strong>Core pack.</strong> Your most complete, organized collection. This should be the price people remember.</li>
+            <li><strong>Pro bundle.</strong> Several packs plus commercial extras. For agencies and repeat buyers.</li>
+          </ul>
+          <h2>What makes a price feel too high</h2>
+          <p>Unclear previews, messy file names, missing license text, or a product that looks like every other pack. Fix those before you discount.</p>
+          <p>If sales are slow, do not immediately cut the price. Improve the first three screenshots, add a before/after, and write a shorter product description. Discounting is a last step, not a first reaction.</p>
+        `
+      },
+      'color-palettes-social': {
+        title: 'Color Palettes That Make Social Content Pop',
+        tag: 'Inspiration',
+        date: 'Apr 21, 2026',
+        image: 'assets/images/article-peaks.svg',
+        lead: 'Color is the fastest way to look intentional on a crowded feed. These palettes are built for contrast, not decoration.',
+        body: `
+          <h2>Think in three roles</h2>
+          <p>Every strong palette has a base, an accent, and a quiet supporting tone. If every color shouts, nothing stands out.</p>
+          <ul>
+            <li><strong>Base:</strong> the background or largest area. Keep it stable across a series.</li>
+            <li><strong>Accent:</strong> one bright or unexpected color for the subject or CTA.</li>
+            <li><strong>Support:</strong> a muted tone for text, shadows, or secondary objects.</li>
+          </ul>
+          <h2>Palettes that work on mobile</h2>
+          <p>High-contrast pairs survive compression: deep navy with warm gold, charcoal with coral, forest green with cream, or black with electric lime. Soft pastels can work, but only if the subject is still clearly separated from the background.</p>
+          <p>Lock the palette in a reference file and reuse it for covers, carousels, and product thumbnails. Recognition comes from repetition, not from using every color you like.</p>
+        `
+      },
+      'licensing-checklist': {
+        title: 'A Creator Checklist for Licensing Digital Assets',
+        tag: 'Resources',
+        date: 'Apr 14, 2026',
+        image: 'assets/images/article-lens.svg',
+        lead: 'Licensing is the difference between a hobby folder and a product people can buy with confidence. Use this checklist before every release.',
+        body: `
+          <h2>What you must state clearly</h2>
+          <ul>
+            <li>Who can use the files: personal, commercial, or both.</li>
+            <li>Where they can use them: web, print, ads, apps, merchandise.</li>
+            <li>What they cannot do: resell the raw files, claim authorship, or use them in competing stock packs.</li>
+            <li>Whether client work is included when an agency buys once.</li>
+          </ul>
+          <h2>Before you publish</h2>
+          <p>Confirm you own or have rights to every layer: photos, fonts, brushes, 3D models, and music. If a tool’s terms forbid commercial resale of outputs, do not include those files in a paid pack.</p>
+          <p>Put a short license.txt in the download. Repeat the same terms on the product page. When the page and the file disagree, buyers get stuck and support tickets start.</p>
+        `
+      },
+      'batch-editing-workflows': {
+        title: 'Batch Editing Workflows for Faster Content Drops',
+        tag: 'Tips & Guides',
+        date: 'Apr 02, 2026',
+        image: 'assets/images/article-peaks.svg',
+        lead: 'Speed comes from a repeatable sequence, not from rushing. Build one workflow and run every drop through it.',
+        body: `
+          <h2>The four-stage pipeline</h2>
+          <ol>
+            <li><strong>Select.</strong> Kill weak shots first. Editing junk is the slowest work you can do.</li>
+            <li><strong>Match.</strong> Apply one preset for white balance, contrast, and crop ratio.</li>
+            <li><strong>Polish.</strong> Only the hero 10–20% of files get local adjustments.</li>
+            <li><strong>Export.</strong> Same naming pattern, same sizes, same color profile.</li>
+          </ol>
+          <h2>Rules that save hours</h2>
+          <p>Name files before you edit: <code>pack-date-001.jpg</code>. Keep a “reject” folder instead of deleting, so you can recover a shot without hunting the camera roll. Save your preset as a recipe, not as a memory.</p>
+          <p>If a step cannot be explained in one sentence, it does not belong in the batch. Special looks go on a separate hero set after the main export is done.</p>
+        `
+      },
+      'moodboards-sellable-packs': {
+        title: 'Moodboards That Turn Ideas Into Sellable Packs',
+        tag: 'Inspiration',
+        date: 'Mar 26, 2026',
+        image: 'assets/images/article-lens.svg',
+        lead: 'A moodboard is not a collage for inspiration only. It is a product spec: palette, subject, lighting, and the feeling the buyer should get.',
+        body: `
+          <h2>Build a board that can become a SKU</h2>
+          <p>Collect 8–12 references, not 80. Group them into lighting, color, subject, and layout. If a reference does not help you make a decision, remove it.</p>
+          <h2>From board to pack</h2>
+          <ul>
+            <li>Write a one-line promise: “Warm dusk city textures for travel brands.”</li>
+            <li>List 3 must-have shots and 3 nice-to-have shots.</li>
+            <li>Decide the ratio and resolution before you shoot or generate.</li>
+            <li>Design the cover last, using the strongest final image, not a random reference.</li>
+          </ul>
+          <p>When the pack is finished, compare it to the board. If they do not match, the product page will feel confused. Either update the board or recut the set until the promise is obvious in the first three previews.</p>
+        `
+      },
+      'organize-visual-libraries': {
+        title: 'Tools Creators Use to Organize Visual Libraries',
+        tag: 'Resources',
+        date: 'Mar 18, 2026',
+        image: 'assets/images/article-desk.svg',
+        lead: 'A library you cannot search is not an asset. These tools and folder habits keep images ready for the next product, client, or post.',
+        body: `
+          <h2>Folder structure that scales</h2>
+          <p>Use one root per year, then pack name, then <code>/preview</code>, <code>/final</code>, and <code>/source</code>. Keep licenses next to the files they cover. Do not mix client work and marketplace products in the same folder.</p>
+          <h2>Tools that help</h2>
+          <ul>
+            <li><strong>A DAM or catalog app</strong> for tags, color labels, and fast search across thousands of files.</li>
+            <li><strong>Cloud sync</strong> for the preview folder only, so your laptop stays light.</li>
+            <li><strong>A simple spreadsheet</strong> for SKU, price, license, and last update date.</li>
+            <li><strong>Checksum or duplicate finder</strong> so you do not sell the same crop twice under different names.</li>
+          </ul>
+          <p>Tag as you export, not “later”. Later never comes. Ten consistent tags — subject, palette, ratio, mood — will save more time than any new plugin.</p>
+        `
+      }
+    };
+
+    const root = document.getElementById('articleRead');
+    const id = new URLSearchParams(window.location.search).get('id');
+    const article = ARTICLES[id];
+
+    if (!article) {
+      document.title = 'Article not found — MorgadCyber';
+      root.innerHTML = `
+        <div class="article-missing">
+          <h1 class="article-read-title">Article not found</h1>
+          <p class="article-read-lead">This article is unavailable. Browse the full list instead.</p>
+          <a class="article-read-back" href="artikel.html">← Back to all articles</a>
+        </div>
+      `;
+    } else {
+      document.title = article.title + ' — MorgadCyber';
+      const related = Object.entries(ARTICLES)
+        .filter(([key, item]) => key !== id && item.tag === article.tag)
+        .slice(0, 3)
+        .map(([key, item]) => `<a href="baca-artikel.html?id=${key}">${item.title}</a>`)
+        .join('');
+
+      root.innerHTML = `
+        <a class="article-read-back" href="artikel.html">← All Articles</a>
+        <div class="article-read-hero">
+          <img src="${article.image}" alt="${article.title}">
+        </div>
+        <div class="article-meta">
+          <span class="article-tag">${article.tag}</span>
+          <span class="article-date">${article.date}</span>
+        </div>
+        <h1 class="article-read-title">${article.title}</h1>
+        <p class="article-read-lead">${article.lead}</p>
+        <div class="article-read-body">${article.body}</div>
+        <div class="article-read-related">
+          <h2>More in ${article.tag}</h2>
+          <div class="related-list">${related || '<a href="artikel.html">View all articles</a>'}</div>
+        </div>
+      `;
+    }
+
+    if (!article && id) {
+      const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+      fetch(`/api/articles?slug=${encodeURIComponent(id)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success || !data.article) return;
+          const publishedArticle = data.article;
+          const paragraphs = publishedArticle.content
+            .split(/\n\s*\n/)
+            .map(paragraph => `<p>${escapeHtml(paragraph).replaceAll('\n', '<br>')}</p>`)
+            .join('');
+          const image = publishedArticle.image_url || 'assets/images/article-desk.svg';
+          const date = publishedArticle.published_at ? new Date(publishedArticle.published_at).toLocaleDateString() : '';
+          document.title = `${publishedArticle.title} — MorgadCyber`;
+          root.innerHTML = `
+            <a class="article-read-back" href="artikel.html">← All Articles</a>
+            <div class="article-read-hero"><img src="${escapeHtml(image)}" alt="${escapeHtml(publishedArticle.title)}"></div>
+            <div class="article-meta"><span class="article-tag">${escapeHtml(publishedArticle.category)}</span><span class="article-date">${escapeHtml(date)}</span></div>
+            <h1 class="article-read-title">${escapeHtml(publishedArticle.title)}</h1>
+            <p class="article-read-lead">${escapeHtml(publishedArticle.summary)}</p>
+            <div class="article-read-body">${paragraphs}</div>
+          `;
+        })
+        .catch(() => {});
+    }
+  </script>
+</body>
+
+</html>
