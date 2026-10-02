@@ -13,7 +13,7 @@ import type {
   MayarPaymentResult,
 } from './types'
 
-const DOKU_BASE_URL = (process.env.DOKU_BASE_URL || 'https://doku.com').replace(/\/+$/, '')
+const DOKU_BASE_URL = (process.env.DOKU_BASE_URL || 'https://api.doku.com').replace(/\/+$/, '')
 const MAYAR_API_BASE =
   process.env.MAYAR_BASE_URL ||
   process.env.MAYAR_API_BASE ||
@@ -165,7 +165,17 @@ export async function createMayarInvoice(
       const timestamp = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z')
       const totalAmount = request.items?.reduce((sum, item) => sum + (item.rate * item.quantity), 0) || 10000
       const invoiceNumber = (request.extraData?.orderNumber as string) || (request.extraData?.orderId as string) || `ORD-${Date.now()}`
-      const callbackUrl = `${process.env.APP_URL || 'http://localhost:3000'}/payment/success`
+      const appUrl = process.env.APP_URL
+      if (!appUrl) throw new Error('APP_URL wajib dikonfigurasi untuk DOKU Checkout.')
+      const publicAppUrl = new URL(appUrl)
+      if (publicAppUrl.protocol !== 'https:') {
+        throw new Error('APP_URL harus menggunakan HTTPS untuk DOKU Checkout produksi.')
+      }
+      const callbackUrl = new URL(`/payment/success?order=${encodeURIComponent(invoiceNumber)}`, publicAppUrl).toString()
+      const notificationUrl = process.env.DOKU_NOTIFICATION_URL || new URL('/api/webhooks/doku', publicAppUrl).toString()
+      if (new URL(notificationUrl).protocol !== 'https:') {
+        throw new Error('DOKU_NOTIFICATION_URL harus menggunakan HTTPS.')
+      }
 
       const dokuPayload = {
         order: {
@@ -178,6 +188,12 @@ export async function createMayarInvoice(
           name: request.name,
           email: request.email,
           phone: request.mobile && request.mobile !== '000000000000' ? request.mobile : '6281234567890',
+        },
+        payment: {
+          payment_due_date: 60,
+        },
+        additional_info: {
+          override_notification_url: notificationUrl,
         },
       }
 
@@ -219,7 +235,19 @@ export async function createMayarInvoice(
       }
 
       const paymentData = respJson.response?.payment || respJson.payment || {}
-      const checkoutUrl = paymentData.url || respJson.url || `${DOKU_BASE_URL}/checkout/v1/payment`
+      const checkoutUrl = paymentData.url || respJson.url
+      if (!checkoutUrl) {
+        return {
+          success: false,
+          id: null,
+          transactionId: null,
+          link: null,
+          expiredAt: null,
+          paymentDetail: null,
+          rawResponse: respJson,
+          error: 'DOKU tidak mengembalikan URL pembayaran',
+        }
+      }
       const providerRef = paymentData.token_id || respJson.order?.invoice_number || invoiceNumber
 
       return {
@@ -233,33 +261,7 @@ export async function createMayarInvoice(
       }
     }
 
-    const payload = {
-      name: request.name,
-      email: request.email,
-      mobile: request.mobile,
-      description: request.description ?? 'Pembelian produk',
-      expiredAt: request.expiredAt,
-      items: request.items,
-      paymentMethod: request.paymentMethod,
-      extraData: request.extraData ?? {},
-    }
-
-    const data = await mayarFetch<MayarCreateInvoiceResponse>('/invoices/create', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    })
-
-    const normalizedDetail = parsePaymentDetail(data.paymentDetail ?? null)
-
-    return {
-      success: true,
-      id: data.id ?? null,
-      transactionId: data.transactionId ?? null,
-      link: data.link ?? null,
-      expiredAt: typeof data.expiredAt === 'number' ? data.expiredAt : null,
-      paymentDetail: normalizedDetail,
-      rawResponse: data as Record<string, unknown>,
-    }
+    throw new Error('DOKU_CLIENT_ID dan DOKU_SECRET_KEY wajib dikonfigurasi.')
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown payment gateway error'
     return {

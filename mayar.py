@@ -1,5 +1,5 @@
 """
-Mayar Payment & Security Integration Engine for Digital Product Platform.
+DOKU Payment & Security Integration Engine for Digital Product Platform.
 Adheres strictly to AGENT.md:
 - Server-side price authority (Section 12, 13)
 - Mayar payment creation & reference storage (Section 14, 15)
@@ -20,15 +20,10 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 from db import get_db
 
-# DOKU Environment Secrets (Production Non-SNAP)
+# DOKU production configuration
 DOKU_CLIENT_ID = os.environ.get("DOKU_CLIENT_ID", "")
 DOKU_SECRET_KEY = os.environ.get("DOKU_SECRET_KEY", "")
-DOKU_BASE_URL = os.environ.get("DOKU_BASE_URL", "https://doku.com").rstrip("/")
-
-# Mayar Legacy Secrets (Compatibility fallback)
-MAYAR_API_KEY = os.environ.get("MAYAR_API_KEY", "")
-MAYAR_API_BASE = os.environ.get("MAYAR_API_BASE", "https://api.mayar.id/hl/v2")
-MAYAR_WEBHOOK_SECRET = os.environ.get("MAYAR_WEBHOOK_SECRET", "")
+DOKU_BASE_URL = "https://api.doku.com"
 DOWNLOAD_TOKEN_EXPIRY_DAYS = int(os.environ.get("DOWNLOAD_TOKEN_EXPIRY_DAYS", 7))
 
 def generate_doku_signature(
@@ -48,13 +43,13 @@ def generate_doku_signature(
             lalu encode ke Base64 string dengan format HMACSHA256=<base64_signature>.
     """
     digest = base64.b64encode(hashlib.sha256(payload_bytes).digest()).decode("utf-8")
-    string_to_sign = (
-        f"Client-Id:{client_id}\\n"
-        f"Request-Id:{request_id}\\n"
-        f"Request-Timestamp:{timestamp}\\n"
-        f"Request-Target:{endpoint_path}\\n"
-        f"Digest:{digest}"
-    )
+    string_to_sign = "\n".join((
+        f"Client-Id:{client_id}",
+        f"Request-Id:{request_id}",
+        f"Request-Timestamp:{timestamp}",
+        f"Request-Target:{endpoint_path}",
+        f"Digest:{digest}",
+    ))
     raw_sig = hmac.new(
         secret_key.encode("utf-8"),
         string_to_sign.encode("utf-8"),
@@ -108,7 +103,7 @@ def create_local_order(product_id: str, customer_email: str, ip_address: str = "
     INSERT INTO orders (
         id, order_number, product_id, customer_email, amount, currency,
         payment_provider, payment_status, order_status, download_status, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, 'mayar', 'PENDING', 'PENDING', 'NOT_AVAILABLE', ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, 'doku', 'PENDING', 'PENDING', 'NOT_AVAILABLE', ?)
     """, (order_id, order_number, product_id, customer_email, amount, currency, now))
 
     # Audit log
@@ -135,7 +130,7 @@ def create_payment(order_id: str) -> dict:
     """
     Generates a DOKU Checkout payment transaction and stores provider reference.
     Adopts DOKU Non-SNAP HMAC-SHA256 signature and standard Checkout payload:
-    Endpoint: https://doku.com/checkout/v1/payment
+    Endpoint: https://api.doku.com/checkout/v1/payment
     """
     conn = get_db()
     cursor = conn.cursor()
@@ -148,7 +143,7 @@ def create_payment(order_id: str) -> dict:
     payment_id = f"pay_{secrets.token_hex(8)}"
     now = now_iso()
     customer_name = order["customer_email"].split("@")[0]
-    provider_name = "doku" if DOKU_CLIENT_ID else "mayar"
+    provider_name = "doku"
     provider_ref = None
     checkout_url = None
 
@@ -206,54 +201,19 @@ def create_payment(order_id: str) -> dict:
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as error:
             raise ValueError(f"DOKU tidak dapat dihubungi: {error}") from error
 
+        data_section = response_payload.get("data") if isinstance(response_payload.get("data"), dict) else {}
         payment_data = (
             response_payload.get("response", {}).get("payment", {})
             or response_payload.get("payment", {})
             or {}
         )
-        checkout_url = payment_data.get("url") or response_payload.get("url") or f"{DOKU_BASE_URL}/checkout/v1/payment"
+        checkout_url = data_section.get("url") or payment_data.get("url") or response_payload.get("url")
+        if not checkout_url:
+            raise ValueError("DOKU tidak mengembalikan URL pembayaran.")
         provider_ref = payment_data.get("token_id") or response_payload.get("order", {}).get("invoice_number") or order["order_number"]
 
-    elif MAYAR_API_KEY:
-        provider_name = "mayar"
-        request_payload = {
-            "name": order["product_name"],
-            "amount": int(order["amount"]),
-            "email": order["customer_email"],
-            "description": f"Pembayaran {order['product_name']} - {order['order_number']}",
-            "extraData": {
-                "orderNumber": order["order_number"],
-                "productId": order["product_id"],
-            },
-        }
-        request = urllib.request.Request(
-            f"{MAYAR_API_BASE}/payments/create",
-            data=json.dumps(request_payload).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {MAYAR_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-        try:
-            with urllib.request.urlopen(request, timeout=20) as response:
-                response_payload = json.loads(response.read().decode("utf-8"))
-        except urllib.error.HTTPError as error:
-            detail = error.read().decode("utf-8", errors="replace")
-            raise ValueError(f"Mayar API error ({error.code}): {detail}") from error
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as error:
-            raise ValueError(f"Mayar tidak dapat dihubungi: {error}") from error
-
-        payment_data = response_payload.get("data") or {}
-        checkout_url = payment_data.get("link")
-        provider_ref = payment_data.get("transactionId") or payment_data.get("id")
-        if not checkout_url or not provider_ref:
-            raise ValueError(f"Respons Mayar tidak lengkap: {response_payload}")
-
     else:
-        # Local development fallback simulation
-        provider_ref = f"MYR-TX-{datetime.now(timezone.utc).strftime('%y%m%d')}-{secrets.token_hex(4).upper()}"
-        checkout_url = f"/checkout/mayar?ref={provider_ref}&order_id={order['order_number']}&amount={order['amount']}"
+        raise ValueError("DOKU production credentials are not configured.")
 
     conn = get_db()
     cursor = conn.cursor()
@@ -288,43 +248,27 @@ create_doku_payment = create_payment
 
 def verify_webhook_signature(headers: dict, raw_payload: str, request_target: str = "") -> bool:
     """
-    Verify webhook signature for DOKU (and legacy fallback).
+    Verify the DOKU webhook signature using the exact signed request target.
     Supports DOKU Non-SNAP HMAC-SHA256 signature format:
     Signature: HMACSHA256=<base64_signature>
     Header components: Client-Id, Request-Id, Request-Timestamp, Signature
     """
     h = {k.lower(): v for k, v in headers.items()}
-    doku_sig = h.get("signature") or h.get("x-signature")
+    signature = h.get("signature")
+    client_id = h.get("client-id", "")
+    request_id = h.get("request-id", "")
+    timestamp = h.get("request-timestamp", "")
+    target = request_target or h.get("request-target", "")
+    if not all((DOKU_CLIENT_ID, DOKU_SECRET_KEY, signature, client_id, request_id, timestamp, target)):
+        return False
+    if not hmac.compare_digest(client_id, DOKU_CLIENT_ID):
+        return False
 
-    if DOKU_SECRET_KEY and doku_sig:
-        client_id = h.get("client-id", DOKU_CLIENT_ID)
-        request_id = h.get("request-id", "")
-        timestamp = h.get("request-timestamp", "")
-        payload_bytes = raw_payload.encode("utf-8") if isinstance(raw_payload, str) else raw_payload
-        target = request_target or h.get("request-target", "")
-
-        computed_sig, _ = generate_doku_signature(
-            client_id, DOKU_SECRET_KEY, request_id, timestamp, target, payload_bytes
-        )
-        if hmac.compare_digest(doku_sig.strip(), computed_sig.strip()):
-            return True
-
-        # Fallback without Request-Target if proxy stripped target
-        digest = base64.b64encode(hashlib.sha256(payload_bytes).digest()).decode("utf-8")
-        alt_str = f"Client-Id:{client_id}\\nRequest-Id:{request_id}\\nRequest-Timestamp:{timestamp}\\nDigest:{digest}"
-        alt_raw = hmac.new(DOKU_SECRET_KEY.encode("utf-8"), alt_str.encode("utf-8"), hashlib.sha256).digest()
-        alt_sig = f"HMACSHA256={base64.b64encode(alt_raw).decode('utf-8')}"
-        if hmac.compare_digest(doku_sig.strip(), alt_sig.strip()):
-            return True
-
-    # Legacy Mayar HMAC check
-    legacy_sig = h.get("x-mayar-signature") or h.get("x-callback-token")
-    if MAYAR_WEBHOOK_SECRET and legacy_sig:
-        computed = hmac.new(MAYAR_WEBHOOK_SECRET.encode('utf-8'), raw_payload.encode('utf-8'), hashlib.sha256).hexdigest()
-        if hmac.compare_digest(legacy_sig.strip(), computed.strip()):
-            return True
-
-    return False
+    payload_bytes = raw_payload.encode("utf-8") if isinstance(raw_payload, str) else raw_payload
+    computed_signature, _ = generate_doku_signature(
+        client_id, DOKU_SECRET_KEY, request_id, timestamp, target, payload_bytes
+    )
+    return hmac.compare_digest(signature.strip(), computed_signature)
 
 def process_mayar_webhook(event_payload: dict, ip_address: str = "127.0.0.1") -> dict:
     """
@@ -390,7 +334,7 @@ def process_mayar_webhook(event_payload: dict, ip_address: str = "127.0.0.1") ->
         or event_data.get("paymentMethod")
         or "DOKU_CHECKOUT"
     )
-    provider_name = "doku" if DOKU_CLIENT_ID or "order" in event_payload else "mayar"
+    provider_name = "doku"
 
     conn = get_db()
     cursor = conn.cursor()
@@ -414,7 +358,8 @@ def process_mayar_webhook(event_payload: dict, ip_address: str = "127.0.0.1") ->
 
     # 2. Local order lookup
     cursor.execute("""
-    SELECT o.*, p.name as product_name, p.max_downloads as prod_max_downloads
+        SELECT o.*, p.name as product_name, p.max_downloads as prod_max_downloads,
+            p.google_drive_id
     FROM orders o JOIN products p ON o.product_id = p.id
     WHERE o.order_number = ? OR o.id = ? OR o.payment_reference = ?
     """, (order_number, order_number, provider_ref))
@@ -471,6 +416,15 @@ def process_mayar_webhook(event_payload: dict, ip_address: str = "127.0.0.1") ->
         expires_at = excluded.expires_at,
         revoked = 0;
     """, (str(uuid.uuid4()), order["id"], order["product_id"], token_h, expires_at, max_dl, now))
+
+    cursor.execute("""
+    INSERT OR REPLACE INTO download_tokens (
+        id, token, order_id, product_id, invoice_id, google_drive_id, expires_at, status, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?)
+    """, (
+        str(uuid.uuid4()), raw_token, order["id"], order["product_id"],
+        order["order_number"], order["google_drive_id"], expires_at, now,
+    ))
 
     # 6. License Generation (Section 49)
     license_key = f"TERA-{order['product_id'][:4].upper()}-{secrets.token_hex(4).upper()}-{secrets.token_hex(4).upper()}"

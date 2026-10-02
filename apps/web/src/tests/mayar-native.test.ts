@@ -1,16 +1,79 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  createMayarInvoice,
   extractExternalId,
   extractPaidAmount,
+  generateDokuSignature,
   getMayarTransactionStatus,
   isPaymentFailureEvent,
   isPaymentSuccessEvent,
   mapMayarStatus,
   parsePaymentDetail,
+  verifyDokuWebhookSignature,
   verifyMayarWebhookSignature,
 } from '@morgad/mayar'
 
 describe('Mayar native payment parsing', () => {
+  it('does not fall back to Mayar when DOKU credentials are missing', async () => {
+    const oldClientId = process.env.DOKU_CLIENT_ID
+    const oldSecretKey = process.env.DOKU_SECRET_KEY
+    delete process.env.DOKU_CLIENT_ID
+    delete process.env.DOKU_SECRET_KEY
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+
+    try {
+      const result = await createMayarInvoice({
+        name: 'Customer',
+        email: 'customer@example.com',
+        mobile: '',
+        items: [{ quantity: 1, rate: 10000, description: 'Product' }],
+      })
+
+      expect(result.success).toBe(false)
+      expect(result.error).toContain('DOKU_CLIENT_ID')
+      expect(fetchMock).not.toHaveBeenCalled()
+    } finally {
+      fetchMock.mockRestore()
+      if (oldClientId === undefined) delete process.env.DOKU_CLIENT_ID
+      else process.env.DOKU_CLIENT_ID = oldClientId
+      if (oldSecretKey === undefined) delete process.env.DOKU_SECRET_KEY
+      else process.env.DOKU_SECRET_KEY = oldSecretKey
+    }
+  })
+
+  it('verifies DOKU webhook signatures against the notification URL path', () => {
+    const oldClientId = process.env.DOKU_CLIENT_ID
+    const oldSecretKey = process.env.DOKU_SECRET_KEY
+    process.env.DOKU_CLIENT_ID = 'merchant-id'
+    process.env.DOKU_SECRET_KEY = 'doku-test-secret'
+
+    try {
+      const body = JSON.stringify({ transaction: { status: 'SUCCESS' } })
+      const requestId = 'notification-id'
+      const timestamp = '2026-10-02T00:00:00Z'
+      const targetPath = '/api/webhooks/doku'
+      const { signature } = generateDokuSignature(
+        process.env.DOKU_CLIENT_ID,
+        process.env.DOKU_SECRET_KEY,
+        requestId,
+        timestamp,
+        targetPath,
+        body,
+      )
+      const headers = { clientId: 'merchant-id', requestId, timestamp, targetPath }
+
+      expect(verifyDokuWebhookSignature(body, signature, headers)).toEqual({ valid: true })
+      expect(verifyDokuWebhookSignature(body, signature.replace(/^HMACSHA256=/i, 'hmacsha256='), headers)).toEqual({ valid: true })
+      expect(verifyDokuWebhookSignature(body, `"${signature}"`, headers)).toEqual({ valid: true })
+      expect(verifyDokuWebhookSignature(body, signature, { ...headers, targetPath: '/wrong-path' })).toHaveProperty('valid', false)
+    } finally {
+      if (oldClientId === undefined) delete process.env.DOKU_CLIENT_ID
+      else process.env.DOKU_CLIENT_ID = oldClientId
+      if (oldSecretKey === undefined) delete process.env.DOKU_SECRET_KEY
+      else process.env.DOKU_SECRET_KEY = oldSecretKey
+    }
+  })
+
   it('parses a QRIS payment detail payload', () => {
     const detail = parsePaymentDetail({
       type: 'QR_CODE',

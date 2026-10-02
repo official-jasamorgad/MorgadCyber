@@ -244,6 +244,99 @@ def init_db():
     finally:
         conn.close()
     print("Database schema verified.")
+    seed_public_articles()
+
+
+def seed_public_articles():
+    """Insert published article data for the storefront and article pages."""
+    conn = get_db()
+    cursor = conn.cursor()
+    now = datetime.now(timezone.utc).isoformat()
+
+    articles = [
+        {
+            "slug": "sinta-1-strategi-publikasi-jurnal-bereputasi",
+            "title": "Sinta 1: Strategi Publikasi Jurnal Bereputasi",
+            "category": "Research",
+            "summary": "Panduan langkah demi langkah agar karya ilmiah siap masuk jurnal nasional terakreditasi dan tampil konsisten di Sinta.",
+            "content": "<h2>Strategi Publikasi Jurnal Bereputasi</h2><p>Publikasi ilmiah yang kuat dimulai dari pemilihan topik yang relevan, metodologi yang jelas, dan penyusunan hasil yang mudah dibaca reviewer.</p><p>Untuk meningkatkan peluang masuk daftar jurnal Sinta, peneliti perlu memastikan format artikel konsisten, sitasi relevan, dan metodologi terdokumentasi dengan baik.</p><p>Langkah yang paling penting adalah menyiapkan draft yang siap ditinjau, lalu melibatkan peer review internal sebelum submit ke jurnal.</p>",
+            "image_url": "/assets/images/hydara.jpeg",
+            "status": "published",
+            "published_at": "2026-10-01T09:00:00+00:00",
+        },
+        {
+            "slug": "sinta-2-panduan-meningkatkan-indeks-jurnal",
+            "title": "Sinta 2: Panduan Meningkatkan Indeks Jurnal",
+            "category": "Publication",
+            "summary": "Cara meningkatkan kualitas jurnal, memperluas sitasi, dan menjaga konsistensi publikasi agar satuan kredit akademik naik.",
+            "content": "<h2>Meningkatkan Indeks Jurnal</h2><p>Jurnal yang sehat biasanya memiliki proses review yang transparan, metadata yang lengkap, dan konten yang terus diperbarui.</p><p>Tim editor perlu menjaga standar kualitas, mengelola plagiarisme, dan memastikan semua kutipan berasal dari sumber yang valid.</p><p>Menjaga konsistensi produktivitas publikasi akan membantu jurnal mendapat pengakuan lebih luas di ranah Sinta.</p>",
+            "image_url": "/assets/images/citations.jpeg",
+            "status": "published",
+            "published_at": "2026-09-24T09:00:00+00:00",
+        },
+        {
+            "slug": "sinta-3-bibliometrik-dan-pemetaan-penelitian",
+            "title": "Sinta 3: Bibliometrik dan Pemetaan Penelitian",
+            "category": "Insights",
+            "summary": "Analisis bibliometrik membantu melihat tren riset, kekuatan bidang, serta arah pengembangan publikasi bergerak ke mana.",
+            "content": "<h2>Bibliometrik dan Pemetaan Penelitian</h2><p>Bibliometrik memberi gambaran mengenai konsentrasi riset, jaringan sitasi, dan arah topik yang paling berkembang.</p><p>Dengan memetakan tren penelitian, institusi dapat menentukan fokus unggulan, mengalokasikan sumber daya, dan menyusun strategi kolaborasi riset yang tepat.</p><p>Metode ini sangat berguna untuk mengukur pengaruh penelitian sebelum keputusan strategis dibuat di tingkat unit kerja.</p>",
+            "image_url": "/assets/images/Software.jpg",
+            "status": "published",
+            "published_at": "2026-09-18T09:00:00+00:00",
+        },
+        {
+            "slug": "sinta-4-profil-penulis-dan-kinerja-publikasi",
+            "title": "Sinta 4: Profil Penulis dan Kinerja Publikasi",
+            "category": "Academic",
+            "summary": "Profil penulis yang kuat memiliki dampak pada reputasi institusi, visibilitas riset, dan kualitas kolaborasi publikasi.",
+            "content": "<h2>Profil Penulis dan Kinerja Publikasi</h2><p>Profil penulis tidak hanya menampilkan nama dan afiliasi, tetapi juga mengkomunikasikan jejak karya ilmiah yang konsisten.</p><p>Dengan data karya ilmiah yang terdokumentasi baik, peneliti dapat menunjukkan kualitas dan konsistensi kinerja dalam setiap tahun.</p><p>Hal ini mempermudah institusi untuk memetakan penguatan kapasitas akademik dan strategi pengembangan SDM riset.</p>",
+            "image_url": "/assets/images/hydara.jpeg",
+            "status": "published",
+            "published_at": "2026-09-12T09:00:00+00:00",
+        },
+        {
+            "slug": "sinta-5-optimasi-riset-untuk-akreditasi",
+            "title": "Sinta 5: Optimasi Riset untuk Akreditasi",
+            "category": "Strategy",
+            "summary": "Riset yang terdokumentasi dan berkelanjutan membantu institusi meraih pengakuan akreditasi dan peningkatan reputasi akademik.",
+            "content": "<h2>Optimasi Riset untuk Akreditasi</h2><p>Akreditasi bukan sekadar angka, tetapi indikator bahwa institusi memiliki ekosistem penelitian yang terkelola dan berkelanjutan.</p><p>Untuk itu, kebutuhan data riset, publikasi, kolaborasi, dan dampak akademik harus terintegrasi satu sama lain.</p><p>Sistem yang konsisten akan membantu pengelola program studi menyusun roadmap publikasi, memantau perolehan indeks, dan menyiapkan evaluasi yang lebih akurat.</p>",
+            "image_url": "/assets/images/citations.jpeg",
+            "status": "published",
+            "published_at": "2026-09-05T09:00:00+00:00",
+        },
+    ]
+
+    for article in articles:
+        cursor.execute(
+            """
+            INSERT INTO articles (slug, title, category, summary, content, image_url, status, published_at, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug) DO UPDATE SET
+                title = excluded.title,
+                category = excluded.category,
+                summary = excluded.summary,
+                content = excluded.content,
+                image_url = excluded.image_url,
+                status = excluded.status,
+                published_at = excluded.published_at,
+                updated_at = excluded.updated_at
+            """,
+            (
+                article["slug"],
+                article["title"],
+                article["category"],
+                article["summary"],
+                article["content"],
+                article["image_url"],
+                article["status"],
+                article["published_at"],
+                now,
+                now,
+            ),
+        )
+
+    conn.commit()
+    conn.close()
 
 
 def ensure_default_product():
@@ -257,22 +350,7 @@ def ensure_default_product():
             id, name, slug, price, category, google_drive_id, image_path, is_published,
             status, currency, file_path, stock_quantity, file_size, version, max_downloads, created_at, updated_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-            name = excluded.name,
-            slug = excluded.slug,
-            price = excluded.price,
-            category = excluded.category,
-            google_drive_id = excluded.google_drive_id,
-            image_path = excluded.image_path,
-            is_published = excluded.is_published,
-            status = excluded.status,
-            currency = excluded.currency,
-            file_path = excluded.file_path,
-            stock_quantity = excluded.stock_quantity,
-            file_size = excluded.file_size,
-            version = excluded.version,
-            max_downloads = excluded.max_downloads,
-            updated_at = excluded.updated_at
+        ON CONFLICT(id) DO NOTHING
     """, (
         DEFAULT_PRODUCT_ID,
         DEFAULT_PRODUCT_NAME,

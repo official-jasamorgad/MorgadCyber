@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://jokul.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
   <style>
     .category-page-header {
       padding: 60px 0 30px;
@@ -24,9 +25,9 @@
       justify-content: space-between;
       margin: 30px 0;
       padding: 16px 20px;
-      background: #ffffff;
-      border: 1px solid var(--border-color, #e2e8f0);
-      border-radius: 8px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
     }
 
     .filter-group {
@@ -39,9 +40,9 @@
     .filter-chip {
       padding: 6px 14px;
       border-radius: 6px;
-      border: 1px solid var(--border-color, #e2e8f0);
-      background: #ffffff;
-      color: #475569;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
@@ -50,25 +51,31 @@
     }
 
     .filter-chip:hover {
-      background: #f8fafc;
-      color: #0f172a;
+      background: var(--color-surface-subtle);
+      color: var(--color-text-primary);
     }
 
     .filter-chip.active {
       background: var(--purple-600);
       color: #ffffff;
-      border-color: #7c3aed;
+      border-color: var(--purple-600);
     }
 
     .sort-select {
       padding: 8px 14px;
       border-radius: 8px;
-      border: 1px solid var(--border-color, #e2e8f0);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
       font-size: 13px;
-      color: #0f172a;
-      background: #ffffff;
+      color: var(--color-text-primary);
+      background: var(--color-surface);
       cursor: pointer;
       outline: none;
+    }
+
+    .sort-select:focus-visible {
+      border-color: var(--purple-600);
+      box-shadow: 0 0 0 3px var(--purple-glow);
     }
 
     .product-count-info {
@@ -80,9 +87,9 @@
     .empty-catalog-state {
       padding: 80px 24px;
       text-align: center;
-      background: #ffffff;
-      border: 1px solid var(--border-color, #e2e8f0);
-      border-radius: 16px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
       margin: 40px 0;
     }
 
@@ -98,18 +105,18 @@
       min-width: 38px;
       height: 38px;
       padding: 0 12px;
-      border: 1px solid var(--border-color, #e2e8f0);
-      border-radius: 8px;
-      background: #ffffff;
-      color: #475569;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
       font-weight: 600;
       cursor: pointer;
     }
 
     .pagination-btn:hover:not(:disabled),
     .pagination-btn.active {
-      background: #7c3aed;
-      border-color: #7c3aed;
+      background: var(--purple-600);
+      border-color: var(--purple-600);
       color: #ffffff;
     }
 
@@ -146,9 +153,9 @@
       color: #f8fafc;
     }
     [data-theme="dark"] .filter-chip.active {
-      background: #7c3aed;
+      background: var(--purple-600);
       color: #ffffff;
-      border-color: #7c3aed;
+      border-color: var(--purple-600);
     }
     [data-theme="dark"] .sort-select {
       background: var(--color-surface-subtle);
@@ -168,9 +175,9 @@
       </a>
 
       <ul class="nav-links">
-        <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="/categories" class="nav-link active">Categories</a></li>
-        <li><a href="/order" class="nav-link">Check Order</a></li>
+        <li><a href="/" class="nav-link" data-i18n="home">Home</a></li>
+        <li><a href="/categories" class="nav-link active" data-i18n="categories">Categories</a></li>
+        <li><a href="/order" class="nav-link" data-i18n="checkOrder">Check Order</a></li>
       </ul>
       <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle dark and light mode" title="Toggle Dark / Light Mode">◐</button>
 
@@ -181,7 +188,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="catSearchInput" placeholder="Search in categories...">
+          <input type="text" id="catSearchInput" placeholder="Search categories..." data-i18n-placeholder="searchCategories">
         </div>
 
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -193,7 +200,7 @@
         </a>
 
         <a href="/order" class="btn-header-cta">
-          Check My Order
+          <span data-i18n="checkMyOrder">Check My Order</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -208,15 +215,14 @@
   <section class="category-page-header">
     <div class="container">
       <div
-        style="font-size: 12px; font-weight: 700; color: #7c3aed; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
-        Marketplace Catalog
+        style="font-size: 12px; font-weight: 700; color: var(--purple-600); text-transform: uppercase; margin-bottom: 8px;">
+        <span data-i18n="categoryKicker">MorgadCyber Catalog</span>
       </div>
-      <h1 style="font-size: 36px; font-weight: 800; color: #0f172a; margin: 0 0 10px; letter-spacing: -0.02em;">
-        Explore All Categories
+      <h1 style="font-size: 36px; font-weight: 800; color: var(--color-text-primary); margin: 0 0 10px; letter-spacing: 0;">
+        <span data-i18n="digitalProducts">Digital Products</span>
       </h1>
-      <p style="font-size: 15px; color: #64748b; margin: 0; max-width: 650px; line-height: 1.6;">
-        Discover verified digital products, templates, software, papers, and graphics. Direct checkout via Mayar without
-        requiring an account.
+      <p style="font-size: 15px; color: var(--color-text-secondary); margin: 0; max-width: 650px; line-height: 1.6;">
+        <span data-i18n="categoryIntro">Browse software and digital tools. Payments are securely processed through DOKU. No account required.</span>
       </p>
     </div>
   </section>
@@ -226,37 +232,24 @@
     <!-- Filters & Sort Bar -->
     <div class="filters-bar">
       <!-- Category Chips -->
-      <div class="filter-group" id="categoryChips">
-        <button class="filter-chip active" data-cat="all">All Categories</button>
-        <button class="filter-chip" data-cat="Arsitek Tools">Arsitek Tools</button>
-        <button class="filter-chip" data-cat="FRP Tools">FRP Tools</button>
-        <button class="filter-chip" data-cat="Foresics Tools">Foresics Tools</button>
-        <button class="filter-chip" data-cat="Digital Assets">Digital Assets</button>
-        <button class="filter-chip" data-cat="Teknisi Tools">Teknisi Tools</button>
-        <button class="filter-chip" data-cat="Software">Software</button>
-        <button class="filter-chip" data-cat="Android Tools">Android Tools</button>
-        <button class="filter-chip" data-cat="File Formats">File Formats</button>
+      <div class="filter-group" id="categoryChips" aria-label="Product categories" data-i18n-aria-label="categoryFilter">
+        <button class="filter-chip active" data-cat="all" data-i18n="allProducts">All products</button>
       </div>
 
       <!-- Currency & Sort Dropdowns -->
       <div class="filter-group">
-        <select class="sort-select" id="currencySelect" aria-label="Display Currency">
-          <option value="IDR">IDR (Rupiah)</option>
-          <option value="USD">USD ($)</option>
-        </select>
-
-        <select class="sort-select" id="sortSelect" aria-label="Sort Products">
-          <option value="newest">Sort: Newest</option>
-          <option value="price_asc">Price: Low → High</option>
-          <option value="price_desc">Price: High → Low</option>
-          <option value="name_asc">Name: A → Z</option>
+        <select class="sort-select" id="sortSelect" aria-label="Sort products" data-i18n-aria-label="sortProducts">
+          <option value="newest" data-i18n="sortNewest">Sort: Newest</option>
+          <option value="price_asc" data-i18n="sortPriceLow">Price: Low to High</option>
+          <option value="price_desc" data-i18n="sortPriceHigh">Price: High to Low</option>
+          <option value="name_asc" data-i18n="sortName">Name: A to Z</option>
         </select>
       </div>
     </div>
 
     <!-- Product Count -->
     <div class="product-count-info" id="productCountInfo">
-      Loading products...
+      <span data-i18n="loadingProducts">Loading products...</span>
     </div>
 
     <!-- Products Grid -->
@@ -268,11 +261,9 @@
 
     <!-- Empty State -->
     <div class="empty-catalog-state" id="emptyState" style="display: none;">
-      <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
-      <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">No products found</h3>
-      <p style="font-size: 14px; color: #64748b; margin-bottom: 24px;">Try selecting a different category or adjusting
-        your search keyword.</p>
-      <button class="filter-chip active" onclick="resetFilters()">Reset All Filters</button>
+      <h3 data-i18n="productNotFound" style="font-size: 18px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 8px;">No products found</h3>
+      <p data-i18n="tryCategorySearch" style="font-size: 14px; color: var(--color-text-secondary); margin-bottom: 24px;">Try another category or change your search.</p>
+      <button class="filter-chip active" onclick="resetFilters()" data-i18n="resetFilters">Reset filters</button>
     </div>
   </main>
 
@@ -281,26 +272,26 @@
     <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 32px;">
       <div>
         <div style="font-weight: 800; font-size: 20px; color: #ffffff; margin-bottom: 8px;">
-          Morgad<span style="color: #a78bfa;">Cyber</span>
+          Morgad<span style="color: var(--purple-400);">Cyber</span>
         </div>
         <p style="font-size: 13px; max-width: 300px; line-height: 1.6;">
-          High-velocity digital product platform powered by Mayar payments and cryptographic download tokens.
+          <span data-i18n="footerDescription">Software and digital tools for technical needs.</span>
         </p>
       </div>
       <div style="display: flex; gap: 48px;">
         <div>
           <div
             style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 12px;">
-            Marketplace</div>
+            <span data-i18n="marketplace">Marketplace</span></div>
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
-            <a href="/categories" style="color: #94a3b8; text-decoration: none;">All Categories</a>
-            <a href="/order" style="color: #94a3b8; text-decoration: none;">Track Order</a>
+            <a href="/categories" style="color: #94a3b8; text-decoration: none;" data-i18n="allCategories">All Categories</a>
+            <a href="/order" style="color: #94a3b8; text-decoration: none;" data-i18n="trackOrder">Track Order</a>
           </div>
         </div>
         <div>
           <div
             style="font-size: 12px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin-bottom: 12px;">
-            Admin</div>
+            <span data-i18n="admin">Admin</span></div>
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
           </div>
         </div>
@@ -308,32 +299,36 @@
     </div>
     <div class="container"
       style="border-top: 1px solid #1e293b; margin-top: 40px; padding-top: 20px; font-size: 12px; color: #475569;">
-      © 2026 MorgadCyber Digital Product Marketplace. All rights reserved.
+      © 2026 MorgadCyber Digital Product Marketplace. <span data-i18n="rights">All rights reserved.</span>
     </div>
   </footer>
 
   <div class="category-product-modal" id="categoryProductModal" hidden>
     <div class="category-product-dialog" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
-      <button class="category-modal-close" type="button" onclick="closeCategoryProduct()" aria-label="Close product details">&times;</button>
+      <button class="category-modal-close" type="button" onclick="closeCategoryProduct()" aria-label="Close product details" data-i18n-aria-label="closeProduct">&times;</button>
       <div class="category-modal-grid">
         <div class="category-modal-image"><img id="categoryModalImage" src="" alt=""><div class="product-image-missing" id="categoryModalImagePlaceholder" hidden>Gambar produk tidak tersedia</div></div>
         <div class="category-modal-details">
           <span class="product-tag" id="categoryModalTag">Category</span>
           <h2 id="categoryModalTitle">Product details</h2>
           <p id="categoryModalDescription"></p>
-          <div class="category-modal-specs">
-            <span>Digital download</span>
-            <span>Commercial license</span>
-          </div>
           <strong class="category-modal-price" id="categoryModalPrice"></strong>
-          <button class="btn-buy-now" id="categoryModalBuy" type="button">Buy &amp; Download Instantly</button>
+          <form id="categoryCheckoutForm" class="category-checkout-form">
+            <label class="checkout-field"><span data-i18n="fullName">Full name</span><input id="categoryCustomerName" name="customer_name" type="text" autocomplete="name" placeholder="Name as shown on your ID" data-i18n-placeholder="namePlaceholder" required maxlength="200"></label>
+            <label class="checkout-field"><span data-i18n="email">Email</span><input id="categoryCustomerEmail" name="customer_email" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+            <label class="checkout-field"><span data-i18n="phone">Phone number</span><input id="categoryCustomerPhone" name="customer_phone" type="tel" autocomplete="tel" inputmode="tel" pattern="[+0-9 ()-]{7,24}" placeholder="Phone number" data-i18n-placeholder="phonePlaceholder" required></label>
+            <p id="categoryCheckoutError" role="alert" hidden></p>
+            <button class="btn-buy-now" id="categoryModalBuy" type="submit" data-i18n="continueDoku">Continue to DOKU</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="/language.js"></script>
   <script>
     const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const tr = (key, values) => window.morgadI18n?.t(key, values) || key;
     const savedTheme = localStorage.getItem('preferred_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     themeToggleBtn?.addEventListener('click', () => {
@@ -377,23 +372,42 @@
       } catch (e) {
         allProducts = [];
       }
+      renderCategoryChips();
       renderProducts();
+    }
+
+    function renderCategoryChips() {
+      const container = document.getElementById('categoryChips');
+      const categories = [...new Set(allProducts.map(product => product.category).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+      if (currentCategory !== 'all' && !categories.includes(currentCategory)) currentCategory = 'all';
+
+      container.replaceChildren();
+      for (const [value, label] of [['all', tr('allProducts')], ...categories.map(category => [category, window.morgadI18n?.productCategory(category) || category])]) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = `filter-chip${currentCategory === value ? ' active' : ''}`;
+        chip.dataset.cat = value;
+        chip.textContent = label;
+        container.appendChild(chip);
+      }
     }
 
     function formatPrice(amount, currency) {
       if (currency === 'USD') {
-        return '$' + (amount > 1000 ? (amount / 100).toFixed(2) : amount.toFixed(2));
+        return '$' + Number(amount).toFixed(2);
       }
+      if (currency === 'CNY') return '¥' + Number(amount).toFixed(2);
       return 'Rp ' + Number(amount).toLocaleString('id-ID');
     }
 
     function getDisplayPrice(product) {
       const sourceCurrency = (product.currency || 'IDR').toUpperCase();
       const sourceAmount = Number(product.price) || 0;
-      if (currentCurrency === sourceCurrency) return sourceAmount;
-      if (currentCurrency === 'IDR' && sourceCurrency === 'USD') return sourceAmount * 15000;
-      if (currentCurrency === 'USD' && sourceCurrency === 'IDR') return sourceAmount / 15000;
-      return sourceAmount;
+      const idrAmount = sourceCurrency === 'USD' ? sourceAmount * 15000 : sourceAmount;
+      if (currentCurrency === 'USD') return idrAmount / 15000;
+      if (currentCurrency === 'CNY') return idrAmount / 2200;
+      return idrAmount;
     }
 
     function renderProducts() {
@@ -431,7 +445,9 @@
       const totalPages = Math.max(1, Math.ceil(filtered.length / productsPerPage));
       currentPage = Math.min(currentPage, totalPages);
       const pageProducts = filtered.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
-      count.textContent = filtered.length ? `Showing ${(currentPage - 1) * productsPerPage + 1}-${Math.min(currentPage * productsPerPage, filtered.length)} of ${filtered.length} products` : `Showing 0 of ${allProducts.length} products`;
+      count.textContent = filtered.length
+        ? tr('productsCount', { start: (currentPage - 1) * productsPerPage + 1, end: Math.min(currentPage * productsPerPage, filtered.length), total: filtered.length })
+        : tr('productsCountEmpty', { total: allProducts.length });
 
       if (filtered.length === 0) {
         grid.innerHTML = '';
@@ -445,18 +461,18 @@
         <div class="product-card" data-id="${p.id}">
           <div class="product-image-container" onclick="openCategoryProduct('${p.id}')">
             <img class="product-image" alt="${p.name}" loading="lazy">
-            <div class="product-image-missing" hidden>Gambar produk tidak tersedia</div>
+            <div class="product-image-missing" hidden>${tr('productImageMissing')}</div>
           </div>
           <div class="product-card-body">
-            <span class="product-tag">${p.category.replace('_', ' ')}</span>
+            <span class="product-tag">${window.morgadI18n?.productCategory(p.category.replace('_', ' ')) || p.category.replace('_', ' ')}</span>
             <h3 class="product-title">${p.name}</h3>
-            <p class="product-desc">${p.short_description || 'Digital product siap digunakan untuk kebutuhan kreatif Anda.'}</p>
+            <p class="product-desc">${window.morgadI18n?.productDescription(p.id, p.short_description || tr('categoryDefault')) || p.short_description || tr('categoryDefault')}</p>
             <div class="product-price-row">
               <div class="product-price">${formatPrice(getDisplayPrice(p), currentCurrency)}</div>
             </div>
             <div class="product-actions">
-              <button class="btn-buy-now" type="button" onclick="initiateCheckout('${p.id}')">Buy Now</button>
-              <button class="btn-view-details" type="button" onclick="openCategoryProduct('${p.id}')">View Details <span aria-hidden="true">→</span></button>
+              <button class="btn-buy-now" type="button" onclick="openCategoryProduct('${p.id}')">${tr('buyNow')}</button>
+              <button class="btn-view-details" type="button" onclick="openCategoryProduct('${p.id}')">${tr('viewDetails')} <span aria-hidden="true">→</span></button>
             </div>
           </div>
         </div>
@@ -480,9 +496,9 @@
         setProductImage(img, placeholder, product);
       });
 
-      pagination.innerHTML = `<button class="pagination-btn" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+      pagination.innerHTML = `<button class="pagination-btn" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>${tr('previous')}</button>
         ${Array.from({ length: totalPages }, (_, index) => `<button class="pagination-btn ${currentPage === index + 1 ? 'active' : ''}" data-page="${index + 1}">${index + 1}</button>`).join('')}
-        <button class="pagination-btn" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+        <button class="pagination-btn" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>${tr('next')}</button>`;
       pagination.querySelectorAll('.pagination-btn:not(:disabled)').forEach(button => {
         button.addEventListener('click', () => {
           const target = button.dataset.page;
@@ -530,11 +546,14 @@
       const modalPlaceholder = document.getElementById('categoryModalImagePlaceholder');
       setProductImage(modalImage, modalPlaceholder, product);
       modalImage.alt = product.name;
-      document.getElementById('categoryModalTag').textContent = product.category.replace('_', ' ');
+      document.getElementById('categoryModalTag').textContent = window.morgadI18n?.productCategory(product.category.replace('_', ' ')) || product.category.replace('_', ' ');
       document.getElementById('categoryModalTitle').textContent = product.name;
-      document.getElementById('categoryModalDescription').textContent = product.short_description || 'Digital product siap digunakan untuk kebutuhan kreatif Anda.';
+      document.getElementById('categoryModalDescription').textContent = window.morgadI18n?.productDescription(product.id, product.short_description || tr('categoryDefault')) || product.short_description || tr('categoryDefault');
       document.getElementById('categoryModalPrice').textContent = formatPrice(getDisplayPrice(product), currentCurrency);
-      document.getElementById('categoryModalBuy').onclick = () => initiateCheckout(product.id);
+      document.getElementById('categoryCheckoutForm').onsubmit = event => {
+        event.preventDefault();
+        initiateCheckout(product.id, event.currentTarget);
+      };
       const modal = document.getElementById('categoryProductModal');
       modal.hidden = false;
       document.body.style.overflow = 'hidden';
@@ -553,30 +572,82 @@
       if (event.key === 'Escape') closeCategoryProduct();
     });
 
-    async function initiateCheckout(productId) {
+    async function initiateCheckout(productId, form) {
+      if (!form) {
+        openCategoryProduct(productId);
+        return;
+      }
+      if (!form.reportValidity()) return;
+      const checkoutError = document.getElementById('categoryCheckoutError');
+      checkoutError.hidden = true;
+
       try {
         const res = await fetch('/api/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product_id: productId, customer_email: 'simulated.customer@example.com' })
+          body: JSON.stringify({
+            product_id: productId,
+            customer_name: form.elements.customer_name.value.trim(),
+            customer_email: form.elements.customer_email.value.trim(),
+            customer_phone: form.elements.customer_phone.value.trim(),
+          })
         });
         const data = await res.json();
         if (!res.ok) {
-          console.error('Checkout failed:', data.error || 'Unknown error');
+          checkoutError.textContent = data.error || 'Checkout gagal dibuat.';
+          checkoutError.hidden = false;
           return;
         }
 
-        if (data.status === 'success' && data.invoice_id && data.paymentDetail) {
-          if (typeof openSandboxPaymentModal === 'function') {
-            openSandboxPaymentModal(data.paymentDetail, data.invoice_id);
-            return;
-          }
-          window.location.href = data.checkout_url || '/';
-          return;
+        const returnedUrl = data.checkout_url || data.response?.payment?.url || data.data?.url;
+        if (!returnedUrl) throw new Error('DOKU tidak memberikan URL pembayaran.');
+        const checkoutUrl = new URL(returnedUrl);
+        if (data.status !== 'success' || checkoutUrl.protocol !== 'https:') {
+          throw new Error('DOKU tidak mengembalikan URL pembayaran yang valid.');
         }
+        const invoiceId = data.invoice_id || data.response?.order?.invoice_number;
+        if (typeof window.loadJokulCheckout !== 'function') throw new Error('SDK DOKU belum tersedia.');
+        window.loadJokulCheckout(checkoutUrl.href);
+        closeCategoryProduct();
+        startCategoryPaymentPolling(invoiceId, form.elements.customer_email.value.trim());
       } catch (e) {
-        console.error('Network error during checkout initiation.', e);
+        checkoutError.textContent = e.message || 'Tidak dapat terhubung ke DOKU.';
+        checkoutError.hidden = false;
       }
+    }
+
+    function startCategoryPaymentPolling(invoiceId, customerEmail) {
+      let inProgress = false;
+      const poll = async () => {
+        if (inProgress) return;
+        inProgress = true;
+        try {
+          const query = new URLSearchParams({ invoice_id: invoiceId, email: customerEmail });
+          const response = await fetch(`/api/check-status?${query}`);
+          const data = await response.json();
+          const paymentStatus = String(data.payment_status || '').toUpperCase();
+          if (!response.ok || !['SUCCESS', 'PAID', 'COMPLETED'].includes(paymentStatus)) return;
+
+          clearInterval(timer);
+          if (data.download_url) {
+            const downloadUrl = new URL(data.download_url, window.location.origin);
+            if (downloadUrl.origin !== window.location.origin) throw new Error('URL unduhan tidak valid.');
+            const link = document.createElement('a');
+            link.href = downloadUrl.href;
+            link.hidden = true;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          }
+        } catch (error) {
+          console.error('DOKU payment status polling failed:', error);
+        } finally {
+          inProgress = false;
+        }
+      };
+
+      poll();
+      const timer = setInterval(poll, 3000);
     }
 
     function resetFilters() {
@@ -586,7 +657,6 @@
       searchQuery = '';
       currentPage = 1;
       document.getElementById('catSearchInput').value = '';
-      document.getElementById('currencySelect').value = currentCurrency;
       document.getElementById('sortSelect').value = 'newest';
       document.querySelectorAll('#categoryChips .filter-chip').forEach(c => {
         c.classList.toggle('active', c.getAttribute('data-cat') === 'all');
@@ -595,30 +665,27 @@
     }
 
     // Event Listeners
-    document.querySelectorAll('#categoryChips .filter-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('#categoryChips .filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        currentCategory = chip.getAttribute('data-cat');
-        currentPage = 1;
-        renderProducts();
-      });
-    });
-
-    document.getElementById('currencySelect').addEventListener('change', (e) => {
-      currentCurrency = e.target.value === 'USD' ? 'USD' : 'IDR';
-      localStorage.setItem('preferred_currency', currentCurrency);
+    document.getElementById('categoryChips').addEventListener('click', event => {
+      const chip = event.target.closest('.filter-chip');
+      if (!chip) return;
+      document.querySelectorAll('#categoryChips .filter-chip').forEach(item => item.classList.remove('active'));
+      chip.classList.add('active');
+      currentCategory = chip.dataset.cat;
       currentPage = 1;
       renderProducts();
     });
 
-    document.getElementById('currencySelect').value = currentCurrency;
     window.addEventListener('storage', event => {
-      if (event.key === 'preferred_currency' && (event.newValue === 'IDR' || event.newValue === 'USD')) {
+      if (event.key === 'preferred_currency' && ['IDR', 'USD', 'CNY'].includes(event.newValue)) {
         currentCurrency = event.newValue;
-        document.getElementById('currencySelect').value = currentCurrency;
         renderProducts();
       }
+    });
+
+    window.addEventListener('morgad-currency-change', event => {
+      currentCurrency = event.detail.currency;
+      currentPage = 1;
+      renderProducts();
     });
 
     document.getElementById('sortSelect').addEventListener('change', (e) => {
@@ -630,6 +697,11 @@
     document.getElementById('catSearchInput').addEventListener('input', (e) => {
       searchQuery = e.target.value;
       currentPage = 1;
+      renderProducts();
+    });
+
+    window.addEventListener('morgad-language-change', () => {
+      renderCategoryChips();
       renderProducts();
     });
 

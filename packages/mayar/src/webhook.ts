@@ -12,7 +12,7 @@
  * Do not invent or guess the signature algorithm.
  */
 
-import { createHmac, timingSafeEqual } from 'crypto'
+import { createHash, createHmac, timingSafeEqual } from 'crypto'
 import type { MayarWebhookPayload, MayarWebhookVerification, MayarPaymentStatus } from './types'
 
 function normalizeEventName(value: string | undefined): string {
@@ -24,6 +24,14 @@ function normalizeSignatureValue(signatureHeader: string): string {
   if (!trimmed) return ''
   const stripped = trimmed.replace(/^sha256\s*[:=]/i, '').trim()
   return stripped.replace(/^['"]|['"]$/g, '')
+}
+
+function normalizeDokuSignatureValue(signatureHeader: string): string {
+  const trimmed = signatureHeader.trim()
+  if (!trimmed) return ''
+  const noQuotes = trimmed.replace(/^['"]|['"]$/g, '')
+  const withoutPrefix = noQuotes.replace(/^hmacsha256\s*[:=]/i, '').trim()
+  return withoutPrefix
 }
 
 /**
@@ -58,7 +66,7 @@ export function verifyMayarWebhookSignature(
   const sigValue = signatureHeader.trim()
 
   // 1. DOKU Signature Verification (HMACSHA256=<base64>)
-  if (dokuSecret && (sigValue.startsWith('HMACSHA256=') || sigValue.includes('='))) {
+  if (dokuSecret && (sigValue.toUpperCase().startsWith('HMACSHA256=') || sigValue.includes('='))) {
     try {
       const bodyStr = Buffer.isBuffer(rawBody) ? rawBody.toString('utf8') : rawBody
       const clientId = options?.clientId || process.env.DOKU_CLIENT_ID || ''
@@ -72,13 +80,15 @@ export function verifyMayarWebhookSignature(
         : `Client-Id:${clientId}\nRequest-Id:${requestId}\nRequest-Timestamp:${timestamp}\nDigest:${digest}`
 
       const expectedSig = 'HMACSHA256=' + createHmac('sha256', dokuSecret).update(stringToSign, 'utf8').digest('base64')
-      if (timingSafeEqual(Buffer.from(sigValue), Buffer.from(expectedSig))) {
+      const normalizedReceived = normalizeDokuSignatureValue(sigValue)
+      const normalizedExpected = normalizeDokuSignatureValue(expectedSig)
+      if (normalizedReceived && normalizedExpected && normalizedReceived.length === normalizedExpected.length && timingSafeEqual(Buffer.from(normalizedReceived), Buffer.from(normalizedExpected))) {
         return { valid: true }
       }
 
-      // Also try simple digest without headers
       const simpleSig = 'HMACSHA256=' + createHmac('sha256', dokuSecret).update(bodyStr, 'utf8').digest('base64')
-      if (sigValue.length === simpleSig.length && timingSafeEqual(Buffer.from(sigValue), Buffer.from(simpleSig))) {
+      const normalizedSimple = normalizeDokuSignatureValue(simpleSig)
+      if (normalizedReceived && normalizedSimple && normalizedReceived.length === normalizedSimple.length && timingSafeEqual(Buffer.from(normalizedReceived), Buffer.from(normalizedSimple))) {
         return { valid: true }
       }
     } catch {
@@ -114,7 +124,53 @@ export function verifyMayarWebhookSignature(
   }
 }
 
-export const verifyDokuWebhookSignature = verifyMayarWebhookSignature
+export function verifyDokuWebhookSignature(
+  rawBody: Buffer | string,
+  signatureHeader: string | null,
+  options: {
+    clientId: string
+    requestId: string
+    timestamp: string
+    targetPath: string
+  }
+): MayarWebhookVerification {
+  const secretKey = process.env.DOKU_SECRET_KEY
+  const configuredClientId = process.env.DOKU_CLIENT_ID
+  if (!secretKey || !configuredClientId) {
+    return { valid: false, error: 'DOKU credentials are not configured' }
+  }
+  if (!signatureHeader || !options.requestId || !options.timestamp || !options.targetPath.startsWith('/')) {
+    return { valid: false, error: 'Missing DOKU signature component' }
+  }
+  if (options.clientId !== configuredClientId) {
+    return { valid: false, error: 'DOKU client ID mismatch' }
+  }
+
+  const body = Buffer.isBuffer(rawBody) ? rawBody.toString('utf8') : rawBody
+  const digest = createHash('sha256').update(body, 'utf8').digest('base64')
+  const stringToSign = [
+    `Client-Id:${options.clientId}`,
+    `Request-Id:${options.requestId}`,
+    `Request-Timestamp:${options.timestamp}`,
+    `Request-Target:${options.targetPath}`,
+    `Digest:${digest}`,
+  ].join('\n')
+  const expected = `HMACSHA256=${createHmac('sha256', secretKey).update(stringToSign, 'utf8').digest('base64')}`
+  const normalizedExpected = normalizeDokuSignatureValue(expected)
+  const normalizedReceived = normalizeDokuSignatureValue(signatureHeader)
+
+  if (!normalizedReceived || !normalizedExpected) {
+    return { valid: false, error: 'Missing DOKU signature value' }
+  }
+
+  if (normalizedReceived.length !== normalizedExpected.length) {
+    return { valid: false, error: 'Signature length mismatch' }
+  }
+
+  return timingSafeEqual(Buffer.from(normalizedReceived), Buffer.from(normalizedExpected))
+    ? { valid: true }
+    : { valid: false, error: 'Signature mismatch' }
+}
 
 /**
  * Extract the idempotency key (unique event ID) from webhook payload.

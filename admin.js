@@ -517,7 +517,7 @@ async function loadAdminData() {
     ADMIN_DATA.orders = Object.fromEntries(adminOrders.map(order => [order.order_number || order.id, {
       ...order, id: order.order_number || order.id, status: orderStatus(order), statusClass: statusClass(orderStatus(order)),
       customer: order.customer_email, product: order.product_name, price: formatOrderMoney(order.amount, order.currency || 'USD'),
-      date: new Date(order.created_at).toLocaleString(), gateway: order.payment_provider || 'Mayar', license: order.license_key || 'N/A'
+      date: new Date(order.created_at).toLocaleString(), gateway: order.payment_provider || 'DOKU', license: order.license_key || 'N/A'
     }]));
     applyDashboardDateRange();
     const stats = statsData.stats || {};
@@ -843,7 +843,7 @@ function promptRefundOrder() {
   closeOrderDetailModal();
   openConfirmDialog(
     'Issue Full Refund?',
-    `Are you sure you want to refund ${orderTitle} via Mayar Gateway? This will automatically revoke the customer's digital download token.`,
+    `Are you sure you want to refund ${orderTitle} via DOKU? This will automatically revoke the customer's digital download token.`,
     () => {
       showAdminToast(`Refund issued successfully for ${orderTitle}.`);
     }

@@ -205,36 +205,148 @@ function ProductCard({ product }: { product: Product }) {
 const CATEGORIES = FEATURED_CATEGORIES.map(slug => ({ slug, ...CATEGORY_META[slug] }))
 
 function CategoriesSection() {
+  const categoryCards = [
+    { title: 'Software', subtitle: 'software', palette: { bg: '#0b1b45', accent: '#dfe6ff', icon: '🔒', text: '#f8fafc' }, href: '/categories/software' },
+    { title: 'Tools', subtitle: 'tools', palette: { bg: '#111827', accent: '#f8fafc', icon: 'FRP', text: '#f8fafc' }, href: '/categories/software' },
+    { title: 'Tools Teknis', subtitle: 'tools', palette: { bg: '#e5e7eb', accent: '#111827', icon: '🖥️', text: '#111827' }, href: '/categories/software' },
+    { title: 'Creative Packs', subtitle: 'creative', palette: { bg: '#dbeafe', accent: '#0f172a', icon: '📁', text: '#0f172a' }, href: '/categories/digital_asset' },
+    { title: 'Trending Collections', subtitle: 'trends', palette: { bg: '#dfeae8', accent: '#0f172a', icon: 'TRNDS', text: '#0f172a' }, href: '/categories/digital_asset' },
+  ]
+
   return (
-    <section style={{ padding: '80px 24px', background: '#f8fafc' }}>
+    <section style={{ padding: '80px 24px 32px', background: '#0d0d0d' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Pilihan produk</p>
-          <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>Semua Kategori</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, marginBottom: 32 }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.04em', margin: 0 }}>Browse Categories</h2>
+          <Link href="/categories" style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            color: '#f8fafc', border: '1px solid rgba(255,255,255,0.35)',
+            background: 'rgba(255,255,255,0.02)', borderRadius: 10,
+            padding: '12px 22px', fontWeight: 600, fontSize: 16,
+          }}>
+            Explore All Categories →
+          </Link>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
-          {CATEGORIES.map(cat => (
-            <Link key={cat.slug} href={`/categories/${cat.slug}`} style={{
-              background: '#fff', border: '1px solid #e2e8f0', borderRadius: 12,
-              padding: '28px 20px', textAlign: 'center',
-              transition: 'border-color 0.15s ease',
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 20 }}>
+          {categoryCards.map(card => (
+            <Link key={card.title} href={card.href} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              position: 'relative', minHeight: 230, borderRadius: 18, overflow: 'hidden',
+              background: card.palette.bg, border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
+              textDecoration: 'none',
             }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#64748b', letterSpacing: '0.12em', marginBottom: 12 }}>CATEGORY</div>
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>{cat.label}</h3>
-              <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.4 }}>{cat.desc}</p>
+              <div style={{
+                width: '100%', height: '100%', padding: '22px 16px 18px',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                color: card.palette.text,
+              }}>
+                <div style={{
+                  width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center',
+                  fontSize: card.palette.icon === 'FRP' || card.palette.icon === 'TRNDS' ? 72 : 46,
+                  fontWeight: 800, letterSpacing: '-0.05em', color: card.palette.accent,
+                  opacity: 0.96, marginBottom: 10,
+                }}>
+                  {card.palette.icon}
+                </div>
+                <div style={{ fontSize: 18, fontWeight: 700, lineHeight: 1.2, textAlign: 'center' }}>{card.title}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, opacity: 0.85, textTransform: 'lowercase', marginTop: 4 }}>{card.subtitle}</div>
+              </div>
             </Link>
           ))}
         </div>
-        <div style={{ textAlign: 'center', marginTop: 32 }}>
-          {/* THIS LINK NAVIGATES TO /categories — NOT A SCROLL */}
-          <Link href="/categories" style={{
-            display: 'inline-block',
-            background: '#fff', border: '1px solid #7c3aed', color: '#7c3aed',
-            padding: '12px 32px', borderRadius: 8,
-            fontSize: 14, fontWeight: 700,
+      </div>
+    </section>
+  )
+}
+
+function InsightsSection() {
+  const articles = [
+    {
+      title: '10 Tips to Create Viral Images That Get Noticed',
+      tag: 'Tips & Guides',
+      date: 'May 18, 2026',
+      tone: 'dark',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+    },
+    {
+      title: 'Best Digital Art Styles Trending in 2026',
+      tag: 'Inspiration',
+      date: 'May 12, 2026',
+      tone: 'light',
+      image: '',
+    },
+    {
+      title: 'Where to Find High-Quality Images For Your Projects',
+      tag: 'Resources',
+      date: 'May 08, 2026',
+      tone: 'light',
+      image: '',
+    },
+  ]
+
+  return (
+    <section style={{ padding: '32px 24px 80px', background: '#0d0d0d' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, marginBottom: 32 }}>
+          <h2 style={{ fontSize: 48, fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.04em', margin: 0 }}>From the Hub</h2>
+          <Link href="/articles" style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            border: '1px solid rgba(255,255,255,0.35)', borderRadius: 10,
+            color: '#f8fafc', background: 'rgba(255,255,255,0.02)',
+            padding: '12px 22px', fontWeight: 600, fontSize: 16,
           }}>
-            Jelajahi Semua Kategori →
+            View All Articles →
           </Link>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 24 }}>
+          {articles.map(article => (
+            <article key={article.title} style={{
+              background: article.tone === 'dark' ? '#171717' : '#f8f7f5',
+              border: '1px solid rgba(255,255,255,0.08)', borderRadius: 18,
+              overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
+            }}>
+              <div style={{
+                height: 290, background: article.image ? `url(${article.image}) center/cover no-repeat` : article.tone === 'dark' ? '#111827' : '#e5e7eb',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                position: 'relative', overflow: 'hidden',
+              }}>
+                {article.image ? null : (
+                  <div style={{
+                    width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 56, fontWeight: 800, letterSpacing: '-0.08em', color: '#111827', opacity: 0.9,
+                  }}>Art</div>
+                )}
+              </div>
+              <div style={{ padding: '18px 18px 22px' }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', padding: '6px 12px', borderRadius: 999,
+                  background: article.tone === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9',
+                  color: article.tone === 'dark' ? '#fef3c7' : '#0f172a',
+                  fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                }}>{article.tag}</div>
+                <div style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  marginTop: 12, marginBottom: 12, color: article.tone === 'dark' ? '#cbd5e1' : '#475569',
+                  fontSize: 13,
+                }}>
+                  <span>{article.date}</span>
+                </div>
+                <h3 style={{
+                  margin: 0, color: article.tone === 'dark' ? '#f8fafc' : '#111827',
+                  fontSize: 24, lineHeight: 1.18, letterSpacing: '-0.03em',
+                }}>{article.title}</h3>
+                <Link href="/articles" style={{
+                  display: 'inline-flex', marginTop: 18, fontWeight: 700,
+                  color: article.tone === 'dark' ? '#f8fafc' : '#111827',
+                }}>
+                  Read More →
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

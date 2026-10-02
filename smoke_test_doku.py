@@ -4,7 +4,7 @@ Smoke Test Mandiri untuk DOKU Checkout v1 (Production Non-SNAP HMAC-SHA256)
 Memvalidasi:
 1. Pembacaan variabel lingkungan DOKU dari .env
 2. Pembentukan Digest, String To Sign, dan Header Signature sesuai spesifikasi DOKU
-3. Pengiriman HTTP POST request native (urllib) ke https://doku.com/checkout/v1/payment
+3. Pengiriman HTTP POST request native (urllib) ke https://api.doku.com/checkout/v1/payment
 4. Validasi respons dari server produksi DOKU
 5. Simulasi DOKU Webhook Notification dan verifikasi perubahan status transaksi menjadi 'PAID'
 """
@@ -76,7 +76,7 @@ def run_doku_smoke_test():
     load_env_file(".env")
     client_id = os.environ.get("DOKU_CLIENT_ID", "").strip()
     secret_key = os.environ.get("DOKU_SECRET_KEY", "").strip()
-    base_url = os.environ.get("DOKU_BASE_URL", "https://doku.com").rstrip("/")
+    base_url = os.environ.get("DOKU_BASE_URL", "https://api.doku.com").rstrip("/")
     endpoint_path = "/checkout/v1/payment"
     target_url = f"{base_url}{endpoint_path}"
 

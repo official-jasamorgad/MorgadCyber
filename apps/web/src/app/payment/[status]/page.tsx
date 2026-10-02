@@ -79,7 +79,7 @@ export default async function PaymentStatusPage({ params, searchParams }: Props)
             <>
               <div style={{ fontSize: 64, marginBottom: 16 }}>⏳</div>
               <h1 style={{ fontSize: 28, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>Menunggu Konfirmasi</h1>
-              <p style={{ fontSize: 15, color: '#64748b', marginBottom: 8 }}>Pembayaran Anda sedang diproses oleh Mayar.</p>
+              <p style={{ fontSize: 15, color: '#64748b', marginBottom: 8 }}>Pembayaran Anda sedang diproses oleh DOKU.</p>
               {orderNumber && <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 32, fontFamily: 'monospace' }}>No. Pesanan: {orderNumber}</p>}
               <p style={{ fontSize: 13, color: '#64748b', marginBottom: 32 }}>
                 Konfirmasi biasanya berlangsung dalam beberapa menit. Anda akan menerima email setelah pembayaran dikonfirmasi.

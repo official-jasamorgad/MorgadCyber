@@ -5,16 +5,16 @@
    ========================================================================== */
 
 :root {
-  /* Brand Purple Accent System */
-  --purple-50: #F5F3FF;
-  --purple-100: #EDE9FE;
-  --purple-200: #DDD6FE;
-  --purple-300: #C4B5FD;
-  --purple-500: #8B5CF6;
-  --purple-600: #7C3AED;
-  --purple-700: #6D28D9;
-  --purple-800: #5B21B6;
-  --purple-900: #4C1D95;
+  /* Brand Brass Accent System */
+  --purple-50: #F8F1E8;
+  --purple-100: #F0DFC9;
+  --purple-200: #E2C39D;
+  --purple-300: #D2A56D;
+  --purple-500: #B36A1D;
+  --purple-600: #985316;
+  --purple-700: #7F4315;
+  --purple-800: #663613;
+  --purple-900: #4A2813;
 
   /* Restrained Semantic Accents */
   --success-text: #065F46;
@@ -37,10 +37,10 @@
   --slate-border: #CBD5E1;
   --slate-dot: #64748B;
 
-  --info-text: #3730A3;
-  --info-bg: #EEF2FF;
-  --info-border: #C7D2FE;
-  --info-dot: #6366F1;
+  --info-text: #155E63;
+  --info-bg: #ECF8F6;
+  --info-border: #B8DED8;
+  --info-dot: #28877D;
 
   /* Neutrals & Surfaces */
   --bg-app: #F8FAFC;
@@ -89,13 +89,15 @@
     --text-secondary: #cbd5e1;
     --text-muted: #9ca3af;
     --text-subtle: #6b7280;
-    --purple-50: #211c35;
-    --purple-100: #2b2348;
-    --purple-200: #44356d;
-    --purple-300: #a78bfa;
-    --purple-700: #a78bfa;
-    --purple-800: #c4b5fd;
-    --purple-900: #ddd6fe;
+    --purple-50: #332a1e;
+    --purple-100: #483722;
+    --purple-200: #68502f;
+    --purple-300: #b38a51;
+    --purple-500: #c69a5a;
+    --purple-600: #d0a66b;
+    --purple-700: #e0b982;
+    --purple-800: #ead0a8;
+    --purple-900: #f1dfc2;
     --success-bg: #123328;
     --success-text: #86efac;
     --success-border: #236044;
@@ -108,9 +110,9 @@
     --slate-bg: #252b35;
     --slate-text: #cbd5e1;
     --slate-border: #4b5563;
-    --info-bg: #20264a;
-    --info-text: #c4b5fd;
-    --info-border: #4c4f91;
+    --info-bg: #17312f;
+    --info-text: #8fd0c5;
+    --info-border: #315a55;
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.32);
@@ -676,13 +678,13 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 1px 2px rgba(109, 40, 217, 0.2);
+  box-shadow: 0 1px 2px rgba(152, 83, 22, 0.18);
   transition: all 0.15s ease;
 }
 
 .btn-primary-action:hover {
   background: var(--purple-800);
-  box-shadow: 0 3px 8px rgba(109, 40, 217, 0.3);
+  box-shadow: 0 3px 8px rgba(152, 83, 22, 0.24);
 }
 
 /* 12-Column Responsive Grid System */

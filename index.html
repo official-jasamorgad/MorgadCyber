@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://jokul.doku.com/jokul-checkout-js/v1/jokul-checkout-1.0.0.js"></script>
 </head>
 
 <body>
@@ -28,11 +29,10 @@
 
       <!-- Desktop Navigation Links -->
       <ul class="nav-links">
-        <li><a href="#trending" class="nav-link active">Explore</a></li>
-        <li><a href="#categories" class="nav-link">Categories</a></li>
-        <li><a href="#featured" class="nav-link">Featured</a></li>
-        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
-        <li><a href="#articles" class="nav-link">Articles</a></li>
+        <li><a href="#trending" class="nav-link active" data-i18n="navExplore">Explore</a></li>
+        <li><a href="#categories" class="nav-link" data-i18n="navCategories">Categories</a></li>
+        <li><a href="#featured" class="nav-link" data-i18n="navFeatured">Featured</a></li>
+        <li><a href="#how-it-works" class="nav-link" data-i18n="navHowItWorks">How It Works</a></li>
       </ul>
 
       <!-- Navigation Actions -->
@@ -43,7 +43,7 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" id="catalogSearchInput" placeholder="Search catalog...">
+          <input type="text" id="catalogSearchInput" placeholder="Search catalog..." data-i18n-placeholder="searchPlaceholder">
         </div>
 
         <button class="icon-button" id="cartToggleBtn" aria-label="View Cart">
@@ -56,12 +56,36 @@
           <span class="cart-badge" id="cartCountBadge">0</span>
         </button>
 
-        <!-- Currency Switcher (IDR / USD) -->
-        <div class="currency-switcher" id="currencySwitcher" role="radiogroup" aria-label="Select Currency">
-          <button type="button" class="currency-btn active" data-currency="IDR"
-            aria-label="Indonesian Rupiah">IDR</button>
-          <button type="button" class="currency-btn" data-currency="USD" aria-label="US Dollar">USD</button>
+        <div class="language-switcher" id="languageSwitcher">
+          <button type="button" class="language-current" id="languageCurrent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" aria-controls="languageMenu">
+            <svg class="language-flag" aria-hidden="true"><use id="currentLanguageFlag" href="#flag-en"></use></svg>
+            <span class="language-currency-code" id="currentCurrencyCode">USD</span>
+            <svg class="language-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="language-menu" id="languageMenu" role="menu" hidden>
+            <button type="button" class="lang-option" data-lang="en" role="menuitemradio" aria-checked="true"><span class="language-option-label"><svg class="language-flag" aria-hidden="true"><use href="#flag-en"></use></svg> English</span><span class="language-option-currency">USD</span></button>
+            <button type="button" class="lang-option" data-lang="zh" role="menuitemradio" aria-checked="false"><span class="language-option-label"><svg class="language-flag" aria-hidden="true"><use href="#flag-zh"></use></svg> 中文</span><span class="language-option-currency">CNY</span></button>
+            <button type="button" class="lang-option" data-lang="id" role="menuitemradio" aria-checked="false"><span class="language-option-label"><svg class="language-flag" aria-hidden="true"><use href="#flag-id"></use></svg> Indonesia</span><span class="language-option-currency">IDR</span></button>
+          </div>
         </div>
+        <svg class="language-flag-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <symbol id="flag-en" viewBox="0 0 24 16">
+            <rect width="24" height="16" fill="#fff"/>
+            <path fill="#b22234" d="M0 0h24v1.23H0zm0 2.46h24v1.23H0zm0 2.46h24v1.23H0zm0 2.46h24v1.23H0zm0 2.46h24v1.23H0zm0 2.46h24v1.23H0zm0 2.46h24V16H0z"/>
+            <path fill="#3c3b6e" d="M0 0h10.4v8.62H0z"/>
+            <g fill="#fff"><circle cx="1.7" cy="1.4" r=".35"/><circle cx="4" cy="1.4" r=".35"/><circle cx="6.3" cy="1.4" r=".35"/><circle cx="8.6" cy="1.4" r=".35"/><circle cx="2.85" cy="2.8" r=".35"/><circle cx="5.15" cy="2.8" r=".35"/><circle cx="7.45" cy="2.8" r=".35"/><circle cx="1.7" cy="4.2" r=".35"/><circle cx="4" cy="4.2" r=".35"/><circle cx="6.3" cy="4.2" r=".35"/><circle cx="8.6" cy="4.2" r=".35"/><circle cx="2.85" cy="5.6" r=".35"/><circle cx="5.15" cy="5.6" r=".35"/><circle cx="7.45" cy="5.6" r=".35"/><circle cx="1.7" cy="7" r=".35"/><circle cx="4" cy="7" r=".35"/><circle cx="6.3" cy="7" r=".35"/><circle cx="8.6" cy="7" r=".35"/></g>
+          </symbol>
+          <symbol id="flag-zh" viewBox="0 0 24 16">
+            <rect width="24" height="16" fill="#de2910"/>
+            <path fill="#ffde00" d="m4 2 1 2.6 2.8.1-2.2 1.7.8 2.7L4 7.5l-2.4 1.6.8-2.7L.2 4.7 3 4.6z"/>
+            <circle cx="9" cy="2.2" r=".55" fill="#ffde00"/><circle cx="11" cy="4.2" r=".55" fill="#ffde00"/><circle cx="11" cy="7" r=".55" fill="#ffde00"/><circle cx="9" cy="9" r=".55" fill="#ffde00"/>
+          </symbol>
+          <symbol id="flag-id" viewBox="0 0 24 16">
+            <rect width="24" height="8" fill="#ce1126"/><rect y="8" width="24" height="8" fill="#fff"/>
+          </symbol>
+        </svg>
 
         <!-- Light / Dark Mode Toggle -->
         <button type="button" class="icon-button theme-toggle-btn" id="themeToggleBtn"
@@ -85,7 +109,7 @@
         </button>
 
         <a href="#trending" class="btn-header-cta">
-          Explore Products
+          <span data-i18n="headerCta">Explore Products</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -110,58 +134,46 @@
               <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
               <polyline points="17 6 23 6 23 12"></polyline>
             </svg>
-            <span>Trending Digital Collections</span>
+            <span data-i18n="heroBadge">Software &amp; Tools</span>
           </div>
 
-          <h1 class="hero-title">
-            Discover Digital Content Worth Sharing.
+          <h1 class="hero-title" data-i18n="heroTitle">
+            Digital tools for technical needs.
           </h1>
-
-          <p class="hero-subtitle">
-            Explore premium viral images, creative collections and digital assets. Buy instantly and download securely.
+          <p class="hero-subtitle" data-i18n="heroSubtitle">
+            Find software for mobile technician work, technical design, and digital forensics.
           </p>
-
           <div class="hero-actions">
-            <a href="#trending" class="btn-primary">
-              Explore Products
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-            </a>
-            <a href="#trending" class="btn-secondary">
-              See What's Trending
-            </a>
+            <a href="#trending" class="btn-primary" data-i18n="viewProducts">View Products</a>
+            <a href="/categories" class="btn-secondary" data-i18n="allCategories">All Categories</a>
           </div>
         </div>
 
         <!-- Hero Dynamic Floating Card Cluster (Matching reference tilt composition) -->
         <div class="hero-visual">
-          <div class="hero-ambient-glow"></div>
           <div class="floating-cards-wrapper">
-            <!-- Card 1: Top Left (Cellebrite UFED 4 UPC) -->
+            <!-- Card 1: Top Left (Cellebrite Tools) -->
             <div class="float-card card-top-left" onclick="openProductQuickView('prod-4')">
-              <img src="assets/images/ufed.svg" alt="Cellebrite UFED 4 UPC">
-              <span class="card-pill">Cellebrite UFED 4 UPC</span>
+              <img src="assets/images/ufed.svg" alt="Cellebrite Tools">
+              <span class="card-pill">Cellebrite Tools</span>
             </div>
 
-            <!-- Card 2: Top Right (Creative Digital Art) -->
+            <!-- Card 2: Top Right (AutoCAD) -->
             <div class="float-card card-top-right" onclick="openProductQuickView('prod-3')">
-              <img src="assets/images/autocad.svg" alt="Creative Digital Art">
-              <span class="card-pill">AutoCad</span>
+              <img src="assets/images/autocad.svg" alt="AutoCAD">
+              <span class="card-pill">AutoCAD</span>
             </div>
 
-            <!-- Card 3: Bottom Left (DZKG Tools) -->
+            <!-- Card 3: Bottom Left (DZKJ Tools) -->
             <div class="float-card card-bottom-left" onclick="openProductQuickView('prod-1')">
-              <img src="assets/images/dzkg.svg" alt="DZKG Tools">
-              <span class="card-pill">DZKG Tools</span>
+              <img src="assets/images/dzkg.svg" alt="DZKJ Tools">
+              <span class="card-pill">DZKJ Tools</span>
             </div>
 
-            <!-- Card 4: Bottom Right (IPS Tools) -->
+            <!-- Card 4: Bottom Right (Tes Point Isp) -->
             <div class="float-card card-bottom-right" onclick="openProductQuickView('prod-2')">
-              <img src="assets/images/Tp_isp.svg" alt="ISP Tools">
-              <span class="card-pill">Tes point Isp</span>
+              <img src="assets/images/Tp_isp.svg" alt="Tes Point Isp">
+              <span class="card-pill">Tes Point Isp</span>
             </div>
           </div>
         </div>
@@ -181,8 +193,8 @@
             </svg>
           </div>
           <div class="trust-info">
-            <div class="trust-title">Instant Digital Access</div>
-            <div class="trust-desc">Get your files instantly</div>
+            <div class="trust-title" data-i18n="trustAccess">Product Access</div>
+            <div class="trust-desc" data-i18n="trustAccessDesc">Available after payment is verified</div>
           </div>
         </div>
 
@@ -195,8 +207,8 @@
             </svg>
           </div>
           <div class="trust-info">
-            <div class="trust-title">Secure Payments</div>
-            <div class="trust-desc">100% safe &amp; secure</div>
+            <div class="trust-title" data-i18n="trustDoku">DOKU Payment</div>
+            <div class="trust-desc" data-i18n="trustDokuDesc">Payment status is processed automatically</div>
           </div>
         </div>
 
@@ -210,8 +222,8 @@
             </svg>
           </div>
           <div class="trust-info">
-            <div class="trust-title">Easy Download</div>
-            <div class="trust-desc">Simple &amp; fast downloads</div>
+            <div class="trust-title" data-i18n="trustDownload">Digital Download</div>
+            <div class="trust-desc" data-i18n="trustDownloadDesc">Link is available after full payment</div>
           </div>
         </div>
 
@@ -224,8 +236,8 @@
             </svg>
           </div>
           <div class="trust-info">
-            <div class="trust-title">No Signup Required</div>
-            <div class="trust-desc">Buy without an account</div>
+            <div class="trust-title" data-i18n="trustNoAccount">No Account Needed</div>
+            <div class="trust-desc" data-i18n="trustNoAccountDesc">Checkout uses your email address</div>
           </div>
         </div>
       </div>
@@ -239,10 +251,10 @@
       <div class="container">
         <div class="section-header">
           <div>
-            <h2 class="section-title">Trending Right Now</h2>
-            <p class="section-subtitle">Popular digital collections people are exploring.</p>
+            <h2 class="section-title" data-i18n="productsTitle">Featured Products</h2>
+            <p class="section-subtitle" data-i18n="productsSubtitle">Technical tools, design software, and digital forensics software.</p>
           </div>
-          <a href="/categories" class="btn-view-all">
+          <a href="/categories" class="btn-view-all"><span data-i18n="viewAllProducts">View All Products</span>
             View All Products
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
@@ -264,20 +276,20 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Quick View
+                  <span data-i18n="quickView">Quick View</span>
                 </span>
               </div>
             </div>
             <div class="product-card-body">
-              <span class="product-tag">Tools Teknisi</span>
+              <span class="product-tag" data-i18n="tagTechnicalTools">Technical Tools</span>
               <h3 class="product-title">DZKJ Tools</h3>
-              <p class="product-desc">DkKJ Tools adalah tools yang digunaka oleh teknisi Hendphone untuk membaca skema.</p>
+              <p class="product-desc" data-i18n="productDescDzkj">Mobile technician tool for viewing device schematics.</p>
               <div class="product-price-row">
                 <span class="product-price" data-price-idr="35000" data-price-usd="1.96">Rp 35.000</span>
               </div>
               <div class="product-actions">
                 <button class="btn-buy-now" onclick="handleBuyNow('prod-1')">
-                  Buy Now
+                  <span data-i18n="buyNow">Buy Now</span>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -285,7 +297,7 @@
                   </svg>
                 </button>
                 <button class="btn-view-details" onclick="openProductQuickView('prod-1')">
-                  View Details
+                  <span data-i18n="viewDetails">View Details</span>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -298,27 +310,27 @@
           <!-- Card 2: Premium Aesthetic Collection -->
           <article class="product-card" data-category="photos" data-id="prod-2">
             <div class="product-image-container" onclick="openProductQuickView('prod-2')">
-              <img src="assets/images/Tp_isp.svg" alt="Premium Aesthetic Collection" class="product-image">
+              <img src="assets/images/Tp_isp.svg" alt="Tes Point Isp" class="product-image">
               <div class="product-quick-view-overlay">
                 <span class="quick-view-btn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Quick View
+                  <span data-i18n="quickView">Quick View</span>
                 </span>
               </div>
             </div>
             <div class="product-card-body">
-              <span class="product-tag">Software</span>
+              <span class="product-tag" data-i18n="tagSoftware">Software</span>
               <h3 class="product-title">Tes Point Isp </h3>
-              <p class="product-desc">Tes point isp adalah tools digunakan oleh teknisi Hendphone.</p>
+              <p class="product-desc" data-i18n="productDescIsp">A mobile technician tool for identifying test points.</p>
               <div class="product-price-row">
                 <span class="product-price" data-price-idr="15000" data-price-usd="0.84">Rp 15.000</span>
               </div>
               <div class="product-actions">
                 <button class="btn-buy-now" onclick="handleBuyNow('prod-2')">
-                  Buy Now
+                  <span data-i18n="buyNow">Buy Now</span>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -326,7 +338,7 @@
                   </svg>
                 </button>
                 <button class="btn-view-details" onclick="openProductQuickView('prod-2')">
-                  View Details
+                  <span data-i18n="viewDetails">View Details</span>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -339,27 +351,27 @@
           <!-- Card 3: Creative Image Bundle -->
           <article class="product-card" data-category="creative" data-id="prod-3">
             <div class="product-image-container" onclick="openProductQuickView('prod-3')">
-              <img src="assets/images/autocad.svg" alt="Creative Image Bundle" class="product-image">
+              <img src="assets/images/autocad.svg" alt="AutoCAD" class="product-image">
               <div class="product-quick-view-overlay">
                 <span class="quick-view-btn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Quick View
+                  <span data-i18n="quickView">Quick View</span>
                 </span>
               </div>
             </div>
             <div class="product-card-body">
-              <span class="product-tag">Software</span>
+              <span class="product-tag" data-i18n="tagSoftware">Software</span>
               <h3 class="product-title">AutoCAD</h3>
-              <p class="product-desc">AutoCAD adalah tools yang digunakan oleh mahasiswa Teknik Sipil dan Insiyur..</p>
+              <p class="product-desc" data-i18n="productDescCad">Architecture and engineering design software for civil engineering students and professionals.</p>
               <div class="product-price-row">
                 <span class="product-price" data-price-idr="35000" data-price-usd="1.96">Rp 35.000</span>
               </div>
               <div class="product-actions">
                 <button class="btn-buy-now" onclick="handleBuyNow('prod-3')">
-                  Buy Now
+                  <span data-i18n="buyNow">Buy Now</span>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -367,7 +379,7 @@
                   </svg>
                 </button>
                 <button class="btn-view-details" onclick="openProductQuickView('prod-3')">
-                  View Details
+                  <span data-i18n="viewDetails">View Details</span>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -380,27 +392,27 @@
           <!-- Card 4: Cellebrite UFED 4PC -->
           <article class="product-card" data-category="Software" data-id="prod-4">
             <div class="product-image-container" onclick="openProductQuickView('prod-4')">
-              <img src="assets/images/ufed.svg" alt="AutoCad" class="product-image">
+              <img src="assets/images/ufed.svg" alt="Cellebrite Tools" class="product-image">
               <div class="product-quick-view-overlay">
                 <span class="quick-view-btn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  Quick View
+                  <span data-i18n="quickView">Quick View</span>
                 </span>
               </div>
             </div>
             <div class="product-card-body">
-              <span class="product-tag">Software</span>
+              <span class="product-tag" data-i18n="tagSoftware">Software</span>
               <h3 class="product-title">Cellebrite Tools</h3>
-              <p class="product-desc">Cellebrite UFED adalah tools yang digunakan oleh Forensics.</p>
+              <p class="product-desc" data-i18n="productDescCellebrite">Cellebrite UFED software for digital forensics.</p>
               <div class="product-price-row">
                 <span class="product-price" data-price-idr="50000" data-price-usd="2.8">Rp 50.000</span>
               </div>
               <div class="product-actions">
                 <button class="btn-buy-now" onclick="handleBuyNow('prod-4')">
-                  Buy Now
+                  <span data-i18n="buyNow">Buy Now</span>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -408,7 +420,7 @@
                   </svg>
                 </button>
                 <button class="btn-view-details" onclick="openProductQuickView('prod-4')">
-                  View Details
+                  <span data-i18n="viewDetails">View Details</span>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
@@ -419,8 +431,8 @@
           </article>
         </div>
         <div class="catalog-empty-state" id="catalogEmptyState" hidden>
-          <strong>No products found</strong>
-          <span>Try another keyword or clear the category filter.</span>
+          <strong data-i18n="searchEmptyTitle">No products found</strong>
+          <span data-i18n="searchEmptyDescription">Try another search or browse all categories.</span>
         </div>
       </div>
     </section>
@@ -432,9 +444,9 @@
       <div class="container">
         <div class="section-header">
           <div>
-            <h2 class="section-title">Browse Categories</h2>
+            <h2 class="section-title" data-i18n="categoriesTitle">Categories</h2>
           </div>
-          <a href="/categories" class="btn-view-all">
+          <a href="/categories" class="btn-view-all" data-i18n="exploreAllCategories">
             Explore All Categories
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
@@ -444,80 +456,62 @@
           </a>
         </div>
 
-        <!-- 5 Category Visual Tiles -->
+        <!-- Categories backed by the current product catalog -->
         <div class="category-grid-5">
-          <!-- Tile 1: Software -->
-          <div class="category-tile" data-cat="viral" onclick="filterByCategory('Software', this)">
-            <img src="assets/images/Software.jpg" alt="Software">
-            <div class="category-tile-overlay">
-              <div class="category-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a class="category-tile" href="/categories?category=Software" aria-label="Software">
+            <div class="category-tile-overlay" style="background: rgba(17, 24, 39, 0.18);">
+              <div class="category-icon-box" style="background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
               </div>
-              <span class="category-title">Software</span>
+              <span class="category-title" data-i18n="categorySoftware">Software</span>
             </div>
-          </div>
+          </a>
 
-          <!-- Tile 2: Sewa Tools FRP -->
-          <div class="category-tile" data-cat="Frp" onclick="filterByCategory('photos', this)">
-            <img src="assets/images/frp.svg" alt="FRP Toolss">
-            <div class="category-tile-overlay">
-              <div class="category-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
+          <a class="category-tile" href="/jasa-tools" aria-label="FRP Rental Tools" style="background: linear-gradient(135deg, #0f172a 0%, #1f2937 100%);">
+            <div class="category-tile-overlay" style="background: rgba(15, 23, 42, 0.18);">
+              <div class="category-icon-box" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28);">
+                <span style="font-size: 2rem; line-height: 1; font-weight: 800; letter-spacing: -0.06em;">FRP</span>
               </div>
-              <span class="category-title">Sewa FRP Tools</span>
+              <span class="category-title" data-i18n="categoryFrp">FRP Rental Tools</span>
             </div>
-          </div>
+          </a>
 
-          <!-- Tile 3: Wallpapers -->
-          <div class="category-tile" data-cat="ToolsTeknisi" onclick="filterByCategory('ToolsTeknisi', this)">
-            <img src="assets/images/teknisi.svg" alt="ToolsTeknisi">
-            <div class="category-tile-overlay">
-              <div class="category-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <a class="category-tile" href="/categories?category=Tools%20Teknisi" aria-label="Technical Tools" style="background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);">
+            <div class="category-tile-overlay" style="background: rgba(255,255,255,0.08);">
+              <div class="category-icon-box" style="background: rgba(17, 24, 39, 0.08); border-color: rgba(17, 24, 39, 0.2); color: #111827;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                   <line x1="8" y1="21" x2="16" y2="21"></line>
                   <line x1="12" y1="17" x2="12" y2="21"></line>
                 </svg>
               </div>
-              <span class="category-title">Tools Teknisi</span>
+              <span class="category-title" data-i18n="categoryTools" style="color: #111827; text-shadow: none;">Technical Tools</span>
             </div>
-          </div>
+          </a>
 
-          <!-- Tile 4: Creative Packs -->
-          <div class="category-tile" data-cat="creative" onclick="filterByCategory('creative', this)">
-            <img src="assets/images/file.svg" alt="Creative Packs">
-            <div class="category-tile-overlay">
-              <div class="category-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
+          <a class="category-tile" href="/categories?category=Creative%20Packs" aria-label="Creative Packs" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+            <div class="category-tile-overlay" style="background: rgba(15, 23, 42, 0.06);">
+              <div class="category-icon-box" style="background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.4); color: #0f172a;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h5L12 7.5h6.5A2.5 2.5 0 0 1 21 10v7.5A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5V7.5z"></path>
+                  <path d="M8 10h8"></path>
                 </svg>
               </div>
-              <span class="category-title">Creative Packs</span>
+              <span class="category-title" data-i18n="categoryCreative" style="color: #0f172a; text-shadow: none;">Creative Packs</span>
             </div>
-          </div>
+          </a>
 
-          <!-- Tile 5: Trending Collections -->
-          <div class="category-tile" data-cat="trending" onclick="filterByCategory('trending', this)">
-            <img src="assets/images/tren.svg" alt="Trending Collections">
-            <div class="category-tile-overlay">
-              <div class="category-icon-box">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path
-                    d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3z">
-                  </path>
-                </svg>
+          <a class="category-tile" href="/categories?category=Trending%20Collections" aria-label="Popular Collections" style="background: linear-gradient(135deg, #e5f0ee 0%, #dce7e5 100%);">
+            <div class="category-tile-overlay" style="background: rgba(15, 23, 42, 0.06);">
+              <div class="category-icon-box" style="background: rgba(255,255,255,0.28); border-color: rgba(255,255,255,0.4); color: #0f172a;">
+                <span style="font-size: 1.55rem; line-height: 1; font-weight: 800; letter-spacing: -0.06em;">TRNDS</span>
               </div>
-              <span class="category-title">Trending Collections</span>
+              <span class="category-title" data-i18n="categoryTrending" style="color: #0f172a; text-shadow: none;">Popular Collections</span>
             </div>
-          </div>
+          </a>
         </div>
       </div>
     </section>
@@ -530,10 +524,10 @@
         <div class="featured-banner">
           <!-- Left Column Content -->
           <div class="featured-content">
-            <span class="featured-pill">Jasa Sewa Tools</span>
-            <h2 class="featured-title">Sewa Tools FRP &amp; Tools Lain</h2>
-            <p class="featured-desc">
-              Akses tools FRP, flashing, unlock, dan utilitas teknisi dengan pilihan sewa yang fleksibel.
+            <span class="featured-pill" data-i18n="rentalPill">Tool Rental Service</span>
+            <h2 class="featured-title" data-i18n="rentalTitle">Rent FRP Tools and More</h2>
+            <p class="featured-desc" data-i18n="rentalDescription">
+              Access FRP, flashing, unlocking, and technician utility tools with flexible rental options.
             </p>
 
             <div class="featured-benefits">
@@ -543,7 +537,7 @@
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>Tools FRP Terupdate</span>
+                <span data-i18n="rentalBenefitUpdated">Up-to-date FRP tools</span>
               </div>
               <div class="benefit-item">
                 <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -551,7 +545,7 @@
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="8 12 11 15 16 9"></polyline>
                 </svg>
-                <span>Sewa Harian &amp; Mingguan</span>
+                <span data-i18n="rentalBenefitTerms">Daily and weekly rentals</span>
               </div>
               <div class="benefit-item">
                 <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -560,12 +554,12 @@
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span>Support Teknisi</span>
+                <span data-i18n="rentalBenefitSupport">Technician support</span>
               </div>
             </div>
 
             <a class="btn-primary" href="/jasa-tools">
-              Lihat Daftar Tools
+              <span data-i18n="rentalAction">Browse Available Tools</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                 stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -599,8 +593,8 @@
     <section class="section" id="how-it-works">
       <div class="container">
         <div class="section-header-centered">
-          <h2 class="section-title">How It Works</h2>
-          <p class="section-subtitle">Get your digital content in three simple steps.</p>
+          <h2 class="section-title" data-i18n="howToShop">How to Shop</h2>
+          <p class="section-subtitle" data-i18n="howToShopDescription">Choose a product, pay through DOKU, then download after payment is verified.</p>
         </div>
 
         <div class="how-it-works-flow">
@@ -617,8 +611,8 @@
               <span class="step-badge">1</span>
             </div>
             <div class="step-content">
-              <h3 class="step-title">Choose</h3>
-              <p class="step-desc">Browse and select the digital products you love.</p>
+              <h3 class="step-title" data-i18n="stepChoose">Choose a product</h3>
+              <p class="step-desc" data-i18n="stepChooseDesc">Review the details and price before continuing.</p>
             </div>
           </div>
 
@@ -643,8 +637,8 @@
               <span class="step-badge">2</span>
             </div>
             <div class="step-content">
-              <h3 class="step-title">Pay Securely</h3>
-              <p class="step-desc">Complete payment securely and safely.</p>
+              <h3 class="step-title" data-i18n="stepPay">Pay through DOKU</h3>
+              <p class="step-desc" data-i18n="stepPayDesc">Complete your payment on the DOKU page.</p>
             </div>
           </div>
 
@@ -670,8 +664,8 @@
               <span class="step-badge">3</span>
             </div>
             <div class="step-content">
-              <h3 class="step-title">Download</h3>
-              <p class="step-desc">Instantly download your files and start using.</p>
+              <h3 class="step-title" data-i18n="stepDownload">Download your product</h3>
+              <p class="step-desc" data-i18n="stepDownloadDesc">The download link is available after payment is verified.</p>
             </div>
           </div>
         </div>
@@ -685,7 +679,7 @@
     <section class="section" id="why-choose">
       <div class="container">
         <div class="section-header-centered">
-          <h2 class="section-title">Why Choose MorgadCyber?</h2>
+          <h2 class="section-title" data-i18n="purchaseInfo">Purchase Information</h2>
         </div>
 
         <div class="why-choose-strip">
@@ -696,8 +690,8 @@
               </svg>
             </div>
             <div>
-              <div class="why-title">Instant Access</div>
-              <div class="why-desc">Get immediate access to your purchased digital products.</div>
+              <div class="why-title" data-i18n="transparentPrice">Transparent pricing</div>
+              <div class="why-desc" data-i18n="transparentPriceDesc">See the product price before checkout.</div>
             </div>
           </div>
 
@@ -708,8 +702,8 @@
               </svg>
             </div>
             <div>
-              <div class="why-title">High Quality</div>
-              <div class="why-desc">Premium quality content crafted for creators.</div>
+              <div class="why-title" data-i18n="guestCheckout">Guest checkout</div>
+              <div class="why-desc" data-i18n="guestCheckoutDesc">Enter your contact details to begin payment.</div>
             </div>
           </div>
 
@@ -721,8 +715,8 @@
               </svg>
             </div>
             <div>
-              <div class="why-title">Secure Checkout</div>
-              <div class="why-desc">Your payments are protected with top-level security.</div>
+              <div class="why-title" data-i18n="verifiedPayment">Verified payment</div>
+              <div class="why-desc" data-i18n="verifiedPaymentDesc">Download access is enabled after payment is confirmed.</div>
             </div>
           </div>
 
@@ -735,8 +729,8 @@
               </svg>
             </div>
             <div>
-              <div class="why-title">Simple Download</div>
-              <div class="why-desc">Easy and fast downloads with one click.</div>
+              <div class="why-title" data-i18n="orderStatus">Check order status</div>
+              <div class="why-desc" data-i18n="orderStatusDesc">View payment and download status on the order page.</div>
             </div>
           </div>
         </div>
@@ -748,13 +742,13 @@
          ========================================================================= -->
     <section class="section" id="articles">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header" style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom: 24px;">
           <div>
-            <h2 class="section-title">From the Hub</h2>
-            <p class="section-subtitle">Tips, trends and inspiration for creators.</p>
+            <h2 class="section-title" data-i18n="articleSectionTitle" style="font-size: clamp(2.1rem, 3vw, 4rem); margin:0; letter-spacing:-0.05em;">From the Hub</h2>
+            <p class="section-subtitle" data-i18n="articleSectionDesc" style="margin-top: 12px; margin-bottom:0;">Research, updates, and useful insights.</p>
           </div>
-          <a href="artikel.html" class="btn-view-all">
-            View All Articles
+          <a href="artikel.html" class="btn-view-all" style="white-space:nowrap;">
+            <span data-i18n="viewAllArticles">View All Articles</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -764,11 +758,9 @@
         </div>
 
         <div class="article-grid-3">
-          <!-- Article 1 -->
-          <a href="baca-artikel.html?id=Intenational-art-styles-2025" class="article-card">
+          <a href="artikel.html" class="article-card">
             <div class="article-image-container">
-              <img src="assets/images/citations.jpeg" alt="International Journal of Electrical and Computer EngineeringInternational Journal of Electrical and Computer Engineering"
-                class="article-image">
+              <img src="assets/images/hydara.jpeg" alt="Electronic and Computer Engineering" class="article-image">
             </div>
             <div class="article-body">
               <div class="article-meta">
@@ -776,21 +768,13 @@
                 <span class="article-date">May 18, 2026</span>
               </div>
               <h3 class="article-title">10 Tips to Create Viral Images That Get Noticed</h3>
-              <span class="article-link">
-                Read More
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </span>
+              <span class="article-link">Read More</span>
             </div>
           </a>
 
-          <!-- Article 2 -->
-          <a href="baca-artikel.html?id=digital-art-styles-2026" class="article-card">
-            <div class="article-image-container">
-              <img src="assets/images/article-desk.svg" alt="Best Digital Art Styles Trending in 2026"
-                class="article-image">
+          <a href="artikel.html" class="article-card">
+            <div class="article-image-container" style="background: #eef2f7;">
+              <img src="assets/images/citations.jpeg" alt="Best Digital Art Styles Trending in 2026" class="article-image" style="object-fit:cover;">
             </div>
             <div class="article-body">
               <div class="article-meta">
@@ -798,21 +782,13 @@
                 <span class="article-date">May 12, 2026</span>
               </div>
               <h3 class="article-title">Best Digital Art Styles Trending in 2026</h3>
-              <span class="article-link">
-                Read More
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </span>
+              <span class="article-link">Read More</span>
             </div>
           </a>
 
-          <!-- Article 3 -->
-          <a href="baca-artikel.html?id=high-quality-images" class="article-card">
-            <div class="article-image-container">
-              <img src="assets/images/article-peaks.svg" alt="Where to Find High-Quality Images For Your Projects"
-                class="article-image">
+          <a href="artikel.html" class="article-card">
+            <div class="article-image-container" style="background: #f1f5f9;">
+              <img src="assets/images/Software.jpg" alt="Where to Find High-Quality Images For Your Projects" class="article-image" style="object-fit:cover;">
             </div>
             <div class="article-body">
               <div class="article-meta">
@@ -820,13 +796,7 @@
                 <span class="article-date">May 08, 2026</span>
               </div>
               <h3 class="article-title">Where to Find High-Quality Images For Your Projects</h3>
-              <span class="article-link">
-                Read More
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </span>
+              <span class="article-link">Read More</span>
             </div>
           </a>
         </div>
@@ -847,13 +817,13 @@
             </svg>
           </div>
           <div>
-            <h2 class="cta-title">Find Something Worth Downloading.</h2>
-            <p class="cta-subtitle">Explore our latest digital collections.</p>
+            <h2 class="cta-title" data-i18n="ctaTitle">Need tools for your work?</h2>
+            <p class="cta-subtitle" data-i18n="ctaDescription">Explore the available software and technical tools.</p>
           </div>
         </div>
 
         <a href="#trending" class="btn-cta-white">
-          Explore Products
+          <span data-i18n="headerCta">Explore Products</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
@@ -876,25 +846,25 @@
                 alt="J.S. Morgad Cyber"></div>
             <span>MorgadCyber</span>
           </a>
-          <p class="footer-desc">
-            Your ultimate destination for premium digital content, curated viral imagery, and modern creative assets.
+          <p class="footer-desc" data-i18n="footerDescription">
+            Software and digital tools for technical needs.
           </p>
           <div class="footer-socials">
-            <a href="#" class="social-icon-btn" aria-label="Twitter">
+            <a href="https://x.com/morgadcyber" class="social-icon-btn" aria-label="X (Twitter)" target="_blank" rel="noopener noreferrer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path
                   d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
                 </path>
               </svg>
             </a>
-            <a href="#" class="social-icon-btn" aria-label="Instagram">
+            <a href="https://www.instagram.com/morgad.cyber/" class="social-icon-btn" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
-            <a href="#" class="social-icon-btn" aria-label="Discord">
+            <a href="https://discord.gg/7WakcdF7E" class="social-icon-btn" aria-label="Discord" target="_blank" rel="noopener noreferrer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path
                   d="M18 6h0a14.5 14.5 0 0 0-4-1.2 11.5 11.5 0 0 0-.5 1.2 13.5 13.5 0 0 0-3 0A11.5 11.5 0 0 0 10 4.8 14.5 14.5 0 0 0 6 6c-2.5 4-3 8-3 12 2 1.5 4 2 6 2 .5-.7 1-1.5 1.4-2.3-1-.3-1.8-.8-2.4-1.4.2.1.4.3.6.4 2 1 4.5 1.5 7.4 1.5s5.4-.5 7.4-1.5c.2-.1.4-.3.6-.4-.6.6-1.4 1.1-2.4 1.4.4.8.9 1.6 1.4 2.3 2 0 4-.5 6-2 0-4-.5-8-3-12z">
@@ -908,60 +878,56 @@
 
         <!-- Col 2: Explore -->
         <div>
-          <h4 class="footer-heading">Explore</h4>
+          <h4 class="footer-heading" data-i18n="footerExplore">Explore</h4>
           <ul class="footer-links">
-            <li><a href="#trending">Trending Now</a></li>
-            <li><a href="#categories">Browse Categories</a></li>
-            <li><a href="#featured">Featured Collection</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#articles">Creator Articles</a></li>
+            <li><a href="#trending" data-i18n="footerTrending">Trending Now</a></li>
+            <li><a href="#categories" data-i18n="footerCategories">Browse Categories</a></li>
+            <li><a href="#featured" data-i18n="footerFeatured">Featured Collection</a></li>
+            <li><a href="#how-it-works" data-i18n="footerHowItWorks">How It Works</a></li>
           </ul>
         </div>
 
         <!-- Col 3: Products -->
         <div>
-          <h4 class="footer-heading">Products</h4>
+          <h4 class="footer-heading" data-i18n="footerProducts">Products</h4>
           <ul class="footer-links">
-            <li><a href="#trending">Viral Visual Packs</a></li>
-            <li><a href="#trending">Aesthetic Photos</a></li>
-            <li><a href="#trending">Creative Bundles</a></li>
-            <li><a href="#trending">4K Wallpapers</a></li>
-            <li><a href="#trending">Social Media Assets</a></li>
+            <li><a href="/categories?category=Software" data-i18n="footerSoftware">Software</a></li>
+            <li><a href="/categories?category=Tools%20Teknisi" data-i18n="footerTools">Technical Tools</a></li>
           </ul>
         </div>
 
         <!-- Col 4: Support -->
         <div>
-          <h4 class="footer-heading">Support</h4>
+          <h4 class="footer-heading" data-i18n="footerSupport">Support</h4>
           <ul class="footer-links">
-            <li><a href="frontend/pages/help-center.html">Help Center &amp; FAQ</a></li>
-            <li><a href="frontend/pages/commercial-licensing.html">Commercial Licensing</a></li>
-            <li><a href="frontend/pages/direct-download-help.html">Direct Download Help</a></li>
-            <li><a href="frontend/pages/refund-policy.html">Refund Policy</a></li>
-            <li><a href="frontend/pages/contact-support.html">Contact Support</a></li>
+            <li><a href="frontend/pages/help-center.html" data-i18n="helpFaq">Help Center &amp; FAQ</a></li>
+            <li><a href="frontend/pages/commercial-licensing.html" data-i18n="commercialLicensing">Commercial Licensing</a></li>
+            <li><a href="frontend/pages/direct-download-help.html" data-i18n="downloadHelp">Direct Download Help</a></li>
+            <li><a href="frontend/pages/refund-policy.html" data-i18n="refundPolicy">Refund Policy</a></li>
+            <li><a href="frontend/pages/contact-support.html" data-i18n="contactSupport">Contact Support</a></li>
           </ul>
         </div>
 
         <!-- Col 5: Company -->
         <div>
-          <h4 class="footer-heading">Company</h4>
+          <h4 class="footer-heading" data-i18n="footerCompany">Company</h4>
           <ul class="footer-links">
-            <li><a href="frontend/pages/about-morgadcyber.html">About MorgadCyber</a></li>
-            <li><a href="frontend/pages/creator-program.html">Creator Program</a></li>
-            <li><a href="frontend/pages/affiliates-partners.html">Affiliates &amp; Partners</a></li>
-            <li><a href="frontend/pages/terms-of-service.html">Terms of Service</a></li>
-            <li><a href="frontend/pages/privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="frontend/pages/about-morgadcyber.html" data-i18n="aboutCompany">About MorgadCyber</a></li>
+            <li><a href="frontend/pages/creator-program.html" data-i18n="creatorProgram">Creator Program</a></li>
+            <li><a href="frontend/pages/affiliates-partners.html" data-i18n="affiliatePartners">Affiliates &amp; Partners</a></li>
+            <li><a href="frontend/pages/terms-of-service.html" data-i18n="termsOfService">Terms of Service</a></li>
+            <li><a href="frontend/pages/privacy-policy.html" data-i18n="privacyPolicy">Privacy Policy</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <div>&copy; 2026 MorgadCyber. All rights reserved.</div>
+        <div>&copy; 2026 MorgadCyber. <span data-i18n="footerRights">All rights reserved.</span></div>
         <div class="footer-legal-links">
-          <a href="frontend/pages/terms-of-service.html">Terms</a>
-          <a href="frontend/pages/privacy-policy.html">Privacy</a>
-          <a href="frontend/pages/commercial-licensing.html">Licenses</a>
-          <a href="frontend/pages/help-center.html">Security</a>
+          <a href="frontend/pages/terms-of-service.html" data-i18n="footerTerms">Terms</a>
+          <a href="frontend/pages/privacy-policy.html" data-i18n="footerPrivacy">Privacy</a>
+          <a href="frontend/pages/commercial-licensing.html" data-i18n="footerLicenses">Licenses</a>
+          <a href="frontend/pages/help-center.html" data-i18n="footerSecurity">Security</a>
         </div>
       </div>
     </div>
@@ -990,27 +956,26 @@
 
           <div class="modal-specs-list">
             <div class="spec-item">
-              <span class="spec-label">Equipment:</span>
+              <span class="spec-label" data-i18n="modalEquipment">Equipment:</span>
               <span class="spec-val" id="modalRes">Software + Lincensi</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">Files:</span>
+              <span class="spec-label" data-i18n="modalFiles">Files:</span>
               <span class="spec-val" id="modalFiles">85+ Assets</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">Format:</span>
-              <span class="spec-val">Zip ,Exe ,File</span>
+              <span class="spec-label" data-i18n="modalFormat">Format:</span>
+              <span class="spec-val" data-i18n="modalFormatValue">ZIP, EXE, digital files</span>
             </div>
             <div class="spec-item">
-              <span class="spec-label">License:</span>
-              <span class="spec-val">Commercial</span>
+              <span class="spec-label" data-i18n="modalLicense">License:</span>
+              <span class="spec-val" data-i18n="modalLicenseValue">Commercial</span>
             </div>
           </div>
 
           <div class="modal-price-row">
             <div>
-              <span style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Instant Download
-                Price</span>
+              <span data-i18n="instantPrice" style="font-size: 0.8rem; color: var(--color-text-muted); display: block;">Instant Download Price</span>
               <span class="modal-price" id="modalPrice">Rp 25.000</span>
               </span>
             </div>
@@ -1018,7 +983,7 @@
 
           <button class="btn-primary" id="modalBuyBtn"
             style="width: 100%; justify-content: center; margin-bottom: 10px;">
-            Buy &amp; Download Instantly
+            <span data-i18n="buyDownload">Buy &amp; Download Instantly</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -1036,8 +1001,8 @@
   <div class="cart-drawer-backdrop" id="cartBackdrop" onclick="toggleCartDrawer()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="cart-drawer-header">
-      <h3 class="cart-drawer-title">Your Digital Cart</h3>
-      <button class="icon-button" onclick="toggleCartDrawer()" aria-label="Close cart">
+      <h3 class="cart-drawer-title" data-i18n="cartTitle">Shopping Cart</h3>
+      <button class="icon-button" onclick="toggleCartDrawer()" aria-label="Close cart" data-i18n-aria-label="closeCart">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -1048,17 +1013,22 @@
     <div class="cart-items-container" id="cartItemsList">
       <!-- Dynamically filled by app.js -->
       <p style="color: var(--color-text-muted); font-size: 0.9rem; text-align: center; margin-top: 40px;">
-        Your cart is currently empty.<br>Browse our trending products to get started!
+        <span data-i18n="cartEmpty">Your cart is empty.</span><br><span data-i18n="cartEmptyAction">Choose a product to continue.</span>
       </p>
     </div>
 
     <div class="cart-drawer-footer">
       <div class="cart-total-row">
-        <span>Total</span>
+        <span data-i18n="total">Total</span>
         <span id="cartTotalSum">$0.00</span>
       </div>
-      <button class="btn-buy-now" id="checkoutBtn" onclick="handleCheckout()">
-        Proceed to Instant Checkout
+      <form id="checkoutCustomerForm" class="checkout-customer-form checkout-cart-form">
+        <label class="checkout-field"><span data-i18n="customerName">Full name</span><input name="name" type="text" autocomplete="name" placeholder="Name as shown on your ID" data-i18n-placeholder="customerNamePlaceholder" required maxlength="200"></label>
+        <label class="checkout-field"><span data-i18n="customerEmail">Email</span><input name="email" type="email" autocomplete="email" placeholder="name@email.com" required></label>
+        <label class="checkout-field"><span data-i18n="customerPhone">Phone number</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="08xx xxxx xxxx" required></label>
+      </form>
+      <button class="btn-buy-now" id="checkoutBtn" type="button" onclick="handleCheckout()">
+        <span data-i18n="continueDoku">Continue to DOKU</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>

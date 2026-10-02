@@ -83,8 +83,526 @@ const state = {
   activeCategory: null,
   searchQuery: '',
   currency: localStorage.getItem('preferred_currency') || 'IDR',
-  theme: localStorage.getItem('preferred_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  theme: localStorage.getItem('preferred_theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+  language: localStorage.getItem('preferred_language') || 'en'
 };
+
+const translations = {
+  en: {
+    navExplore: 'Explore',
+    navCategories: 'Categories',
+    navFeatured: 'Featured',
+    navHowItWorks: 'How It Works',
+    categoriesTitle: 'Categories',
+    searchPlaceholder: 'Search catalog...',
+    languageLabel: 'Select language',
+    searchEmptyTitle: 'No products found',
+    searchEmptyDescription: 'Try another search or browse all categories.',
+    headerCta: 'Explore Products',
+    heroBadge: 'Software & Tools',
+    heroTitle: 'Digital tools for technical needs.',
+    heroSubtitle: 'Find software for mobile technician work, technical design, and digital forensics.',
+    viewProducts: 'View Products',
+    allCategories: 'All Categories',
+    exploreAllCategories: 'Explore All Categories',
+    categorySoftware: 'Software',
+    categoryFrp: 'FRP Rental Tools',
+    categoryTools: 'Technical Tools',
+    categoryCreative: 'Creative Packs',
+    categoryTrending: 'Popular Collections',
+    trustAccess: 'Product Access',
+    trustAccessDesc: 'Available after payment is verified',
+    trustDoku: 'DOKU Payment',
+    trustDokuDesc: 'Payment status is processed automatically',
+    trustDownload: 'Digital Download',
+    trustDownloadDesc: 'Link is available after full payment',
+    trustNoAccount: 'No Account Needed',
+    trustNoAccountDesc: 'Checkout uses your email address',
+    footerExplore: 'Explore',
+    footerTrending: 'Trending Now',
+    footerCategories: 'Browse Categories',
+    footerFeatured: 'Featured Collection',
+    footerHowItWorks: 'How It Works',
+    footerProducts: 'Products',
+    footerSoftware: 'Software',
+    footerTools: 'Technical Tools',
+    productsTitle: 'Featured Products',
+    productsSubtitle: 'Technical tools, design software, and digital forensics software.',
+    viewAllProducts: 'View All Products',
+    quickView: 'Quick View',
+    tagTechnicalTools: 'Technical Tools',
+    tagSoftware: 'Software',
+    productDescDzkj: 'Mobile technician tool for viewing device schematics.',
+    productDescIsp: 'A mobile technician tool for identifying test points.',
+    productDescCad: 'Architecture and engineering design software for civil engineering students and professionals.',
+    productDescCellebrite: 'Cellebrite UFED software for digital forensics.',
+    buyNow: 'Buy Now',
+    viewDetails: 'View Details',
+    rentalPill: 'Tool Rental Service',
+    rentalTitle: 'Rent FRP Tools and More',
+    rentalDescription: 'Access FRP, flashing, unlocking, and technician utility tools with flexible rental options.',
+    rentalBenefitUpdated: 'Up-to-date FRP tools',
+    rentalBenefitTerms: 'Daily and weekly rentals',
+    rentalBenefitSupport: 'Technician support',
+    rentalAction: 'Browse Available Tools',
+    howToShop: 'How to Shop',
+    howToShopDescription: 'Choose a product, pay through DOKU, then download after payment is verified.',
+    stepChoose: 'Choose a product',
+    stepChooseDesc: 'Review the details and price before continuing.',
+    stepPay: 'Pay through DOKU',
+    stepPayDesc: 'Complete your payment on the DOKU page.',
+    stepDownload: 'Download your product',
+    stepDownloadDesc: 'The download link is available after payment is verified.',
+    purchaseInfo: 'Purchase Information',
+    transparentPrice: 'Transparent pricing',
+    transparentPriceDesc: 'See the product price before checkout.',
+    guestCheckout: 'Guest checkout',
+    guestCheckoutDesc: 'Enter your contact details to begin payment.',
+    verifiedPayment: 'Verified payment',
+    verifiedPaymentDesc: 'Download access is enabled after payment is confirmed.',
+    orderStatus: 'Check order status',
+    orderStatusDesc: 'View payment and download status on the order page.',
+    articleSectionTitle: 'From the Hub',
+    articleSectionDesc: 'Research, updates, and useful insights.',
+    viewAllArticles: 'View All Articles',
+    readArticle: 'Read article',
+    ctaTitle: 'Need tools for your work?',
+    ctaDescription: 'Explore the available software and technical tools.',
+    footerDescription: 'Software and digital tools for technical needs.',
+    footerSupport: 'Support',
+    helpFaq: 'Help Center & FAQ',
+    commercialLicensing: 'Commercial Licensing',
+    downloadHelp: 'Direct Download Help',
+    refundPolicy: 'Refund Policy',
+    contactSupport: 'Contact Support',
+    footerCompany: 'Company',
+    aboutCompany: 'About MorgadCyber',
+    creatorProgram: 'Creator Program',
+    affiliatePartners: 'Affiliates & Partners',
+    termsOfService: 'Terms of Service',
+    privacyPolicy: 'Privacy Policy',
+    footerRights: 'All rights reserved.',
+    footerTerms: 'Terms',
+    footerPrivacy: 'Privacy',
+    footerLicenses: 'Licenses',
+    footerSecurity: 'Security',
+    modalEquipment: 'Equipment:',
+    modalFiles: 'Files:',
+    modalFormat: 'Format:',
+    modalLicense: 'License:',
+    modalFormatValue: 'ZIP, EXE, digital files',
+    modalLicenseValue: 'Commercial',
+    instantPrice: 'Instant Download Price',
+    buyDownload: 'Buy & Download Instantly',
+    cartTitle: 'Shopping Cart',
+    cartEmpty: 'Your cart is empty.',
+    cartEmptyAction: 'Choose a product to continue.',
+    cartEmptyExtra: 'Browse the catalog and choose a digital product.',
+    total: 'Total',
+    customerName: 'Full name',
+    customerNamePlaceholder: 'Name as shown on your ID',
+    customerEmail: 'Email',
+    customerPhone: 'Phone number',
+    continueDoku: 'Continue to DOKU',
+    closeCart: 'Close cart',
+    removeItem: 'Remove item',
+    paymentSuccess: 'Payment confirmed. Downloading your product...',
+    connectingPayment: 'Connecting to DOKU...',
+    currencyChanged: 'Currency changed to',
+    themeChanged: 'Theme changed to'
+  },
+  id: {
+    navExplore: 'Jelajahi',
+    navCategories: 'Kategori',
+    navFeatured: 'Unggulan',
+    navHowItWorks: 'Cara Kerja',
+    categoriesTitle: 'Kategori Produk',
+    searchPlaceholder: 'Cari katalog...',
+    languageLabel: 'Pilih bahasa',
+    searchEmptyTitle: 'Produk tidak ditemukan',
+    searchEmptyDescription: 'Coba kata pencarian lain atau lihat semua kategori.',
+    headerCta: 'Jelajahi Produk',
+    heroBadge: 'Software & Alat',
+    heroTitle: 'Alat digital untuk kebutuhan teknis.',
+    heroSubtitle: 'Temukan perangkat lunak untuk pekerjaan teknisi ponsel, desain teknis, dan forensik digital.',
+    viewProducts: 'Lihat Produk',
+    allCategories: 'Semua Kategori',
+    exploreAllCategories: 'Lihat Semua Kategori',
+    categorySoftware: 'Software',
+    categoryFrp: 'Sewa Alat FRP',
+    categoryTools: 'Alat Teknisi',
+    categoryCreative: 'Paket Kreatif',
+    categoryTrending: 'Koleksi Populer',
+    trustAccess: 'Akses Produk',
+    trustAccessDesc: 'Tersedia setelah pembayaran diverifikasi',
+    trustDoku: 'Pembayaran DOKU',
+    trustDokuDesc: 'Status pembayaran diproses otomatis',
+    trustDownload: 'Unduhan Digital',
+    trustDownloadDesc: 'Tautan tersedia setelah pembayaran lunas',
+    trustNoAccount: 'Tanpa Akun',
+    trustNoAccountDesc: 'Checkout memakai email Anda',
+    footerExplore: 'Jelajahi',
+    footerTrending: 'Sedang Tren',
+    footerCategories: 'Kategori',
+    footerFeatured: 'Koleksi Unggulan',
+    footerHowItWorks: 'Cara Kerja',
+    footerProducts: 'Produk',
+    footerSoftware: 'Software',
+    footerTools: 'Alat Teknisi',
+    productsTitle: 'Produk Pilihan',
+    productsSubtitle: 'Alat teknisi, perangkat lunak desain, dan perangkat lunak forensik digital.',
+    viewAllProducts: 'Lihat Semua Produk',
+    quickView: 'Pratinjau Cepat',
+    tagTechnicalTools: 'Alat Teknisi',
+    tagSoftware: 'Software',
+    productDescDzkj: 'Alat teknisi ponsel untuk melihat skema perangkat.',
+    productDescIsp: 'Alat teknisi ponsel untuk menemukan titik tes.',
+    productDescCad: 'Perangkat lunak desain arsitektur dan teknik untuk mahasiswa serta profesional teknik sipil.',
+    productDescCellebrite: 'Perangkat lunak Cellebrite UFED untuk forensik digital.',
+    buyNow: 'Beli Sekarang',
+    viewDetails: 'Lihat Detail',
+    rentalPill: 'Layanan Sewa Tools',
+    rentalTitle: 'Sewa Tools FRP dan Lainnya',
+    rentalDescription: 'Akses tools FRP, flashing, unlock, dan utilitas teknisi dengan pilihan sewa yang fleksibel.',
+    rentalBenefitUpdated: 'Tools FRP terbaru',
+    rentalBenefitTerms: 'Sewa harian dan mingguan',
+    rentalBenefitSupport: 'Dukungan teknisi',
+    rentalAction: 'Lihat Daftar Tools',
+    howToShop: 'Cara Belanja',
+    howToShopDescription: 'Pilih produk, bayar melalui DOKU, lalu unduh setelah pembayaran terverifikasi.',
+    stepChoose: 'Pilih produk',
+    stepChooseDesc: 'Periksa detail dan harga sebelum melanjutkan.',
+    stepPay: 'Bayar melalui DOKU',
+    stepPayDesc: 'Selesaikan pembayaran pada halaman DOKU.',
+    stepDownload: 'Unduh produk',
+    stepDownloadDesc: 'Tautan unduhan tersedia setelah pembayaran terverifikasi.',
+    purchaseInfo: 'Informasi Pembelian',
+    transparentPrice: 'Harga transparan',
+    transparentPriceDesc: 'Harga produk terlihat sebelum checkout.',
+    guestCheckout: 'Checkout tanpa akun',
+    guestCheckoutDesc: 'Isi detail kontak untuk memulai pembayaran.',
+    verifiedPayment: 'Pembayaran terverifikasi',
+    verifiedPaymentDesc: 'Akses unduhan dibuka setelah pembayaran dikonfirmasi.',
+    orderStatus: 'Cek status pesanan',
+    orderStatusDesc: 'Lihat status pembayaran dan unduhan dari halaman pesanan.',
+    articleSectionTitle: 'Wawasan dan Artikel',
+    articleSectionDesc: 'Riset, kabar terbaru, dan wawasan bermanfaat.',
+    viewAllArticles: 'Lihat Semua Artikel',
+    readArticle: 'Baca artikel',
+    ctaTitle: 'Butuh tools untuk pekerjaan Anda?',
+    ctaDescription: 'Jelajahi software dan alat teknisi yang tersedia.',
+    footerDescription: 'Software dan alat digital untuk kebutuhan teknis.',
+    footerSupport: 'Dukungan',
+    helpFaq: 'Pusat Bantuan & FAQ',
+    commercialLicensing: 'Lisensi Komersial',
+    downloadHelp: 'Bantuan Unduhan Langsung',
+    refundPolicy: 'Kebijakan Pengembalian Dana',
+    contactSupport: 'Hubungi Dukungan',
+    footerCompany: 'Perusahaan',
+    aboutCompany: 'Tentang MorgadCyber',
+    creatorProgram: 'Program Kreator',
+    affiliatePartners: 'Afiliasi & Mitra',
+    termsOfService: 'Ketentuan Layanan',
+    privacyPolicy: 'Kebijakan Privasi',
+    footerRights: 'Hak cipta dilindungi.',
+    footerTerms: 'Ketentuan',
+    footerPrivacy: 'Privasi',
+    footerLicenses: 'Lisensi',
+    footerSecurity: 'Keamanan',
+    modalEquipment: 'Perangkat:',
+    modalFiles: 'Berkas:',
+    modalFormat: 'Format:',
+    modalLicense: 'Lisensi:',
+    modalFormatValue: 'ZIP, EXE, berkas digital',
+    modalLicenseValue: 'Komersial',
+    instantPrice: 'Harga Unduhan Instan',
+    buyDownload: 'Beli & Unduh Sekarang',
+    cartTitle: 'Keranjang Belanja',
+    cartEmpty: 'Keranjang Anda masih kosong.',
+    cartEmptyAction: 'Pilih produk untuk melanjutkan.',
+    cartEmptyExtra: 'Jelajahi katalog dan pilih produk digital.',
+    total: 'Total',
+    customerName: 'Nama lengkap',
+    customerNamePlaceholder: 'Nama sesuai identitas',
+    customerEmail: 'Email',
+    customerPhone: 'Nomor telepon',
+    continueDoku: 'Lanjutkan ke DOKU',
+    closeCart: 'Tutup keranjang',
+    removeItem: 'Hapus item',
+    paymentSuccess: 'Pembayaran terverifikasi. Produk sedang diunduh...',
+    connectingPayment: 'Menghubungkan ke DOKU...',
+    currencyChanged: 'Mata uang diubah ke',
+    themeChanged: 'Tema diubah ke'
+  },
+  zh: {
+    navExplore: '探索',
+    navCategories: '分类',
+    navFeatured: '精选',
+    navHowItWorks: '使用方式',
+    categoriesTitle: '产品分类',
+    searchPlaceholder: '搜索目录...',
+    languageLabel: '选择语言',
+    searchEmptyTitle: '未找到产品',
+    searchEmptyDescription: '请尝试其他搜索词，或浏览全部分类。',
+    headerCta: '探索产品',
+    heroBadge: '软件与工具',
+    heroTitle: '适用于技术需求的数字工具。',
+    heroSubtitle: '查找适用于手机维修、技术设计和数字取证的软件。',
+    viewProducts: '查看产品',
+    allCategories: '全部分类',
+    exploreAllCategories: '浏览全部分类',
+    categorySoftware: '软件',
+    categoryFrp: 'FRP租赁工具',
+    categoryTools: '技术工具',
+    categoryCreative: '创意包',
+    categoryTrending: '热门合集',
+    trustAccess: '产品访问',
+    trustAccessDesc: '付款验证后即可使用',
+    trustDoku: 'DOKU支付',
+    trustDokuDesc: '付款状态会自动处理',
+    trustDownload: '数字下载',
+    trustDownloadDesc: '全额付款后可获取链接',
+    trustNoAccount: '无需账户',
+    trustNoAccountDesc: '结账时使用您的邮箱',
+    footerExplore: '探索',
+    footerTrending: '热门推荐',
+    footerCategories: '浏览分类',
+    footerFeatured: '精选合集',
+    footerHowItWorks: '使用方式',
+    footerProducts: '产品',
+    footerSoftware: '软件',
+    footerTools: '技术工具',
+    productsTitle: '精选产品',
+    productsSubtitle: '维修工具、设计软件和数字取证软件。',
+    viewAllProducts: '查看全部产品',
+    quickView: '快速预览',
+    tagTechnicalTools: '技术工具',
+    tagSoftware: '软件',
+    productDescDzkj: '用于查看设备原理图的手机维修工具。',
+    productDescIsp: '用于查找测试点的手机维修工具。',
+    productDescCad: '面向土木工程学生和专业人士的建筑与工程设计软件。',
+    productDescCellebrite: '用于数字取证的 Cellebrite UFED 软件。',
+    buyNow: '立即购买',
+    viewDetails: '查看详情',
+    rentalPill: '工具租赁服务',
+    rentalTitle: '租用 FRP 工具及其他工具',
+    rentalDescription: '灵活租用 FRP、刷机、解锁和维修辅助工具。',
+    rentalBenefitUpdated: '最新 FRP 工具',
+    rentalBenefitTerms: '按天或按周租用',
+    rentalBenefitSupport: '技术人员支持',
+    rentalAction: '查看可用工具',
+    howToShop: '购物流程',
+    howToShopDescription: '选择产品，通过 DOKU 付款，验证成功后即可下载。',
+    stepChoose: '选择产品',
+    stepChooseDesc: '继续前请查看产品详情和价格。',
+    stepPay: '通过 DOKU 付款',
+    stepPayDesc: '在 DOKU 页面完成付款。',
+    stepDownload: '下载产品',
+    stepDownloadDesc: '付款验证后即可获取下载链接。',
+    purchaseInfo: '购买信息',
+    transparentPrice: '价格透明',
+    transparentPriceDesc: '结账前即可查看产品价格。',
+    guestCheckout: '无需账户结账',
+    guestCheckoutDesc: '填写联系方式即可开始付款。',
+    verifiedPayment: '付款已验证',
+    verifiedPaymentDesc: '确认付款后将开放下载权限。',
+    orderStatus: '查询订单状态',
+    orderStatusDesc: '在订单页面查看付款和下载状态。',
+    articleSectionTitle: '平台文章',
+    articleSectionDesc: '研究、更新和实用见解。',
+    viewAllArticles: '查看全部文章',
+    readArticle: '阅读文章',
+    ctaTitle: '工作需要工具吗？',
+    ctaDescription: '浏览可用的软件和技术工具。',
+    footerDescription: '满足技术需求的软件和数字工具。',
+    footerSupport: '支持',
+    helpFaq: '帮助中心与常见问题',
+    commercialLicensing: '商业许可',
+    downloadHelp: '直接下载帮助',
+    refundPolicy: '退款政策',
+    contactSupport: '联系支持',
+    footerCompany: '公司',
+    aboutCompany: '关于 MorgadCyber',
+    creatorProgram: '创作者计划',
+    affiliatePartners: '联盟与合作伙伴',
+    termsOfService: '服务条款',
+    privacyPolicy: '隐私政策',
+    footerRights: '版权所有。',
+    footerTerms: '条款',
+    footerPrivacy: '隐私',
+    footerLicenses: '许可',
+    footerSecurity: '安全',
+    modalEquipment: '设备：',
+    modalFiles: '文件：',
+    modalFormat: '格式：',
+    modalLicense: '许可：',
+    modalFormatValue: 'ZIP、EXE、数字文件',
+    modalLicenseValue: '商业用途',
+    instantPrice: '即时下载价格',
+    buyDownload: '立即购买并下载',
+    cartTitle: '购物车',
+    cartEmpty: '购物车还是空的。',
+    cartEmptyAction: '选择产品以继续。',
+    cartEmptyExtra: '浏览目录并选择数字产品。',
+    total: '总计',
+    customerName: '姓名',
+    customerNamePlaceholder: '填写证件上的姓名',
+    customerEmail: '电子邮箱',
+    customerPhone: '电话号码',
+    continueDoku: '前往 DOKU 付款',
+    closeCart: '关闭购物车',
+    removeItem: '移除商品',
+    paymentSuccess: '付款已确认，正在下载产品...',
+    connectingPayment: '正在连接 DOKU...',
+    currencyChanged: '货币已切换为',
+    themeChanged: '主题已切换为'
+  }
+};
+
+const bundledArticleTranslations = {
+  'sinta-1-strategi-publikasi-jurnal-bereputasi': {
+    en: { title: 'Sinta 1: A Strategy for Publishing in Reputable Journals', summary: 'A practical guide to preparing a strong research paper for accredited national journals and improving its visibility in Sinta.' },
+    zh: { title: 'Sinta 1：在高声誉期刊发表研究的策略', summary: '实用指南，帮助研究者为国家认证期刊准备高质量论文，并提升其在 Sinta 平台上的可见度。' }
+  },
+  'sinta-2-panduan-meningkatkan-indeks-jurnal': {
+    en: { title: 'Sinta 2: A Guide to Improving Journal Indexing', summary: 'Ways to improve journal quality, grow citations, and maintain consistent publication standards.' },
+    zh: { title: 'Sinta 2：提升期刊索引的指南', summary: '介绍如何提升期刊质量、增加引用并保持稳定的出版标准。' }
+  },
+  'sinta-3-bibliometrik-dan-pemetaan-penelitian': {
+    en: { title: 'Sinta 3: Bibliometrics and Research Mapping', summary: 'Bibliometric analysis helps reveal research trends, field strengths, and emerging directions for publication.' },
+    zh: { title: 'Sinta 3：文献计量与研究图谱', summary: '文献计量分析有助于了解研究趋势、领域优势以及出版方向的变化。' }
+  },
+  'sinta-4-profil-penulis-dan-kinerja-publikasi': {
+    en: { title: 'Sinta 4: Author Profiles and Publication Performance', summary: 'Strong author profiles improve institutional reputation, research visibility, and opportunities for collaboration.' },
+    zh: { title: 'Sinta 4：作者档案与出版表现', summary: '完善的作者档案有助于提升机构声誉、研究可见度和合作机会。' }
+  },
+  'sinta-5-optimasi-riset-untuk-akreditasi': {
+    en: { title: 'Sinta 5: Optimizing Research for Accreditation', summary: 'Well-documented, sustained research supports accreditation and strengthens an institution’s academic reputation.' },
+    zh: { title: 'Sinta 5：优化研究以支持认证', summary: '完善记录并持续开展研究，有助于通过认证并提升机构的学术声誉。' }
+  }
+};
+
+const articleCategoryTranslations = {
+  Research: { en: 'Research', id: 'Riset', zh: '研究' },
+  Publication: { en: 'Publication', id: 'Publikasi', zh: '出版' },
+  Insights: { en: 'Insights', id: 'Wawasan', zh: '见解' },
+  Academic: { en: 'Academic', id: 'Akademik', zh: '学术' },
+  Strategy: { en: 'Strategy', id: 'Strategi', zh: '策略' }
+};
+
+const productSpecTranslations = {
+  en: {
+    'prod-1': ['Executable tool', 'EXE file + license'],
+    'prod-2': ['6K UHD (6000x4000)', '110+ reference files'],
+    'prod-3': ['Design software + license', '95+ design resources'],
+    'prod-4': ['Windows application', 'Software + license']
+  },
+  id: {
+    'prod-1': ['Aplikasi EXE', 'Berkas EXE + lisensi'],
+    'prod-2': ['6K UHD (6000x4000)', '110+ berkas referensi'],
+    'prod-3': ['Perangkat lunak desain + lisensi', '95+ sumber daya desain'],
+    'prod-4': ['Aplikasi Windows', 'Perangkat lunak + lisensi']
+  },
+  zh: {
+    'prod-1': ['可执行工具', 'EXE 文件 + 许可证'],
+    'prod-2': ['6K UHD (6000x4000)', '110+ 个参考文件'],
+    'prod-3': ['设计软件 + 许可证', '95+ 个设计资源'],
+    'prod-4': ['Windows 应用程序', '软件 + 许可证']
+  }
+};
+
+function translate(key) {
+  return translations[state.language]?.[key] || translations.en[key] || key;
+}
+
+function applyLanguage(language = state.language) {
+  const current = translations[language] || translations.en;
+  const translatedText = document.querySelectorAll('[data-i18n]');
+  translatedText.forEach(node => {
+    const key = node.dataset.i18n;
+    if (current[key]) {
+      node.textContent = current[key];
+    }
+  });
+
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(node => {
+    const label = current[node.dataset.i18nAriaLabel];
+    if (label) node.setAttribute('aria-label', label);
+  });
+  document.getElementById('languageCurrent')?.setAttribute('aria-label', current.languageLabel);
+
+  document.querySelectorAll('.article-link').forEach(node => {
+    node.textContent = current.readArticle || translations.en.readArticle;
+  });
+
+  const placeholderNodes = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholderNodes.forEach(node => {
+    const key = node.dataset.i18nPlaceholder;
+    if (current[key]) {
+      node.placeholder = current[key];
+    }
+  });
+
+  const languageOptions = document.querySelectorAll('.lang-option');
+  languageOptions.forEach(button => {
+    const isActive = button.dataset.lang === language;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-checked', String(isActive));
+  });
+
+  const currentFlag = document.getElementById('currentLanguageFlag');
+  if (currentFlag) currentFlag.setAttribute('href', `#flag-${language in translations ? language : 'en'}`);
+  const currencyCodes = { en: 'USD', id: 'IDR', zh: 'CNY' };
+  const currentCurrencyCode = document.getElementById('currentCurrencyCode');
+  if (currentCurrencyCode) currentCurrencyCode.textContent = currencyCodes[language] || 'USD';
+
+  document.documentElement.lang = language === 'zh' ? 'zh' : language === 'id' ? 'id' : 'en';
+  state.language = language;
+  localStorage.setItem('preferred_language', language);
+  const languageCurrency = { en: 'USD', id: 'IDR', zh: 'CNY' }[language] || 'USD';
+  setCurrency(languageCurrency, false);
+  updateCartUI();
+  if (activeModalProdId) openProductQuickView(activeModalProdId);
+  loadPublishedArticles();
+}
+
+function initLanguageSwitcher() {
+  const switcher = document.getElementById('languageSwitcher');
+  const currentButton = document.getElementById('languageCurrent');
+  const menu = document.getElementById('languageMenu');
+  const languageOptions = document.querySelectorAll('.lang-option');
+  if (!switcher || !currentButton || !menu || !languageOptions.length) return;
+
+  const closeMenu = () => {
+    menu.hidden = true;
+    currentButton.setAttribute('aria-expanded', 'false');
+  };
+
+  currentButton.addEventListener('click', () => {
+    const isOpen = currentButton.getAttribute('aria-expanded') === 'true';
+    currentButton.setAttribute('aria-expanded', String(!isOpen));
+    menu.hidden = isOpen;
+  });
+
+  languageOptions.forEach(button => {
+    button.addEventListener('click', () => {
+      applyLanguage(button.dataset.lang);
+      closeMenu();
+      currentButton.focus();
+    });
+  });
+
+  document.addEventListener('click', event => {
+    if (!switcher.contains(event.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      closeMenu();
+      currentButton.focus();
+    }
+  });
+}
 
 // DOM Elements
 const cartToggleBtn = document.getElementById('cartToggleBtn');
@@ -119,17 +637,21 @@ function formatPrice(amount, currency = state.currency) {
   if (currency === 'USD') {
     return '$' + Number(amount).toFixed(2);
   }
+  if (currency === 'CNY') {
+    return '¥' + Number(amount).toFixed(2);
+  }
   return 'Rp ' + Number(amount).toLocaleString('id-ID');
 }
 
 function getItemPrice(item, currency = state.currency) {
-  if (currency === 'USD') {
-    return item.priceUSD || item.price;
-  }
-  return item.priceIDR || (item.price * 15000);
+  const idrPrice = item.priceIDR ?? (item.priceUSD ? item.priceUSD * 15000 : item.price * 15000);
+  if (currency === 'USD') return idrPrice / 15000;
+  if (currency === 'CNY') return idrPrice / 2200;
+  return idrPrice;
 }
 
-function setCurrency(newCurrency) {
+function setCurrency(newCurrency, notify = true) {
+  if (!['IDR', 'USD', 'CNY'].includes(newCurrency)) return;
   state.currency = newCurrency;
   localStorage.setItem('preferred_currency', newCurrency);
 
@@ -158,14 +680,14 @@ function setCurrency(newCurrency) {
 
   // Update cart UI
   updateCartUI();
-  showToast(`Currency changed to ${newCurrency}`);
+  if (notify) showToast(`${translate('currencyChanged')} ${newCurrency}`);
 }
 
 function setTheme(newTheme) {
   state.theme = newTheme;
   document.documentElement.setAttribute('data-theme', newTheme);
   localStorage.setItem('preferred_theme', newTheme);
-  showToast(`Switched to ${newTheme === 'dark' ? 'Dark' : 'Light'} Mode`);
+  showToast(`${translate('themeChanged')} ${newTheme === 'dark' ? 'Dark' : 'Light'}`);
 }
 
 function initThemeAndCurrency() {
@@ -234,62 +756,83 @@ function showToast(message, type = 'success') {
   }, 3200);
 }
 
-let activeCheckoutModal = null;
-let activePollingTimer = null;
+let activePaymentPollingTimer = null;
 
-function createSandboxPaymentModal() {
-  if (document.getElementById('sandbox-payment-modal')) {
-    return document.getElementById('sandbox-payment-modal');
-  }
+function getCheckoutCustomer() {
+  const form = document.getElementById('checkoutCustomerForm');
+  if (!form || !form.reportValidity()) return null;
+  return {
+    customer_name: form.elements.name.value.trim(),
+    customer_email: form.elements.email.value.trim(),
+    customer_phone: form.elements.phone.value.trim(),
+  };
+}
 
-  const modal = document.createElement('div');
-  modal.id = 'sandbox-payment-modal';
-  modal.style.position = 'fixed';
-  modal.style.inset = '0';
-  modal.style.background = 'rgba(15, 23, 42, 0.7)';
-  modal.style.display = 'none';
-  modal.style.alignItems = 'center';
-  modal.style.justifyContent = 'center';
-  modal.style.zIndex = '9999';
-  modal.innerHTML = `
-    <div style="width:min(440px, calc(100vw - 32px)); background:#0f172a; border:1px solid rgba(148,163,184,.24); border-radius:22px; box-shadow:0 30px 80px rgba(15,23,42,.45); overflow:hidden; color:#e2e8f0;">
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid rgba(148,163,184,.2);">
-        <div>
-          <div style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:#a78bfa; font-weight:700;">MORGAD SECURE CHECKOUT (POWERED BY DOKU)</div>
-          <div style="font-size:20px; font-weight:700; margin-top:4px;">Pembayaran Terenkripsi DOKU</div>
-        </div>
-        <button id="sandbox-payment-close" type="button" aria-label="Close payment modal" style="background:transparent; border:0; color:#cbd5e1; font-size:24px; cursor:pointer;">×</button>
-      </div>
-      <div style="padding:22px 20px 18px;">
-        <div style="display:flex; align-items:center; justify-content:center; margin:8px 0 16px; background:#f8fafc; border-radius:16px; padding:16px;">
-          <img id="sandbox-qr-image" alt="QR payment DOKU" src="" style="width:200px; height:200px; border-radius:12px; background:#fff; border:1px solid rgba(148,163,184,.2);" />
-        </div>
-        <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px;">Detail transaksi</div>
-        <div id="sandbox-payment-detail" style="padding:14px 12px; border:1px solid rgba(148,163,184,.22); border-radius:12px; background:rgba(15,23,42,.42); color:#e2e8f0; font-size:13px; word-break:break-word; min-height:52px;">
-          Menyiapkan transaksi DOKU Checkout...
-        </div>
-        <div style="display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;">
-          <a id="doku-payment-redirect" href="#" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:180px; padding:12px 14px; border:0; border-radius:12px; background:linear-gradient(135deg,#8b5cf6,#7c3aed); color:white; font-weight:700; text-align:center; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; cursor:pointer;">Bayar Sekarang (DOKU)</a>
-          <button id="sandbox-payment-cancel" type="button" style="padding:12px 14px; border:1px solid rgba(148,163,184,.3); border-radius:12px; background:transparent; color:#e2e8f0; font-weight:600; cursor:pointer;">Tutup</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      closeSandboxPaymentModal();
-    }
+async function requestDokuCheckout(productId, customer) {
+  const response = await fetch('/api/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ product_id: productId, ...customer }),
   });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Checkout DOKU gagal dibuat.');
+  const returnedUrl = data.checkout_url || data.response?.payment?.url || data.data?.url;
+  if (!returnedUrl) throw new Error('DOKU tidak memberikan URL pembayaran.');
+  const checkoutUrl = new URL(returnedUrl);
+  if (checkoutUrl.protocol !== 'https:') throw new Error('URL checkout DOKU tidak valid.');
+  return { ...data, checkout_url: checkoutUrl.href };
+}
 
-  const closeBtn = modal.querySelector('#sandbox-payment-close');
-  const cancelBtn = modal.querySelector('#sandbox-payment-cancel');
-  closeBtn.addEventListener('click', closeSandboxPaymentModal);
-  cancelBtn.addEventListener('click', closeSandboxPaymentModal);
+function launchDokuCheckout(checkout, customer) {
+  const checkoutUrl = checkout.checkout_url
+    || checkout.response?.payment?.url
+    || checkout.data?.url;
+  if (!checkoutUrl || typeof window.loadJokulCheckout !== 'function') {
+    throw new Error('SDK atau URL Checkout DOKU tidak tersedia.');
+  }
+  window.loadJokulCheckout(checkoutUrl);
+  startDokuPaymentPolling(checkout.invoice_id || checkout.response?.order?.invoice_number, customer.customer_email);
+}
 
-  document.body.appendChild(modal);
-  activeCheckoutModal = modal;
-  return modal;
+function startDokuPaymentPolling(invoiceId, customerEmail) {
+  if (activePaymentPollingTimer) clearInterval(activePaymentPollingTimer);
+  let requestInProgress = false;
+
+  const poll = async () => {
+    if (requestInProgress) return;
+    requestInProgress = true;
+    try {
+      const query = new URLSearchParams({ invoice_id: invoiceId, email: customerEmail });
+      const response = await fetch(`/api/check-status?${query}`);
+      const data = await response.json();
+      if (!response.ok) return;
+      const status = String(data.payment_status || '').toUpperCase();
+      if (!['SUCCESS', 'PAID', 'COMPLETED'].includes(status)) return;
+
+      if (activePaymentPollingTimer) {
+        clearInterval(activePaymentPollingTimer);
+        activePaymentPollingTimer = null;
+      }
+      showToast(translate('paymentSuccess'));
+      if (data.download_url) {
+        const downloadUrl = new URL(data.download_url, window.location.origin);
+        if (downloadUrl.origin !== window.location.origin) throw new Error('URL unduhan tidak valid.');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = downloadUrl.href;
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+      }
+    } catch (error) {
+      console.error('DOKU payment status polling failed:', error);
+    } finally {
+      requestInProgress = false;
+    }
+  };
+
+  poll();
+  activePaymentPollingTimer = setInterval(poll, 3000);
 }
 
 function resolveProductImageUrl(imageUrl) {
@@ -323,92 +866,6 @@ function renderProductImageElement(product, fallbackPath = '/assets/img/logo.png
   return `<img src="${product && product.image_path ? product.image_path : imagePath}" onerror="this.src='${fallbackPath}'; this.onerror=null;" alt="${altText}">`;
 }
 
-function openSandboxPaymentModal(paymentDetail, invoiceId, checkoutUrl) {
-  const modal = createSandboxPaymentModal();
-  const qrImage = modal.querySelector('#sandbox-qr-image');
-  const detailEl = modal.querySelector('#sandbox-payment-detail');
-  const redirectBtn = modal.querySelector('#doku-payment-redirect');
-
-  const qrTarget = paymentDetail && !paymentDetail.startsWith('http')
-    ? paymentDetail
-    : (checkoutUrl || paymentDetail || `https://doku.com/checkout?invoice=${encodeURIComponent(invoiceId)}`);
-
-  qrImage.src = qrTarget.startsWith('http') && qrTarget.includes('qr')
-    ? qrTarget
-    : `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrTarget)}&size=200x200`;
-  qrImage.onerror = () => { qrImage.src = '/assets/img/logo.png'; };
-
-  detailEl.innerHTML = `
-    <div style="font-weight:600; margin-bottom:4px;">No. Invoice: <span style="color:#a78bfa;">${invoiceId}</span></div>
-    <div style="font-size:12px; color:#cbd5e1; margin-bottom:8px;">Metode: DOKU Checkout / QRIS Real-Time</div>
-    <div style="font-size:11px; color:#94a3b8; background:rgba(30,41,59,.7); padding:8px 10px; border-radius:8px;">Scan QRIS di atas dengan m-Banking / e-Wallet Anda atau klik tombol di bawah untuk membayar langsung di gateway DOKU. Status pembayaran akan terverifikasi otomatis.</div>
-  `;
-
-  if (redirectBtn) {
-    const targetUrl = checkoutUrl || (paymentDetail && paymentDetail.startsWith('http') ? paymentDetail : '#');
-    redirectBtn.href = targetUrl;
-    redirectBtn.onclick = (e) => {
-      if (targetUrl && targetUrl !== '#') {
-        window.location.href = targetUrl;
-      }
-    };
-  }
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  startPaymentPolling(invoiceId);
-}
-
-function closeSandboxPaymentModal() {
-  const modal = document.getElementById('sandbox-payment-modal');
-  if (!modal) return;
-  modal.style.display = 'none';
-  document.body.style.overflow = '';
-  if (activePollingTimer) {
-    clearInterval(activePollingTimer);
-    activePollingTimer = null;
-  }
-}
-
-function startPaymentPolling(invoiceId) {
-  if (activePollingTimer) clearInterval(activePollingTimer);
-
-  const pollStatus = async () => {
-    try {
-      const res = await fetch(`/api/check-status?invoice_id=${encodeURIComponent(invoiceId)}`);
-      const data = await res.json();
-      if (!res.ok) return;
-
-      const normalizedStatus = String(data.payment_status || data.status || '').toLowerCase();
-      const isSuccess = normalizedStatus === 'success' || normalizedStatus === 'paid' || normalizedStatus === 'completed';
-
-      if (isSuccess) {
-        clearInterval(activePollingTimer);
-        activePollingTimer = null;
-        closeSandboxPaymentModal();
-        showToast('Pembayaran lunas. Mengunduh file aman...');
-
-        const downloadUrl = data.download_url || (data.download_token ? `/api/download/${encodeURIComponent(data.download_token)}` : null);
-
-        if (downloadUrl) {
-          setTimeout(() => {
-            const safeUrl = downloadUrl.startsWith('http') ? downloadUrl : `${window.location.origin}${downloadUrl}`;
-            const popup = window.open(safeUrl, '_blank', 'noopener,noreferrer');
-            if (!popup) {
-              window.location.href = safeUrl;
-            }
-          }, 300);
-        }
-      }
-    } catch (error) {
-      console.error('Polling payment status failed:', error);
-    }
-  };
-
-  pollStatus();
-  activePollingTimer = setInterval(pollStatus, 3000);
-}
-
 /**
  * Cart Management
  */
@@ -421,20 +878,14 @@ if (cartToggleBtn) {
   cartToggleBtn.addEventListener('click', toggleCartDrawer);
 }
 
-function handleBuyNow(productId) {
-  const product = PRODUCTS_DATA[productId];
-  if (!product) return;
-
-  // Add to cart state
+async function handleBuyNow(productId) {
+  if (!PRODUCTS_DATA[productId]) return;
   const existingItem = state.cart.find(item => item.id === productId);
-  if (existingItem) {
-    existingItem.qty += 1;
-  } else {
-    state.cart.push({ ...product, qty: 1 });
-  }
-
+  if (existingItem) existingItem.qty += 1;
+  else state.cart.push({ ...PRODUCTS_DATA[productId], qty: 1 });
   updateCartUI();
-  showToast(`Added "${product.title}" to cart!`);
+  if (!cartDrawer.classList.contains('active')) toggleCartDrawer();
+  document.querySelector('#checkoutCustomerForm [name="name"]')?.focus();
 }
 
 function removeFromCart(productId) {
@@ -454,8 +905,8 @@ function updateCartUI() {
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
-        <p style="font-size: 0.95rem; font-weight: 600; color: var(--color-text-secondary);">Your cart is empty</p>
-        <p style="font-size: 0.8rem; margin-top: 4px;">Explore our catalog and pick your favorite digital collections!</p>
+        <p style="font-size: 0.95rem; font-weight: 600; color: var(--color-text-secondary);">${translate('cartEmpty')}</p>
+        <p style="font-size: 0.8rem; margin-top: 4px;">${translate('cartEmptyExtra')}</p>
       </div>
     `;
     cartTotalSum.textContent = formatPrice(0, state.currency);
@@ -474,7 +925,7 @@ function updateCartUI() {
           <div class="cart-item-name">${item.title}</div>
           <div class="cart-item-price">${formatPrice(unitPrice, state.currency)} &times; ${item.qty}</div>
         </div>
-        <button class="cart-item-remove" onclick="removeFromCart('${item.id}')" title="Remove item">
+        <button class="cart-item-remove" onclick="removeFromCart('${item.id}')" title="${translate('removeItem')}" aria-label="${translate('removeItem')}">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="3 6 5 6 21 6"></polyline>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -489,42 +940,22 @@ function updateCartUI() {
 
 async function handleCheckout() {
   if (state.cart.length === 0) {
-    showToast('Your cart is empty! Add products first.');
+    showToast(translate('cartEmptyAction'));
     return;
   }
 
   const primaryItem = state.cart[0];
-  const email = 'customer@morgadcyber.com';
+  const customer = getCheckoutCustomer();
+  if (!customer) return;
 
   try {
-    showToast('Menghubungkan ke DOKU Secure Checkout...');
-    const res = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        product_id: primaryItem.id,
-        customer_email: email,
-        currency: state.currency
-      })
-    });
-    const checkoutData = await res.json();
-    if (!res.ok) throw new Error(checkoutData.error || 'Checkout failed.');
+    showToast(translate('connectingPayment'));
+    const checkout = await requestDokuCheckout(primaryItem.id, customer);
 
     state.cart = [];
     updateCartUI();
-    toggleCartDrawer();
-
-    const checkoutUrl = checkoutData.url || checkoutData.checkout_url || (checkoutData.response && checkoutData.response.payment && checkoutData.response.payment.url);
-    const invoiceId = checkoutData.invoice_id || checkoutData.order_number || (checkoutData.order && checkoutData.order.invoice_number);
-    const paymentDetail = checkoutData.paymentDetail || checkoutData.qris_data || checkoutUrl;
-
-    if (checkoutData.status === 'success' && invoiceId) {
-      openSandboxPaymentModal(paymentDetail, invoiceId, checkoutUrl);
-      showToast('Transaksi DOKU dibuat. Silakan bayar melalui modal atau dialihkan.');
-      return;
-    }
-
-    throw new Error('Checkout response tidak lengkap.');
+    if (cartDrawer.classList.contains('active')) toggleCartDrawer();
+    launchDokuCheckout(checkout, customer);
   } catch (err) {
     showToast(`Checkout error: ${err.message}`, 'error');
   }
@@ -541,16 +972,23 @@ function openProductQuickView(productId) {
   modalImg.src = resolveProductImageUrl(product.image);
   modalImg.alt = product.title;
   attachProductImageFallback(modalImg);
-  modalTag.textContent = product.tag;
+  modalTag.textContent = product.category === 'Software' ? translate('tagSoftware') : product.tag;
   modalTitle.textContent = product.title;
-  modalDesc.textContent = product.desc;
-  modalRes.textContent = product.resolution;
-  modalFiles.textContent = product.files;
+  const descriptionKeys = {
+    'prod-1': 'productDescDzkj',
+    'prod-2': 'productDescIsp',
+    'prod-3': 'productDescCad',
+    'prod-4': 'productDescCellebrite'
+  };
+  modalDesc.textContent = descriptionKeys[productId] ? translate(descriptionKeys[productId]) : product.desc;
+  const localizedSpecs = productSpecTranslations[state.language]?.[productId];
+  modalRes.textContent = localizedSpecs?.[0] || product.resolution;
+  modalFiles.textContent = localizedSpecs?.[1] || product.files;
   modalPrice.textContent = formatPrice(getItemPrice(product, state.currency), state.currency);
 
   modalBuyBtn.onclick = () => {
-    handleBuyNow(productId);
     closeProductModal();
+    handleBuyNow(productId);
   };
 
   productModal.classList.add('active');
@@ -651,11 +1089,93 @@ if (catalogSearchInput) {
   });
 }
 
+async function loadPublishedArticles() {
+  const section = document.getElementById('articles');
+  if (!section) return;
+
+  try {
+    const response = await fetch('/api/articles');
+    const data = await response.json();
+    const articles = response.ok && Array.isArray(data.articles) ? data.articles.slice(0, 3) : [];
+    if (!articles.length) {
+      section.remove();
+      return;
+    }
+
+    const grid = section.querySelector('.article-grid-3');
+    const cards = articles.map(article => {
+      const card = document.createElement('a');
+      card.className = 'article-card';
+      card.href = `/baca-artikel.html?id=${encodeURIComponent(article.slug)}`;
+
+      const imageContainer = document.createElement('div');
+      imageContainer.className = 'article-image-container';
+      const image = document.createElement('img');
+      image.className = 'article-image';
+      image.alt = article.title || 'Artikel MorgadCyber';
+      image.loading = 'lazy';
+      image.onerror = () => { image.src = '/assets/img/logo.png'; };
+      try {
+        const imageUrl = new URL(article.image_url || '/assets/img/logo.png', window.location.origin);
+        image.src = imageUrl.protocol === 'https:' || imageUrl.origin === window.location.origin
+          ? imageUrl.href
+          : '/assets/img/logo.png';
+      } catch {
+        image.src = '/assets/img/logo.png';
+      }
+      imageContainer.appendChild(image);
+
+      const body = document.createElement('div');
+      body.className = 'article-body';
+      const meta = document.createElement('div');
+      meta.className = 'article-meta';
+      const category = document.createElement('span');
+      category.className = 'article-tag';
+      const categoryTranslation = articleCategoryTranslations[article.category];
+      category.textContent = categoryTranslation?.[state.language] || article.category || 'Article';
+      meta.appendChild(category);
+      if (article.published_at) {
+        const date = new Date(article.published_at);
+        if (!Number.isNaN(date.getTime())) {
+          const dateLabel = document.createElement('span');
+          dateLabel.className = 'article-date';
+          const locales = { en: 'en-US', id: 'id-ID', zh: 'zh-CN' };
+          dateLabel.textContent = date.toLocaleDateString(locales[state.language] || 'en-US');
+          meta.appendChild(dateLabel);
+        }
+      }
+
+      const title = document.createElement('h3');
+      title.className = 'article-title';
+      const localizedArticle = bundledArticleTranslations[article.slug]?.[state.language];
+      title.textContent = localizedArticle?.title || article.title || '';
+      const summary = document.createElement('p');
+      summary.className = 'article-summary';
+      summary.textContent = localizedArticle?.summary || article.summary || '';
+      const linkLabel = document.createElement('span');
+      linkLabel.className = 'article-link';
+      linkLabel.textContent = translate('readArticle');
+
+      body.append(meta, title, summary, linkLabel);
+      card.append(imageContainer, body);
+      return card;
+    });
+
+    grid.replaceChildren(...cards);
+    section.hidden = false;
+  } catch {
+    section.remove();
+  }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   initThemeAndCurrency();
+  initLanguageSwitcher();
+  applyLanguage(state.language);
   updateCartUI();
   applyProductFilters();
+  loadPublishedArticles();
 
   const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
   const sections = [...navLinks]

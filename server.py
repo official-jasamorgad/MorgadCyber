@@ -19,12 +19,32 @@ import threading
 import time
 import urllib.parse
 import uuid
+from http.cookies import SimpleCookie
 from datetime import datetime, timedelta, timezone
 from email import policy
 from email.parser import BytesParser
 from html.parser import HTMLParser
 from email.message import Message
+
+
+def load_environment_file():
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if not os.path.isfile(env_path):
+        return
+    with open(env_path, "r", encoding="utf-8") as env_file:
+        for line in env_file:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            value = value.strip().strip('"').strip("'")
+            os.environ.setdefault(key.strip(), value)
+
+
+load_environment_file()
+
 import requests
+import nh3
 import db
 import mayar
 
@@ -36,9 +56,55 @@ DOWNLOAD_TOKENS_LOCK = threading.Lock()
 MAX_PRODUCT_UPLOAD_BYTES = 250 * 1024 * 1024
 PRODUCT_UPLOAD_LOCK = threading.Lock()
 MAX_PRODUCT_IMAGE_BYTES = 5 * 1024 * 1024
-SIMULATED_PAYMENTS = {}
-SIMULATED_DOWNLOAD_TOKENS = {}
 DEFAULT_PRODUCT_IMAGE = "/assets/img/logo.png"
+ADMIN_SESSION_TTL_SECONDS = 1800
+ADMIN_SESSIONS = {}
+ADMIN_SESSIONS_LOCK = threading.Lock()
+ADMIN_LOGIN_FAILURES = {}
+ADMIN_LOGIN_FAILURES_LOCK = threading.Lock()
+ADMIN_LOGIN_WINDOW_SECONDS = 900
+ADMIN_LOGIN_MAX_FAILURES = 5
+MAX_API_BODY_BYTES = 1024 * 1024
+ARTICLE_ALLOWED_TAGS = {
+    "p", "h1", "h2", "h3", "h4", "ul", "ol", "li", "blockquote",
+    "pre", "code", "strong", "em", "b", "i", "a", "br", "hr",
+}
+
+
+def get_login_retry_after(identifier):
+    now = time.monotonic()
+    with ADMIN_LOGIN_FAILURES_LOCK:
+        attempts = [stamp for stamp in ADMIN_LOGIN_FAILURES.get(identifier, []) if now - stamp < ADMIN_LOGIN_WINDOW_SECONDS]
+        if attempts:
+            ADMIN_LOGIN_FAILURES[identifier] = attempts
+        else:
+            ADMIN_LOGIN_FAILURES.pop(identifier, None)
+        if len(attempts) < ADMIN_LOGIN_MAX_FAILURES:
+            return 0
+        return max(1, int(ADMIN_LOGIN_WINDOW_SECONDS - (now - attempts[0])))
+
+
+def record_admin_login_failure(identifier):
+    now = time.monotonic()
+    with ADMIN_LOGIN_FAILURES_LOCK:
+        attempts = [stamp for stamp in ADMIN_LOGIN_FAILURES.get(identifier, []) if now - stamp < ADMIN_LOGIN_WINDOW_SECONDS]
+        attempts.append(now)
+        ADMIN_LOGIN_FAILURES[identifier] = attempts
+
+
+def clear_admin_login_failures(identifier):
+    with ADMIN_LOGIN_FAILURES_LOCK:
+        ADMIN_LOGIN_FAILURES.pop(identifier, None)
+
+
+def sanitize_article_html(content):
+    return nh3.clean(
+        str(content or ""),
+        tags=ARTICLE_ALLOWED_TAGS,
+        attributes={"a": {"href", "title"}},
+        url_schemes={"http", "https", "mailto"},
+        strip_comments=True,
+    )
 
 
 def ensure_required_product_seed():
@@ -118,6 +184,35 @@ def ensure_required_product_seed():
         conn.close()
 
 
+def extract_doku_qris_string(payload):
+    qr_keys = {"qr_string", "qris_string", "qrstring", "qrisstring", "qr_content", "qris_content", "qr_code", "qrcode"}
+    pending = [payload]
+    while pending:
+        current = pending.pop()
+        if isinstance(current, dict):
+            for key, value in current.items():
+                if key.lower() in qr_keys and isinstance(value, str) and value.strip() and not value.startswith(("http://", "https://")):
+                    return value.strip()
+                if isinstance(value, (dict, list)):
+                    pending.append(value)
+        elif isinstance(current, list):
+            pending.extend(current)
+    return None
+
+
+def normalize_indonesian_phone(value):
+    digits = re.sub(r"\D", "", str(value or ""))
+    if digits.startswith("00"):
+        digits = digits[2:]
+    if digits.startswith("0"):
+        digits = "62" + digits[1:]
+    elif digits.startswith("8"):
+        digits = "62" + digits
+    if not digits.startswith("628") or not 10 <= len(digits) <= 15:
+        return None
+    return digits
+
+
 def resolve_product_image_url(image_path=None, product_id=None):
     candidate = (image_path or "").strip()
     if not candidate:
@@ -139,13 +234,6 @@ def resolve_product_image_url(image_path=None, product_id=None):
         return candidate
 
     return DEFAULT_PRODUCT_IMAGE
-
-
-def build_mock_payment_detail(product_name, price, customer_email, invoice_id):
-    return (
-        f"DOKU_CHECKOUT|product={product_name}|amount={float(price):.0f}|"
-        f"email={customer_email}|invoice={invoice_id}|channel=QRIS"
-    )
 
 
 def product_image_extension(upload):
@@ -217,14 +305,60 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
             return super().log_message("%s %s", self.command, parsed_path)
         return super().log_message(format_string, *args)
 
+    def is_sensitive_static_path(self, request_path):
+        decoded_path = urllib.parse.unquote(request_path).replace("\\", "/")
+        segments = [segment for segment in decoded_path.split("/") if segment not in {"", "."}]
+        if any(segment.startswith(".") for segment in segments):
+            return True
+
+        root = os.path.realpath(DIRECTORY)
+        candidate = os.path.realpath(os.path.join(root, decoded_path.lstrip("/")))
+        try:
+            if os.path.commonpath((root, candidate)) != root:
+                return True
+            private_root = os.path.realpath(os.path.join(root, "storage", "private"))
+            if os.path.commonpath((private_root, candidate)) == private_root:
+                return True
+        except ValueError:
+            return True
+
+        return os.path.splitext(candidate)[1].lower() in {
+            ".py", ".pyc", ".pyo", ".db", ".sqlite", ".sqlite3", ".sql", ".bak",
+        }
+
+    def get_admin_session_id(self):
+        cookies = SimpleCookie()
+        try:
+            cookies.load(self.headers.get("Cookie", ""))
+        except Exception:
+            return None
+        session_cookie = cookies.get("morgad_admin_session")
+        return session_cookie.value if session_cookie else None
+
+    def admin_cookie_is_secure(self):
+        host = self.headers.get("Host", "").split(":", 1)[0].strip("[]").lower()
+        return host not in {"localhost", "127.0.0.1", "::1"}
+
+    def clear_admin_session(self):
+        session_id = self.get_admin_session_id()
+        if session_id:
+            with ADMIN_SESSIONS_LOCK:
+                ADMIN_SESSIONS.pop(session_id, None)
+
+    def set_admin_session_cookie(self, session_id, max_age):
+        secure = "; Secure" if self.admin_cookie_is_secure() else ""
+        self.send_header(
+            "Set-Cookie",
+            f"morgad_admin_session={session_id}; Max-Age={max_age}; HttpOnly; SameSite=Strict; Path=/{secure}",
+        )
+
     def send_json(self, status_code: int, data: dict):
         body = json.dumps(data).encode('utf-8')
         self.send_response(status_code)
         self.send_header('Content-Type', 'application/json')
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('Cache-Control', 'no-store')
         self.send_header('Content-Length', str(len(body)))
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Mayar-Signature, Client-Id, Request-Id, Request-Timestamp, Signature')
         self.end_headers()
         self.wfile.write(body)
 
@@ -344,15 +478,21 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_OPTIONS(self):
         self.send_response(204)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Mayar-Signature, Client-Id, Request-Id, Request-Timestamp, Signature')
+        self.send_header('Allow', 'GET, HEAD, POST, OPTIONS')
         self.end_headers()
+
+    def do_HEAD(self):
+        path = urllib.parse.urlparse(self.path).path
+        if self.is_sensitive_static_path(path):
+            return self.send_error(404, "Not Found")
+        return super().do_HEAD()
 
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
+        if self.is_sensitive_static_path(path):
+            return self.send_error(404, "Not Found")
 
         if path == "/checkout/mayar":
             reference = query.get("ref", [""])[0].strip()
@@ -389,27 +529,7 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
                     return self.send_json(400, {"error": "Jumlah callback tidak cocok dengan order."})
                 now_iso = datetime.now(timezone.utc).isoformat()
                 if access["payment_status"] != "PAID":
-                    local_simulation = (
-                        not mayar.MAYAR_API_KEY
-                        and callback_amount is not None
-                        and re.fullmatch(r"MYR-TX-\d{6}-[A-F0-9]{8}", reference)
-                    )
-                    if not local_simulation:
-                        return self.send_json(402, {"error": "Pembayaran belum terverifikasi. Token download tidak diterbitkan."})
-
-                    conn.execute("""
-                        UPDATE orders SET payment_status = 'PAID', order_status = 'COMPLETED',
-                            download_status = 'READY', paid_at = ?
-                        WHERE id = ? AND payment_reference = ? AND payment_status = 'PENDING'
-                    """, (now_iso, access["id"], reference))
-                    conn.execute("""
-                        UPDATE payments SET status = 'PAID', payment_channel = 'LOCAL_SIMULATION', paid_at = ?
-                        WHERE order_id = ? AND provider_reference = ?
-                    """, (now_iso, access["id"], reference))
-                    conn.commit()
-                    access = dict(access)
-                    access["payment_status"] = "PAID"
-                    access["access_id"] = None
+                    return self.send_json(402, {"error": "Pembayaran belum terverifikasi. Token download tidak diterbitkan."})
 
                 if access["revoked"]:
                     return self.send_json(403, {"error": "Hak download order ini sudah dicabut."})
@@ -590,30 +710,38 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
             if not invoice_id:
                 return self.send_json(400, {"error": "invoice_id diperlukan."})
 
-            entry = SIMULATED_PAYMENTS.get(invoice_id)
-            if not entry:
+            conn = db.get_db()
+            order = conn.execute("""
+                SELECT o.order_number, o.payment_status, o.customer_email, dt.token AS download_token
+                FROM orders o
+                LEFT JOIN download_tokens dt
+                    ON dt.order_id = o.id AND dt.status = 'active'
+                WHERE o.order_number = ? OR o.id = ? OR o.payment_reference = ?
+                LIMIT 1
+            """, (invoice_id, invoice_id, invoice_id)).fetchone()
+            conn.close()
+            if not order:
                 return self.send_json(404, {"error": "Invoice tidak ditemukan."})
-
-            token = next((token for token, value in SIMULATED_DOWNLOAD_TOKENS.items() if value.get("invoice_id") == invoice_id), None)
-            payload = {
+            customer_email = query.get("email", [""])[0].strip().lower()
+            download_url = None
+            if (
+                order["payment_status"] == "PAID"
+                and order["download_token"]
+                and hmac.compare_digest(customer_email, order["customer_email"].lower())
+            ):
+                download_url = f"/api/download/{urllib.parse.quote(order['download_token'])}"
+            return self.send_json(200, {
                 "status": "success",
-                "invoice_id": invoice_id,
-                "payment_status": entry.get("status", "pending"),
-                "mode": "simulation",
-                "download_token": token,
-                "download_url": f"/api/download/{urllib.parse.quote(token)}" if token else None,
-                "product_name": entry.get("product_name"),
-                "amount": entry.get("amount"),
-                "currency": entry.get("currency", "IDR"),
-                "google_drive_id": entry.get("google_drive_id"),
-                "image_path": entry.get("image_path"),
-            }
-            return self.send_json(200, payload)
+                "invoice_id": order["order_number"],
+                "payment_status": order["payment_status"],
+                "download_url": download_url,
+            })
 
         if path == "/api/admin/logout":
+            self.clear_admin_session()
             self.send_response(302)
             self.send_header('Location', '/MorgadAdmin')
-            self.send_header('Set-Cookie', 'morgad_admin_session=; Max-Age=0; HttpOnly; SameSite=Lax; Path=/')
+            self.set_admin_session_cookie('', 0)
             self.end_headers()
             return
 
@@ -709,7 +837,9 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
                 if not row:
                     return self.send_json(404, {"success": False, "error": "Artikel tidak ditemukan."})
-                return self.send_json(200, {"success": True, "article": dict(row)})
+                article = dict(row)
+                article["content"] = sanitize_article_html(article.get("content", ""))
+                return self.send_json(200, {"success": True, "article": article})
             rows = [dict(row) for row in conn.execute(
                 "SELECT id, slug, title, category, summary, image_url, published_at FROM articles WHERE status = 'published' ORDER BY published_at DESC, id DESC"
             )]
@@ -779,27 +909,6 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
         if path.startswith("/api/download/"):
             raw_token = path.split("/api/download/")[1].strip()
             client_ip = self.client_address[0] if self.client_address else "127.0.0.1"
-
-            if raw_token in SIMULATED_DOWNLOAD_TOKENS:
-                token_data = SIMULATED_DOWNLOAD_TOKENS[raw_token]
-                if time.time() > token_data["expires_at"]:
-                    SIMULATED_DOWNLOAD_TOKENS.pop(raw_token, None)
-                    return self.send_json(410, {"error": "Download token expired."})
-                if token_data.get("google_drive_id"):
-                    return self.send_google_drive_file(token_data["google_drive_id"], token_data["product_name"])
-
-            conn = db.get_db()
-            token_row = conn.execute("""
-                SELECT dt.token, dt.google_drive_id, p.name AS product_name, p.id AS product_id
-                FROM download_tokens dt
-                LEFT JOIN products p ON p.id = dt.product_id
-                WHERE dt.token = ? AND dt.status = 'active'
-                LIMIT 1
-            """, (raw_token,)).fetchone()
-            conn.close()
-            if token_row and token_row["google_drive_id"]:
-                return self.send_google_drive_file(token_row["google_drive_id"], token_row["product_name"] or "produk")
-
             try:
                 claim = mayar.verify_and_claim_download(raw_token, client_ip)
                 if claim.get("google_drive_id"):
@@ -815,6 +924,8 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # 4. API: Admin Metrics & Live Stats
         if path == "/api/admin/stats":
+            if not self.is_admin_authenticated():
+                return self.send_json(401, {"success": False, "error": "Admin login required."})
             conn = db.get_db()
             cursor = conn.cursor()
 
@@ -852,6 +963,8 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # 5. API: Admin Orders List
         if path == "/api/admin/orders":
+            if not self.is_admin_authenticated():
+                return self.send_json(401, {"success": False, "error": "Admin login required."})
             status_filter = query.get("status", [None])[0]
             conn = db.get_db()
             cursor = conn.cursor()
@@ -886,8 +999,16 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def is_admin_authenticated(self):
-        cookies = self.headers.get('Cookie', '')
-        return 'morgad_admin_session=authenticated' in cookies
+        session_id = self.get_admin_session_id()
+        if not session_id:
+            return False
+        now = time.time()
+        with ADMIN_SESSIONS_LOCK:
+            expiry = ADMIN_SESSIONS.get(session_id)
+            if not expiry or expiry <= now:
+                ADMIN_SESSIONS.pop(session_id, None)
+                return False
+            return True
 
     def parse_multipart_form(self, raw_body):
         content_type = self.headers.get('Content-Type', '')
@@ -1010,7 +1131,15 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
         path = parsed.path
         if path == "/api/admin/products" and self.headers.get('Content-Type', '').lower().startswith('multipart/form-data'):
             return self.handle_admin_product_upload()
-        content_length = int(self.headers.get('Content-Length', 0))
+        try:
+            content_length = int(self.headers.get('Content-Length', 0))
+        except ValueError:
+            return self.send_json(400, {"error": "Invalid Content-Length."})
+        if content_length < 0:
+            return self.send_json(400, {"error": "Invalid Content-Length."})
+        if content_length > MAX_API_BODY_BYTES:
+            self.close_connection = True
+            return self.send_json(413, {"error": "Request body is too large."})
         raw_body_bytes = self.rfile.read(content_length) if content_length > 0 else b"{}"
         raw_body = raw_body_bytes.decode('utf-8', errors='replace')
         client_ip = self.client_address[0] if self.client_address else "127.0.0.1"
@@ -1120,7 +1249,7 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
                         conn.close()
                         return self.send_json(400, {"success": False, "error": "Stok harus antara 0 dan 1.000.000."})
                 try:
-                    conn.execute("UPDATE products SET name = ?, slug = ?, description = ?, category = ?, google_drive_id = ?, file_path = ?, cost_price = ?, price = ?, stock_quantity = ?, status = ?, updated_at = ? WHERE id = ?", (name, slug, description, category, google_drive_id, f"google-drive://{google_drive_id}", cost_price, price, stock_quantity, status, now, product_id))
+                    conn.execute("UPDATE products SET name = ?, slug = ?, description = ?, category = ?, google_drive_id = ?, file_path = ?, cost_price = ?, price = ?, stock_quantity = ?, status = ?, is_published = ?, updated_at = ? WHERE id = ?", (name, slug, description, category, google_drive_id, f"google-drive://{google_drive_id}", cost_price, price, stock_quantity, status, 1 if status == "published" else 0, now, product_id))
                 except sqlite3.IntegrityError:
                     conn.close()
                     return self.send_json(409, {"success": False, "error": "Kode produk sudah digunakan."})
@@ -1188,7 +1317,7 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
             slug = re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", slug_source)).strip("-")
             category = str(body.get("category", "Tips & Guides")).strip()
             summary = str(body.get("summary", "")).strip()
-            content = str(body.get("content", "")).strip()
+            content = sanitize_article_html(str(body.get("content", "")).strip())
             image_url = str(body.get("image_url", "")).strip()
             status = str(body.get("status", "draft")).strip().lower()
             article_id = body.get("id")
@@ -1240,225 +1369,73 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
                 conn.close()
             return self.send_json(200, {"success": True, "article": article})
 
-        # Verify and process paid DOKU notifications, then issue secure Google Drive token.
-        if path in ("/webhook-doku", "/api/webhooks/doku", "/webhook-mayar"):
-            order_data = body.get("order") if isinstance(body.get("order"), dict) else {}
-            trans_data = body.get("transaction") if isinstance(body.get("transaction"), dict) else {}
-            invoice_id = str(
-                order_data.get("invoice_number")
-                or body.get("invoice_id")
-                or body.get("order_number")
-                or body.get("order_id")
-                or ""
-            ).strip()
+        # Process signed DOKU production notifications and issue verified download access.
+        if path in ("/webhook-doku", "/api/webhooks/doku"):
+            if not mayar.DOKU_CLIENT_ID or not mayar.DOKU_SECRET_KEY:
+                return self.send_json(503, {"error": "DOKU webhook credentials are not configured."})
+            if not mayar.verify_webhook_signature(dict(self.headers), raw_body, path):
+                return self.send_json(401, {"error": "Invalid DOKU webhook signature."})
 
+            event_data = body.get("data") if isinstance(body.get("data"), dict) else {}
+            order_data = body.get("order") if isinstance(body.get("order"), dict) else event_data.get("order", {})
+            transaction_data = body.get("transaction") if isinstance(body.get("transaction"), dict) else event_data.get("transaction", {})
             status_raw = str(
-                trans_data.get("status")
+                transaction_data.get("status")
                 or body.get("status")
                 or body.get("event_type")
                 or body.get("event")
-                or "SUCCESS"
+                or event_data.get("status")
+                or ""
             ).strip().upper()
-            is_success = status_raw in ("SUCCESS", "PAID", "COMPLETED", "SETTLED", "PAYMENT.PAID", "PAYMENT.SUCCESS")
+            if status_raw not in {"PAID", "SUCCESS", "COMPLETED", "SETTLED", "PAYMENT.PAID", "PAYMENT.SUCCESS"}:
+                return self.send_json(200, {"status": "ignored", "payment_status": status_raw or "UNKNOWN"})
 
-            if (mayar.DOKU_SECRET_KEY or mayar.MAYAR_WEBHOOK_SECRET) and not mayar.verify_webhook_signature(dict(self.headers), raw_body, path):
-                return self.send_json(401, {"error": "Invalid webhook signature."})
-
-            if not is_success:
-                return self.send_json(400, {"error": f"Webhook does not report a successful payment (status: {status_raw})."})
-
-            conn = db.get_db()
-            cursor = conn.cursor()
-            order = cursor.execute("""
-                SELECT o.*, p.name as product_name, p.google_drive_id, p.file_path, p.max_downloads as prod_max_downloads
-                FROM orders o
-                JOIN products p ON o.product_id = p.id
-                WHERE o.order_number = ? OR o.id = ? OR o.payment_reference = ?
-                LIMIT 1
-            """, (invoice_id, invoice_id, invoice_id)).fetchone()
-
-            now_iso = datetime.now(timezone.utc).isoformat()
-            token = secrets.token_urlsafe(32)
-
-            if order:
-                drive_id = order["google_drive_id"]
-                prod_name = order["product_name"]
-                max_dl = order["prod_max_downloads"] or 5
-
-                # 1. Update orders & payments in DB
-                cursor.execute("""
-                    UPDATE orders SET
-                        payment_status = 'PAID',
-                        order_status = 'COMPLETED',
-                        download_status = 'READY',
-                        paid_at = ?
-                    WHERE id = ?
-                """, (now_iso, order["id"]))
-
-                cursor.execute("""
-                    UPDATE payments SET
-                        status = 'PAID',
-                        paid_at = ?
-                    WHERE order_id = ?
-                """, (now_iso, order["id"]))
-
-                # 2. Insert active download token with Google Drive ID
-                cursor.execute("""
-                    INSERT OR REPLACE INTO download_tokens (
-                        id, token, order_id, product_id, invoice_id, google_drive_id, expires_at, status, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?)
-                """, (
-                    str(uuid.uuid4()),
-                    token,
-                    order["id"],
-                    order["product_id"],
-                    order["order_number"],
-                    drive_id,
-                    (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-                    now_iso,
-                ))
-
-                # 3. Insert download access
-                token_h = mayar.hash_token(token)
-                cursor.execute("""
-                    INSERT INTO download_access (
-                        id, order_id, product_id, token_hash, expires_at, download_count, max_downloads, revoked, created_at
-                    ) VALUES (?, ?, ?, ?, ?, 0, ?, 0, ?)
-                    ON CONFLICT(order_id) DO UPDATE SET
-                        token_hash = excluded.token_hash,
-                        expires_at = excluded.expires_at,
-                        revoked = 0;
-                """, (
-                    str(uuid.uuid4()),
-                    order["id"],
-                    order["product_id"],
-                    token_h,
-                    (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-                    max_dl,
-                    now_iso,
-                ))
-                conn.commit()
-
-                try:
-                    mayar.process_mayar_webhook(body, client_ip)
-                except Exception as ex:
-                    print(f"[Webhook Audit Note] {ex}")
-
-            elif invoice_id and invoice_id in SIMULATED_PAYMENTS:
-                entry = SIMULATED_PAYMENTS[invoice_id]
-                entry["status"] = "success"
-                entry["paid_at"] = now_iso
-                drive_id = entry.get("google_drive_id")
-                prod_name = entry.get("product_name")
-
-                cursor.execute("""
-                    INSERT OR REPLACE INTO download_tokens (
-                        id, token, order_id, product_id, invoice_id, google_drive_id, expires_at, status, created_at
-                    ) VALUES (?, ?, NULL, ?, ?, ?, ?, 'active', ?)
-                """, (
-                    str(uuid.uuid4()),
-                    token,
-                    entry.get("product_id"),
-                    invoice_id,
-                    drive_id,
-                    (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-                    now_iso,
-                ))
-                conn.commit()
-            else:
-                conn.close()
-                return self.send_json(404, {"error": f"Invoice '{invoice_id}' tidak ditemukan di database pesanan."})
-
-            conn.close()
-
-            # Update cache in-memory
-            if invoice_id in SIMULATED_PAYMENTS:
-                SIMULATED_PAYMENTS[invoice_id]["status"] = "success"
-                SIMULATED_PAYMENTS[invoice_id]["paid_at"] = now_iso
-
-            SIMULATED_DOWNLOAD_TOKENS[token] = {
-                "invoice_id": invoice_id,
-                "product_name": prod_name,
-                "google_drive_id": drive_id,
-                "expires_at": time.time() + 86400 * 7,
-            }
-
-            return self.send_json(200, {
-                "status": "success",
-                "invoice_id": invoice_id,
-                "payment_status": "PAID",
-                "download_token": token,
-                "download_url": f"/api/download/{urllib.parse.quote(token)}",
-                "google_drive_id": drive_id,
-            })
-
-        if path == "/api/check-status":
-            invoice_id = urllib.parse.parse_qs(parsed.query).get("invoice_id", [""])[0].strip()
-            if not invoice_id:
-                return self.send_json(400, {"error": "invoice_id diperlukan."})
-
-            conn = db.get_db()
-            db_order = conn.execute("""
-                SELECT o.id, o.order_number, o.payment_status, o.product_id,
-                       p.google_drive_id, p.name AS product_name,
-                       dt.token AS download_token
-                FROM orders o
-                LEFT JOIN products p ON p.id = o.product_id
-                LEFT JOIN download_tokens dt ON (dt.invoice_id = o.order_number OR dt.order_id = o.id) AND dt.status = 'active'
-                WHERE o.order_number = ? OR o.id = ? OR o.payment_reference = ?
-                LIMIT 1
-            """, (invoice_id, invoice_id, invoice_id)).fetchone()
-            conn.close()
-
-            if db_order:
-                is_paid = db_order["payment_status"] == "PAID"
-                token = db_order["download_token"]
-                if not token and invoice_id in SIMULATED_DOWNLOAD_TOKENS:
-                    token = next((t for t, v in SIMULATED_DOWNLOAD_TOKENS.items() if v.get("invoice_id") == invoice_id), None)
-
-                return self.send_json(200, {
-                    "status": "success",
-                    "invoice_id": invoice_id,
-                    "payment_status": "PAID" if is_paid else db_order["payment_status"],
-                    "download_token": token if is_paid else None,
-                    "download_url": f"/api/download/{urllib.parse.quote(token)}" if (is_paid and token) else None,
-                    "google_drive_id": db_order["google_drive_id"],
-                })
-
-            entry = SIMULATED_PAYMENTS.get(invoice_id)
-            if not entry:
-                return self.send_json(404, {"error": "Invoice tidak ditemukan."})
-
-            is_paid = entry["status"] in ("success", "paid", "PAID")
-            token = next((t for t, value in SIMULATED_DOWNLOAD_TOKENS.items() if value.get("invoice_id") == invoice_id), None)
-            return self.send_json(200, {
-                "status": "success",
-                "invoice_id": invoice_id,
-                "payment_status": "PAID" if is_paid else entry["status"],
-                "download_token": token if is_paid else None,
-                "download_url": f"/api/download/{urllib.parse.quote(token)}" if (is_paid and token) else None,
-                "google_drive_id": entry.get("google_drive_id"),
-            })
+            webhook_payload = dict(body)
+            webhook_payload.setdefault("event_id", self.headers.get("Request-Id") or uuid.uuid5(uuid.NAMESPACE_URL, raw_body).hex)
+            if order_data:
+                webhook_payload.setdefault("order", order_data)
+            if transaction_data:
+                webhook_payload.setdefault("transaction", transaction_data)
+            webhook_payload.setdefault("status", status_raw)
+            if "amount" not in webhook_payload and transaction_data.get("amount") is not None:
+                webhook_payload["amount"] = transaction_data["amount"]
+            try:
+                return self.send_json(200, mayar.process_doku_webhook(webhook_payload, client_ip))
+            except ValueError as error:
+                return self.send_json(400, {"error": str(error)})
 
         if path == "/api/admin/login":
             identifier = str(body.get("identifier", body.get("email", ""))).strip()
             password = str(body.get("password", ""))
-            expected_identifier = os.environ.get("MORGAD_ADMIN_EMAIL", "morgadcyber@morgad.com")
-            expected_username = os.environ.get("MORGAD_ADMIN_USERNAME", "morgadcyber")
-            expected_password = os.environ.get("MORGAD_ADMIN_PASSWORD", "JasaMorgad21vp")
-            valid_identifier = (
-                hmac.compare_digest(identifier.lower(), expected_identifier.lower())
-                or hmac.compare_digest(identifier.lower(), expected_username.lower())
-                or hmac.compare_digest(identifier.lower(), "morgad admin")
+            expected_identifier = os.environ.get("MORGAD_ADMIN_EMAIL", "").strip()
+            expected_username = os.environ.get("MORGAD_ADMIN_USERNAME", "").strip()
+            expected_password = os.environ.get("MORGAD_ADMIN_PASSWORD", "")
+            if not expected_password or not (expected_identifier or expected_username):
+                return self.send_json(503, {"success": False, "error": "Admin login is not securely configured."})
+
+            login_key = identifier.casefold() or (self.client_address[0] if self.client_address else "unknown")
+            retry_after = get_login_retry_after(login_key)
+            if retry_after:
+                return self.send_json(429, {"success": False, "error": "Too many failed login attempts. Try again later.", "retry_after_seconds": retry_after})
+
+            valid_identifier = any(
+                candidate and hmac.compare_digest(identifier.casefold(), candidate.casefold())
+                for candidate in (expected_identifier, expected_username)
             )
             valid_password = hmac.compare_digest(password, expected_password)
             if not (valid_identifier and valid_password):
+                record_admin_login_failure(login_key)
                 return self.send_json(401, {"success": False, "error": "Email atau password salah."})
 
+            clear_admin_login_failures(login_key)
+            session_id = secrets.token_urlsafe(32)
+            with ADMIN_SESSIONS_LOCK:
+                ADMIN_SESSIONS[session_id] = time.time() + ADMIN_SESSION_TTL_SECONDS
             response = json.dumps({"success": True}).encode('utf-8')
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')
-            self.send_header('Set-Cookie', 'morgad_admin_session=authenticated; Max-Age=1800; HttpOnly; SameSite=Lax; Path=/')
+            self.send_header('Cache-Control', 'no-store')
+            self.set_admin_session_cookie(session_id, ADMIN_SESSION_TTL_SECONDS)
             self.send_header('Content-Length', str(len(response)))
             self.end_headers()
             self.wfile.write(response)
@@ -1469,188 +1446,162 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
             if not isinstance(body, dict):
                 return self.send_json(400, {"error": "JSON body required."})
 
-            product_id = body.get("product_id") or body.get("productId") or body.get("id")
-            customer_email = body.get("customer_email") or body.get("customerEmail") or body.get("email")
+            product_id = str(body.get("product_id") or body.get("productId") or body.get("id") or "").strip()
+            customer_name = str(body.get("customer_name") or body.get("customerName") or "").strip()
+            customer_email = str(body.get("customer_email") or body.get("customerEmail") or body.get("email") or "").strip().lower()
+            customer_phone = normalize_indonesian_phone(
+                body.get("customer_phone") or body.get("customerPhone") or body.get("phone")
+            )
 
-            if not product_id or not customer_email:
-                return self.send_json(400, {"error": "Missing required fields: 'product_id' and 'customer_email'."})
+            if not product_id or not customer_name or not customer_email or not customer_phone:
+                return self.send_json(400, {"error": "product_id, customer_name, customer_email, and customer_phone are required."})
+            if len(customer_name) > 200 or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", customer_email):
+                return self.send_json(400, {"error": "Customer name or email is invalid."})
+            if not customer_phone:
+                return self.send_json(400, {"error": "Customer phone number must be an Indonesian mobile number."})
+
+            doku_client_id = os.environ.get("DOKU_CLIENT_ID", "").strip()
+            doku_secret_key = os.environ.get("DOKU_SECRET_KEY", "").strip()
+            if not doku_client_id or not doku_secret_key:
+                return self.send_json(503, {"error": "DOKU production credentials are not configured."})
 
             conn = db.get_db()
-            product = conn.execute(
-                """
-                SELECT id, name, price, google_drive_id, image_path, currency,
-                       COALESCE(status, 'published') AS status,
-                       COALESCE(is_published, 1) AS is_published
-                FROM products WHERE id = ? LIMIT 1
-                """,
-                (str(product_id),),
-            ).fetchone()
-
-            if not product:
-                conn.close()
-                return self.send_json(404, {"error": "Product not found or not published."})
-
-            if product["status"] != "published" and product["is_published"] not in (1, True, "1"):
-                conn.close()
-                return self.send_json(404, {"error": "Product not found or not published."})
-
             try:
+                product = conn.execute(
+                    """
+                    SELECT id, name, price, google_drive_id,
+                           COALESCE(status, 'published') AS status,
+                           COALESCE(is_published, 1) AS is_published
+                    FROM products WHERE id = ? LIMIT 1
+                    """,
+                    (product_id,),
+                ).fetchone()
+                if not product or (product["status"] != "published" and product["is_published"] not in (1, True, "1")):
+                    conn.close()
+                    return self.send_json(404, {"error": "Product not found or not published."})
+                if not re.fullmatch(r"[A-Za-z0-9_-]{10,200}", str(product["google_drive_id"] or "")):
+                    conn.close()
+                    return self.send_json(409, {"error": "Product download file is not configured yet."})
                 price_value = float(product["price"])
             except (TypeError, ValueError):
                 conn.close()
                 return self.send_json(400, {"error": "Product price is invalid."})
+            if not math.isfinite(price_value) or price_value <= 0:
+                conn.close()
+                return self.send_json(400, {"error": "Product price must be greater than zero."})
 
-            invoice_id = f"INV-{datetime.now(timezone.utc).strftime('%Y%m%d')}-{secrets.token_hex(4).upper()}"
+            now = datetime.now(timezone.utc)
+            invoice_id = f"INV-{secrets.token_hex(4).upper()}"
             order_id = f"ord_{secrets.token_hex(8)}"
-            currency = product["currency"] or "IDR"
             amount_int = int(round(price_value))
-            now_iso = datetime.now(timezone.utc).isoformat()
-            customer_name = customer_email.split("@")[0]
-
-            # DOKU Production Credentials & Signature
-            doku_client_id = os.environ.get("DOKU_CLIENT_ID", "").strip()
-            doku_secret_key = os.environ.get("DOKU_SECRET_KEY", "").strip()
-            doku_base_url = os.environ.get("DOKU_BASE_URL", "https://doku.com").rstrip("/")
+            now_iso = now.isoformat()
             endpoint_path = "/checkout/v1/payment"
-            target_url = f"{doku_base_url}{endpoint_path}"
-            app_url = os.environ.get("APP_URL", "http://localhost:3000").rstrip("/")
-            callback_url = f"{app_url}/payment/success"
+            target_url = f"https://api.doku.com{endpoint_path}"
 
             doku_payload = {
                 "order": {
                     "invoice_number": invoice_id,
                     "amount": amount_int,
-                    "currency": currency,
-                    "callback_url": callback_url
+                    "currency": "IDR",
+                    "callback_url": "https://morgadcyber.cloud",
                 },
                 "customer": {
                     "name": customer_name,
                     "email": customer_email,
-                    "phone": "6281234567890"
-                }
+                    "phone": customer_phone,
+                },
             }
             payload_bytes = json.dumps(doku_payload, separators=(',', ':')).encode("utf-8")
             request_id = str(uuid.uuid4())
             timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-            # Signature Calculation Non-SNAP
-            signature, digest = mayar.generate_doku_signature(
-                doku_client_id or "MALLID-MORGAD",
-                doku_secret_key or "SECRET-KEY",
+            signature, _ = mayar.generate_doku_signature(
+                doku_client_id,
+                doku_secret_key,
                 request_id,
                 timestamp,
                 endpoint_path,
                 payload_bytes
             )
 
-            checkout_url = None
-            if doku_client_id and doku_secret_key:
-                headers = {
-                    "Client-Id": doku_client_id,
-                    "Request-Id": request_id,
-                    "Request-Timestamp": timestamp,
-                    "Signature": signature,
-                    "Content-Type": "application/json",
-                }
-                req = urllib.request.Request(target_url, data=payload_bytes, headers=headers, method="POST")
-                try:
-                    with urllib.request.urlopen(req, timeout=15) as resp:
-                        resp_data = json.loads(resp.read().decode("utf-8"))
-                        checkout_url = (
-                            resp_data.get("response", {}).get("payment", {}).get("url")
-                            or resp_data.get("payment", {}).get("url")
-                            or resp_data.get("url")
-                        )
-                except urllib.error.HTTPError as err:
-                    err_body = err.read().decode("utf-8", errors="replace")
-                    print(f"[DOKU Production API] HTTP {err.code}: {err_body}")
-                except Exception as e:
-                    print(f"[DOKU API Connection Note] {e}")
-
-            if not checkout_url:
-                checkout_url = f"{doku_base_url}/checkout/v1/payment?invoice={invoice_id}"
-
-            # Simpan order dan payment ke database SQLite
             conn.execute("""
                 INSERT INTO orders (
                     id, order_number, product_id, customer_email, amount, currency,
                     payment_provider, payment_reference, payment_status, order_status, download_status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, 'doku', ?, 'PENDING', 'PENDING', 'NOT_AVAILABLE', ?)
-            """, (order_id, invoice_id, product["id"], customer_email, price_value, currency, invoice_id, now_iso))
+                ) VALUES (?, ?, ?, ?, ?, 'IDR', 'doku', ?, 'PENDING', 'PENDING', 'NOT_AVAILABLE', ?)
+            """, (order_id, invoice_id, product["id"], customer_email, amount_int, invoice_id, now_iso))
 
             conn.execute("""
                 INSERT INTO payments (
                     id, order_id, provider, provider_reference, amount, currency, status, payment_channel, created_at
-                ) VALUES (?, ?, 'doku', ?, ?, ?, 'PENDING', 'DOKU_CHECKOUT', ?)
-            """, (f"pay_{secrets.token_hex(8)}", order_id, invoice_id, price_value, currency, now_iso))
-
-            download_token = secrets.token_urlsafe(32)
-            conn.execute("""
-                INSERT OR REPLACE INTO download_tokens (
-                    id, token, order_id, product_id, invoice_id, google_drive_id, expires_at, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
-            """, (
-                str(uuid.uuid4()),
-                download_token,
-                order_id,
-                product["id"],
-                invoice_id,
-                product["google_drive_id"],
-                (datetime.now(timezone.utc) + timedelta(minutes=60)).isoformat(),
-                now_iso,
-            ))
+                ) VALUES (?, ?, 'doku', ?, ?, 'IDR', 'PENDING', 'DOKU_CHECKOUT', ?)
+            """, (f"pay_{secrets.token_hex(8)}", order_id, invoice_id, amount_int, now_iso))
             conn.commit()
             conn.close()
 
-            payment_detail = f"DOKU_CHECKOUT|invoice={invoice_id}|amount={amount_int}|currency={currency}"
-            SIMULATED_PAYMENTS[invoice_id] = {
-                "status": "pending",
-                "product_id": product["id"],
-                "product_name": product["name"],
-                "google_drive_id": product["google_drive_id"],
-                "image_path": product["image_path"],
-                "amount": float(price_value),
-                "currency": currency,
-                "customer_email": customer_email,
-                "created_at": now_iso,
-                "paymentDetail": payment_detail,
-                "checkout_url": checkout_url,
+            headers = {
+                "Client-Id": doku_client_id,
+                "Request-Id": request_id,
+                "Request-Timestamp": timestamp,
+                "Signature": signature,
+                "Content-Type": "application/json",
             }
-            SIMULATED_DOWNLOAD_TOKENS[download_token] = {
-                "invoice_id": invoice_id,
-                "product_name": product["name"],
-                "google_drive_id": product["google_drive_id"],
-                "expires_at": time.time() + 86400 * 7,
-            }
+            doku_response = None
+            try:
+                doku_response = requests.post(target_url, data=payload_bytes, headers=headers, timeout=20)
+                doku_response.raise_for_status()
+                response_payload = doku_response.json()
+                if not isinstance(response_payload, dict):
+                    raise ValueError("DOKU returned a non-object JSON response.")
+            except (requests.RequestException, ValueError) as error:
+                error_response = getattr(error, "response", None) or doku_response
+                if error_response is not None:
+                    print("DOKU RAW ERROR RESP:", error_response.status_code, error_response.text)
+                else:
+                    print("DOKU RAW ERROR RESP:", None, str(error))
+                conn = db.get_db()
+                conn.execute("UPDATE orders SET payment_status = 'FAILED', order_status = 'FAILED' WHERE id = ?", (order_id,))
+                conn.execute("UPDATE payments SET status = 'FAILED' WHERE order_id = ?", (order_id,))
+                conn.commit()
+                conn.close()
+                return self.send_json(502, {"error": "DOKU production checkout could not be created."})
 
-            response = {
-                "status": "success",
-                "invoice_id": invoice_id,
-                "order_number": invoice_id,
-                "download_token": download_token,
-                "download_url": f"/api/download/{urllib.parse.quote(download_token)}",
-                "paymentDetail": payment_detail,
-                "product_name": product["name"],
-                "amount": float(price_value),
-                "currency": currency,
-                "google_drive_id": product["google_drive_id"],
-                "image_path": product["image_path"] or "/assets/img/logo.png",
-                "url": checkout_url,
-                "checkout_url": checkout_url,
-            }
+            data_section = response_payload.get("data") if isinstance(response_payload.get("data"), dict) else {}
+            response_section = response_payload.get("response") if isinstance(response_payload.get("response"), dict) else {}
+            payment_data = response_section.get("payment") if isinstance(response_section.get("payment"), dict) else {}
+            payment_section = response_payload.get("payment") if isinstance(response_payload.get("payment"), dict) else {}
+            checkout_url = (
+                data_section.get("url")
+                or payment_data.get("url")
+                or payment_section.get("url")
+                or response_payload.get("url")
+            )
+            qris_string = extract_doku_qris_string(response_payload)
+            parsed_checkout_url = urllib.parse.urlparse(str(checkout_url or ""))
+            if parsed_checkout_url.scheme != "https" or not parsed_checkout_url.netloc:
+                print("DOKU RAW ERROR RESP:", doku_response.status_code, doku_response.text)
+                conn = db.get_db()
+                conn.execute("UPDATE orders SET payment_status = 'FAILED', order_status = 'FAILED' WHERE id = ?", (order_id,))
+                conn.execute("UPDATE payments SET status = 'FAILED' WHERE order_id = ?", (order_id,))
+                conn.commit()
+                conn.close()
+                return self.send_json(502, {"error": "DOKU did not return a valid HTTPS checkout URL."})
 
-            return self.send_json(200, response)
+            response_payload["status"] = "success"
+            response_payload["invoice_id"] = invoice_id
+            response_payload["checkout_url"] = str(checkout_url)
+            response_payload["qris_string"] = qris_string
+            return self.send_json(200, response_payload)
 
-        # 2. API: Payment Webhook Endpoint (DOKU & legacy Mayar)
-        if path in ("/api/webhooks/mayar", "/api/webhooks/doku", "/webhook-doku"):
+        if path in ("/api/webhooks/doku", "/webhook-doku"):
+            if not mayar.DOKU_CLIENT_ID or not mayar.DOKU_SECRET_KEY:
+                return self.send_json(503, {"error": "DOKU webhook credentials are not configured."})
             if not mayar.verify_webhook_signature(dict(self.headers), raw_body, path):
                 return self.send_json(401, {"error": "Invalid webhook signature."})
 
             try:
-                result = mayar.process_mayar_webhook(body, client_ip)
-                return self.send_json(200, result)
-            except ValueError as e:
-                return self.send_json(400, {"error": str(e)})
+                return self.send_json(200, mayar.process_doku_webhook(body, client_ip))
+            except ValueError as error:
+                return self.send_json(400, {"error": str(error)})
 
         # 3. API: Resend Download Link (Section 35, 36)
         if path.startswith("/api/orders/") and path.endswith("/resend-download"):
@@ -1694,6 +1645,8 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # 4. API: Admin Revoke Token
         if path.startswith("/api/admin/downloads/") and path.endswith("/revoke"):
+            if not self.is_admin_authenticated():
+                return self.send_json(401, {"success": False, "error": "Admin login required."})
             order_ref = path.split("/api/admin/downloads/")[1].replace("/revoke", "")
             conn = db.get_db()
             conn.execute("""
@@ -1710,6 +1663,8 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         # 5. API: Admin Reset Quota
         if path.startswith("/api/admin/downloads/") and path.endswith("/reset"):
+            if not self.is_admin_authenticated():
+                return self.send_json(401, {"success": False, "error": "Admin login required."})
             order_ref = path.split("/api/admin/downloads/")[1].replace("/reset", "")
             conn = db.get_db()
             conn.execute("""
@@ -1719,29 +1674,6 @@ class PlatformRequestHandler(http.server.SimpleHTTPRequestHandler):
             conn.commit()
             conn.close()
             return self.send_json(200, {"status": "success", "message": f"Download quota reset to 0 for #{order_ref}."})
-
-        # 6. API: Developer / Admin Webhook Simulator
-        if path == "/api/admin/simulate-payment":
-            order_ref = body.get("order_number") or body.get("order_id")
-            conn = db.get_db()
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM orders WHERE order_number = ? OR id = ?", (order_ref, order_ref))
-            order = cursor.fetchone()
-            conn.close()
-
-            if not order:
-                return self.send_json(404, {"error": "Order not found."})
-
-            simulated_event = {
-                "event_id": f"sim_{mayar.secrets.token_hex(6)}",
-                "event_type": "payment.paid",
-                "order_number": order["order_number"],
-                "amount": float(order["amount"]),
-                "payment_reference": order["payment_reference"] or f"MYR-SIM-{mayar.secrets.token_hex(4).upper()}",
-                "payment_channel": body.get("channel", "QRIS")
-            }
-            res = mayar.process_mayar_webhook(simulated_event, client_ip)
-            return self.send_json(200, res)
 
         return self.send_json(404, {"error": "Not Found"})
 

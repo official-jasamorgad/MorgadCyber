@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db, orders, downloadAccess } from '@morgad/db'
 import { eq, and } from 'drizzle-orm'
-import { getMayarTransaction, getMayarTransactionStatus } from '@morgad/mayar'
 
 const QuerySchema = z.object({
   number: z.string().min(1),
@@ -37,19 +36,6 @@ export async function GET(request: NextRequest) {
   }
 
   let currentStatus = order.paymentStatus
-
-  if (order.paymentStatus === 'PENDING' && (order.transactionId || order.paymentReference)) {
-    const remote = await getMayarTransaction((order.transactionId ?? order.paymentReference) as string)
-    const candidate = remote ? getMayarTransactionStatus(remote as Record<string, unknown>) : null
-    if (candidate && candidate !== 'PENDING') {
-      currentStatus = candidate
-      await db.update(orders).set({
-        paymentStatus: candidate,
-        orderStatus: candidate === 'PAID' ? 'READY' : 'FAILED',
-        updatedAt: new Date(),
-      }).where(eq(orders.id, order.id))
-    }
-  }
 
   // Check download access
   let downloadUrl: string | null = null

@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { db, products, orders } from '@morgad/db'
 import { eq } from 'drizzle-orm'
-import { createMayarInvoice, MAYAR_NATIVE_CHANNELS } from '@morgad/mayar'
+import { createMayarInvoice } from '@morgad/mayar'
 import { generateOrderNumber } from '@morgad/security'
 
 const CheckoutSchema = z.object({
   productId: z.string().min(1),
   customerName: z.string().min(1).max(200),
   customerEmail: z.string().email(),
-  paymentMethod: z.string().min(1),
 })
 
 export async function POST(request: NextRequest) {
@@ -20,12 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Data tidak valid.' }, { status: 400 })
     }
 
-    const { productId, customerName, customerEmail, paymentMethod } = parsed.data
-    const normalizedMethod = paymentMethod.trim().toLowerCase()
-
-    if (!MAYAR_NATIVE_CHANNELS.includes(normalizedMethod as typeof MAYAR_NATIVE_CHANNELS[number])) {
-      return NextResponse.json({ success: false, error: 'Metode pembayaran tidak tersedia.' }, { status: 400 })
-    }
+    const { productId, customerName, customerEmail } = parsed.data
 
     const productRows = await db.select().from(products).where(eq(products.id, productId)).limit(1)
     const product = productRows[0]
@@ -45,8 +39,8 @@ export async function POST(request: NextRequest) {
       customerEmail,
       amount: product.price,
       currency: product.currency,
-      paymentProvider: 'mayar',
-      paymentMethod: normalizedMethod,
+      paymentProvider: 'doku',
+      paymentMethod: 'doku_checkout',
       paymentStatus: 'PENDING',
       orderStatus: 'PENDING',
       extraData: { productId: product.id, orderNumber },
@@ -65,7 +59,6 @@ export async function POST(request: NextRequest) {
         rate: product.price,
         description: product.name,
       }],
-      paymentMethod: normalizedMethod,
       extraData: {
         orderId: newOrder.id,
         orderNumber,
@@ -86,7 +79,7 @@ export async function POST(request: NextRequest) {
       paymentReference: invoiceResult.id,
       transactionId: invoiceResult.transactionId,
       checkoutUrl: invoiceResult.link,
-      paymentMethod: normalizedMethod,
+      paymentMethod: 'doku_checkout',
       paymentDetail: invoiceResult.paymentDetail ?? null,
       extraData: { orderId: newOrder.id, orderNumber, productId: product.id },
       paymentStatus: 'PENDING',
@@ -103,7 +96,7 @@ export async function POST(request: NextRequest) {
         paymentStatus: 'PENDING',
         checkoutUrl: invoiceResult.link,
         paymentReference: invoiceResult.id,
-        paymentMethod: normalizedMethod,
+        paymentMethod: 'doku_checkout',
         paymentDetail: invoiceResult.paymentDetail,
       },
     })
